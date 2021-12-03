@@ -5,6 +5,7 @@ using Microsoft.VisualStudio.Shell;
 using Microsoft.VisualStudio.Shell.Interop;
 using Microsoft.VisualStudio.Shell.Settings;
 using Recoding.ClippyVSPackage.Configurations;
+using SharedProject1.AssistImpl;
 using System;
 using System.ComponentModel;
 using System.ComponentModel.Composition;
@@ -29,7 +30,7 @@ namespace Recoding.ClippyVSPackage
         /// <summary>
         /// The instance of Clippy, our hero
         /// </summary>
-        private Clippy _clippy { get; set; }
+        private Merlin _clippy { get; set; }
 
         /// <summary>
         /// This VSIX package
@@ -118,7 +119,7 @@ namespace Recoding.ClippyVSPackage
             //}
             //// /TEMP
 
-            _clippy = new Clippy((Canvas)FindName("ClippyCanvas"));
+            _clippy = new Merlin((Canvas)FindName("ClippyCanvas"));
             _clippy.StartAnimation(ClippyAnimation.Idle1_1);
 
         }
