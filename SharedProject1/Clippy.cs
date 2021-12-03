@@ -32,21 +32,6 @@ namespace Recoding.ClippyVSPackage
         private static string animationsResourceUri = "pack://application:,,,/ClippyVs2022;component/animations.json";
 
         /// <summary>
-        /// The sprite with all the animation stages for Clippy
-        /// </summary>
-        private BitmapSource Sprite;
-
-        /// <summary>
-        /// The actual Clippy container that works as a clipping mask
-        /// </summary>
-        public Canvas ClippyCanvas { get; private set; }
-
-        /// <summary>
-        /// The image that holds the sprite
-        /// </summary>
-        private Image clippedImage;
-
-        /// <summary>
         /// The with of the frame
         /// </summary>
         private static int clipWidth = 124;
