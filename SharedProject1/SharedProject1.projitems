@@ -47,11 +47,16 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Resource Include="$(MSBuildThisFileDirectory)Resources\Merlin\merlin_map.png" />
+    <Resource Include="$(MSBuildThisFileDirectory)Resources\Merlin\merlin_map.png" />
   </ItemGroup>
   <ItemGroup>
     <None Include="$(MSBuildThisFileDirectory)app.config" />
     <None Include="$(MSBuildThisFileDirectory)ClippyVSPackage.ruleset" />
     <None Include="$(MSBuildThisFileDirectory)Key.snk" />
+    <Resource Include="$(MSBuildThisFileDirectory)Resources\Merlin\merlin_agent.js" />
+    <Resource Include="$(MSBuildThisFileDirectory)Resources\Merlin\merlin_sounds-mp3.js" />
+    <Resource Include="$(MSBuildThisFileDirectory)Resources\Merlin\merlin_sounds-ogg.js" />
+    <Resource Include="$(MSBuildThisFileDirectory)Resources\Merlin\merlin_tempanimfile.js" />
     <Resource Include="$(MSBuildThisFileDirectory)Resources\Merlin\merlin_agent.js" />
     <Resource Include="$(MSBuildThisFileDirectory)Resources\Merlin\merlin_sounds-mp3.js" />
     <Resource Include="$(MSBuildThisFileDirectory)Resources\Merlin\merlin_sounds-ogg.js" />
