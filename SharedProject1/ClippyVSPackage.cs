@@ -11,6 +11,7 @@ using System.Threading.Tasks;
 using System.Windows;
 using Microsoft.VisualStudio;
 using System.Runtime.InteropServices;
+using SharedProject1;
 
 namespace Recoding.ClippyVSPackage
 {
@@ -64,7 +65,8 @@ namespace Recoding.ClippyVSPackage
                     MenuCommand menuItem = new MenuCommand(MenuItemCallback, menuCommandID);
                     mcs.AddCommand(menuItem);
                 }
-                
+                await Command1.InitializeAsync(this).ConfigureAwait(true);
+                await Command2.InitializeAsync(this);
             }
             catch (Exception e)
             {

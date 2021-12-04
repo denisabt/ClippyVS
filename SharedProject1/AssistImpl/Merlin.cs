@@ -43,7 +43,7 @@ namespace SharedProject1.AssistImpl
 
         public static int ClipHeight { get => clipHeight; set => clipHeight = value; }
         public static int ClipWidth { get => clipWidth; set => clipWidth = value; }
-        public List<ClippyAnimation> AllAnimations { get => allAnimations; }
+        public List<MerlinAnimations> AllAnimations { get => allAnimations; }
 
         /// <summary>
         /// The list of couples of Columns/Rows double animations
@@ -53,20 +53,86 @@ namespace SharedProject1.AssistImpl
         /// <summary>
         /// All the animations that represents an Idle state
         /// </summary>
-        private static List<ClippyAnimation> IdleAnimations = new List<ClippyAnimation>() {
-            ClippyAnimation.Idle1_1,
-            ClippyAnimation.IdleRopePile,
-            ClippyAnimation.IdleAtom,
-            ClippyAnimation.IdleEyeBrowRaise,
-            ClippyAnimation.IdleFingerTap,
-            ClippyAnimation.IdleHeadScratch,
-            ClippyAnimation.IdleSideToSide,
-            ClippyAnimation.IdleSnooze };
+        public static List<MerlinAnimations> IdleAnimations = new List<MerlinAnimations>() {
+            MerlinAnimations.MoveLeft,
+MerlinAnimations.Congratulate,
+MerlinAnimations.Hide,
+MerlinAnimations.Pleased,
+MerlinAnimations.Acknowledge,
+MerlinAnimations.Thinking,
+MerlinAnimations.Suggest,
+MerlinAnimations.Explain,
+MerlinAnimations.Decline,
+MerlinAnimations.DontRecognize,
+MerlinAnimations.Writing,
+MerlinAnimations.Write,
+MerlinAnimations.Idle3_2,
+MerlinAnimations.Idle3_1,
+MerlinAnimations.Congratulate_2,
+MerlinAnimations.StartListening,
+MerlinAnimations.Idle2_2,
+MerlinAnimations.Announce,
+MerlinAnimations.GetAttention,
+MerlinAnimations.Idle2_1,
+MerlinAnimations.GestureLeft,
+MerlinAnimations.Surprised,
+MerlinAnimations.GestureRight,
+MerlinAnimations.Idle1_4,
+MerlinAnimations.LookLeftReturn,
+MerlinAnimations.GestureUp,
+MerlinAnimations.Idle1_1,
+MerlinAnimations.Idle1_3,
+MerlinAnimations.Idle1_2,
+MerlinAnimations.Read,
+MerlinAnimations.Processing,
+MerlinAnimations.Wave,
+MerlinAnimations.DoMagic1,
+MerlinAnimations.DoMagic2,
+MerlinAnimations.LookRight,
+MerlinAnimations.Alert,
+MerlinAnimations.MoveRight,
+MerlinAnimations.Reading,
+MerlinAnimations.GetAttentionContinued,
+MerlinAnimations.WriteContinued,
+MerlinAnimations.Confused,
+MerlinAnimations.LookRightBlink,
+MerlinAnimations.Search,
+MerlinAnimations.Uncertain,
+MerlinAnimations.LookLeft,
+MerlinAnimations.LookDownReturn,
+MerlinAnimations.Hearing_4,
+MerlinAnimations.LookUpReturn,
+MerlinAnimations.Hearing_1,
+MerlinAnimations.Greet,
+MerlinAnimations.Hearing_3,
+MerlinAnimations.WriteReturn,
+MerlinAnimations.Hearing_2,
+MerlinAnimations.GetAttentionReturn,
+MerlinAnimations.RestPose,
+MerlinAnimations.LookDownBlink,
+MerlinAnimations.LookUpBlink,
+MerlinAnimations.Think,
+MerlinAnimations.Blink,
+MerlinAnimations.Show,
+MerlinAnimations.LookRightReturn,
+MerlinAnimations.StopListening,
+MerlinAnimations.MoveDown,
+MerlinAnimations.ReadContinued,
+MerlinAnimations.LookDown,
+MerlinAnimations.Sad,
+MerlinAnimations.Process,
+MerlinAnimations.LookUp,
+MerlinAnimations.GestureDown,
+MerlinAnimations.ReadReturn,
+MerlinAnimations.Searching,
+MerlinAnimations.MoveUp,
+MerlinAnimations.LookLeftBlink };
+
 
         /// <summary>
         /// The list of all the available animations
         /// </summary>
-        private List<ClippyAnimation> allAnimations = new List<ClippyAnimation>();
+        private List<MerlinAnimations> allAnimations = new List<MerlinAnimations>();
 
         /// <summary>
         /// The time dispatcher to perform the animations in a random way
@@ -102,9 +168,9 @@ namespace SharedProject1.AssistImpl
 
 
             //XX Requires testing..
-            allAnimations = new List<ClippyAnimation>();
-            var values = Enum.GetValues(typeof(ClippyAnimation));
-            allAnimations.AddRange(values.Cast<ClippyAnimation>());
+            allAnimations = new List<MerlinAnimations>();
+            var values = Enum.GetValues(typeof(MerlinAnimations));
+            allAnimations.AddRange(values.Cast<MerlinAnimations>());
             RegisterIdleRandomAnimations();
         }
 
@@ -198,7 +264,7 @@ namespace SharedProject1.AssistImpl
             StartAnimation(IdleAnimations[random_int]);
         }
 
-        public void StartAnimation(ClippyAnimation animations, bool byPassCurrentAnimation = false)
+        public void StartAnimation(MerlinAnimations animations, bool byPassCurrentAnimation = false)
         {
             ThreadHelper.JoinableTaskFactory.Run(
                 async delegate {
@@ -210,7 +276,7 @@ namespace SharedProject1.AssistImpl
         /// Start a specific animation
         /// </summary>
         /// <param name="animationType"></param>
-        public async System.Threading.Tasks.Task StartAnimationAsync(ClippyAnimation animationType, bool byPassCurrentAnimation = false)
+        public async System.Threading.Tasks.Task StartAnimationAsync(MerlinAnimations animationType, bool byPassCurrentAnimation = false)
         {
             if (!IsAnimating || byPassCurrentAnimation)
             {
