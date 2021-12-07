@@ -5,9 +5,7 @@ using Microsoft.VisualStudio.Shell.Settings;
 using System.ComponentModel.Design;
 using System.Diagnostics;
 using System.Globalization;
-using System.Linq;
 using System.Threading;
-using System.Threading.Tasks;
 using System.Windows;
 using Microsoft.VisualStudio;
 using System.Runtime.InteropServices;
@@ -25,10 +23,12 @@ namespace Recoding.ClippyVSPackage
     [ProvideAutoLoad(VSConstants.UICONTEXT.SolutionHasSingleProject_string, PackageAutoLoadFlags.BackgroundLoad)]
 
     [Guid(Constants.guidClippyVSPkgString)]
-    [ProvideOptionPageAttribute(typeof(OptionsPage), "Clippy VS", "General", 0, 0, supportsAutomation: true)]
+    [ProvideOptionPage(typeof(OptionsPage), "Clippy VS", "General", 0, 0, supportsAutomation: true)]
 
-    public sealed class ClippyVisualStudioPackage : Microsoft.VisualStudio.Shell.AsyncPackage
+    public sealed class ClippyVisualStudioPackage : AsyncPackage
     {
+        public SpriteContainer SpriteContainer { get; private set; }
+
         /// <summary>
         /// Default ctor
         /// https://docs.microsoft.com/en-us/visualstudio/extensibility/internals/designing-xml-command-table-dot-vsct-files?view=vs-2022
@@ -60,10 +60,14 @@ namespace Recoding.ClippyVSPackage
 
                 if (null != mcs)
                 {
-                    // Create the command for the menu item.
+                    // Create the commands for the menu item.
                     CommandID menuCommandID = new CommandID(Constants.guidClippyVSCmdSet, (int)PkgCmdIDList.cmdShowClippy);
                     MenuCommand menuItem = new MenuCommand(MenuItemCallback, menuCommandID);
                     mcs.AddCommand(menuItem);
+
+                    CommandID menuCommand2ID = new CommandID(Constants.guidClippyVSCmdSet, (int)PkgCmdIDList.cmdShowMerlin);
+                    MenuCommand menuItem2 = new MenuCommand(MenuItemCallback, menuCommand2ID);
+                    mcs.AddCommand(menuItem2);
                 }
                 await Command1.InitializeAsync(this).ConfigureAwait(true);
                 await Command2.InitializeAsync(this);
@@ -82,11 +86,10 @@ namespace Recoding.ClippyVSPackage
             var writableSettingsStore = shellSettingsManager.GetWritableSettingsStore(SettingsScope.UserSettings);
 
             IClippyVSSettings settings = new ClippyVSSettings(writableSettingsStore);
-            SpriteContainer container = new SpriteContainer(this);
+            SpriteContainer = new SpriteContainer(this);
 
             if (settings.ShowAtStartup)
-                container.Show();
-
+                SpriteContainer.Show();
         }
 
         #endregion
@@ -98,12 +101,13 @@ namespace Recoding.ClippyVSPackage
         /// </summary>
         private void MenuItemCallback(object sender, EventArgs e)
         {
-            if (!Application.Current.Windows.OfType<SpriteContainer>().Any())
+            if (SpriteContainer == null)
             {
-                SpriteContainer container = new SpriteContainer(this);
+                SpriteContainer = new SpriteContainer(this);
             }
 
-            Application.Current.Windows.OfType<SpriteContainer>().First().Show();
+            //Application.Current.Windows.OfType<SpriteContainer>().First().Show();
+            SpriteContainer.Show();
 
         }
     }

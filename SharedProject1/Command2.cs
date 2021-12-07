@@ -1,11 +1,8 @@
 ﻿using Microsoft.VisualStudio.Shell;
 using Recoding.ClippyVSPackage;
 using System;
-using System.Collections.Generic;
 using System.ComponentModel.Design;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 
 namespace SharedProject1
@@ -55,7 +52,7 @@ namespace SharedProject1
         /// <summary>
         /// Gets the service provider from the owner package.
         /// </summary>
-        private Microsoft.VisualStudio.Shell.IAsyncServiceProvider ServiceProvider
+        private IAsyncServiceProvider ServiceProvider
         {
             get
             {
@@ -94,6 +91,7 @@ namespace SharedProject1
             }
 
             Application.Current.Windows.OfType<SpriteContainer>().First().Show();
+            ((Recoding.ClippyVSPackage.ClippyVisualStudioPackage)this.package).SpriteContainer.ReviveMerlin();
         }
     }
 

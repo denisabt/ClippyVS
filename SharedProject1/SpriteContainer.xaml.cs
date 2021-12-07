@@ -141,7 +141,6 @@ namespace Recoding.ClippyVSPackage
             var values = Enum.GetValues(typeof(ClippyAnimation));
             if (_showMerlin)
             {
-
                 values = Enum.GetValues(typeof(MerlinAnimations));
             }
             //// TEMP: create a voice for each animation in the context menu
@@ -162,15 +161,21 @@ namespace Recoding.ClippyVSPackage
 #endif
 
             if (_showMerlin)
-            {
-                Merlin = new Merlin((Canvas)this.FindName("ClippyCanvas"));
-                Merlin.StartAnimation(MerlinAnimations.Idle1_1);
-            }
+                ReviveMerlin();
             else
-            {
-                Clippy = new Clippy((Canvas)this.FindName("ClippyCanvas"));
-                Clippy.StartAnimation(ClippyAnimation.Idle1_1);
-            }
+                ReviveClippy();
+        }
+
+        public void ReviveClippy()
+        {
+            Clippy = new Clippy((Canvas)this.FindName("ClippyCanvas"));
+            Clippy.StartAnimation(ClippyAnimation.Idle1_1);
+        }
+
+        public void ReviveMerlin()
+        {
+            Merlin = new Merlin((Canvas)this.FindName("ClippyCanvas"));
+            Merlin.StartAnimation(MerlinAnimations.Idle1_1);
         }
 
         private void RegisterToDteEvents()
