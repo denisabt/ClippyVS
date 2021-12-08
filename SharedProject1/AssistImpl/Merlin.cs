@@ -11,6 +11,7 @@ using System.Windows.Resources;
 using System.Windows.Threading;
 using System.Linq;
 using Recoding.ClippyVSPackage;
+using System.Diagnostics;
 
 namespace SharedProject1.AssistImpl
 {
@@ -223,6 +224,7 @@ MerlinAnimations.LookLeftBlink };
                     DiscreteDoubleKeyFrame yKeyFrame = new DiscreteDoubleKeyFrame(ClipHeight * -lastRow, KeyTime.FromTimeSpan(TimeSpan.FromSeconds(timeOffset)));
 
                     timeOffset += ((double)frame.Duration / 1000);
+                    Debug.WriteLine(string.Format("TimeOffset will be {0}", timeOffset));
 
                     xDoubleAnimation.KeyFrames.Add(xKeyFrame);
                     yDoubleAnimation.KeyFrames.Add(yKeyFrame);
@@ -282,8 +284,12 @@ MerlinAnimations.LookLeftBlink };
             {
                 IsAnimating = true;
                 await ThreadHelper.JoinableTaskFactory.SwitchToMainThreadAsync();
-                clippedImage.BeginAnimation(Canvas.LeftProperty, Animations[animationType.ToString()].Item1);
-                clippedImage.BeginAnimation(Canvas.TopProperty, Animations[animationType.ToString()].Item2);
+                Debug.WriteLine("Animation start - duration will be XXX");
+                var animationItem1 = Animations[animationType.ToString()].Item1;
+                var animationItem2 = Animations[animationType.ToString()].Item2;
+
+                clippedImage.BeginAnimation(Canvas.LeftProperty, animationItem1);
+                clippedImage.BeginAnimation(Canvas.TopProperty, animationItem2);
             }
 
         }

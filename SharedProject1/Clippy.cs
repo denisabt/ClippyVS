@@ -11,6 +11,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Resources;
 using System.Windows.Threading;
 using System.Linq;
+using System.Diagnostics;
 
 namespace Recoding.ClippyVSPackage
 {
@@ -157,7 +158,7 @@ namespace Recoding.ClippyVSPackage
                     DiscreteDoubleKeyFrame yKeyFrame = new DiscreteDoubleKeyFrame(ClipHeight * -lastRow, KeyTime.FromTimeSpan(TimeSpan.FromSeconds(timeOffset)));
 
                     timeOffset += ((double)frame.Duration / 1000);
-
+                    Debug.WriteLine(string.Format("TimeOffset will be {0}", timeOffset));
                     xDoubleAnimation.KeyFrames.Add(xKeyFrame);
                     yDoubleAnimation.KeyFrames.Add(yKeyFrame);
                 }
