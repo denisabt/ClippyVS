@@ -24,7 +24,7 @@ namespace Recoding.ClippyVSPackage
         /// </summary>
         private Clippy Clippy { get; set; }
         private Merlin Merlin { get; set; }
-        private readonly bool _showMerlin;
+        private bool _showMerlin;
 
         /// <summary>
         /// This VSIX package
@@ -168,12 +168,30 @@ namespace Recoding.ClippyVSPackage
 
         public void ReviveClippy()
         {
+            Merlin = null;
+            _showMerlin = false;
+
+            ClippySpriteContainer.Width = 124;
+            ClippySpriteContainer.Height = 93;
+            ClippyGrid.Width = 124;
+            ClippyGrid.Height = 93;
+            ClippyCanvas.Height = 93;
+
             Clippy = new Clippy((Canvas)this.FindName("ClippyCanvas"));
             Clippy.StartAnimation(ClippyAnimation.Idle1_1);
         }
 
         public void ReviveMerlin()
         {
+            Clippy = null;
+            _showMerlin = true;
+            this.Width = 128;
+            this.Height = 128; 
+            ClippyGrid.Width = 150;
+            ClippyGrid.Height = 150;
+            ClippyCanvas.Height = 150;
+
+
             Merlin = new Merlin((Canvas)this.FindName("ClippyCanvas"));
             Merlin.StartAnimation(MerlinAnimations.Idle1_1);
         }
@@ -379,13 +397,28 @@ namespace Recoding.ClippyVSPackage
         {
             if (_showMerlin)
             {
-                var merlinAnimation = (MerlinAnimations)Enum.Parse(typeof(MerlinAnimations), (sender as MenuItem).Header.ToString());
-                Merlin.StartAnimation(merlinAnimation, true);
+                try
+                {
+                    var merlinAnimation = (MerlinAnimations)Enum.Parse(typeof(MerlinAnimations),
+                        (sender as MenuItem).Header.ToString());
+                    Merlin.StartAnimation(merlinAnimation, true);
+                }
+                catch (Exception e1)
+                {
+                    // NOP
+                }
             }
             else
             {
-                var animation = (ClippyAnimation)Enum.Parse(typeof(ClippyAnimation), (sender as MenuItem).Header.ToString());
-                Clippy.StartAnimation(animation, true);
+                try
+                {
+                    var animation = (ClippyAnimation)Enum.Parse(typeof(ClippyAnimation), (sender as MenuItem).Header.ToString());
+                    Clippy.StartAnimation(animation, true);
+                }
+                catch (Exception e2)
+                {
+                    // NOP
+                }
             }
         }
 

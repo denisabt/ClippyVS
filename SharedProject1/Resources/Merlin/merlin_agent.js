@@ -173,7 +173,12 @@
                 "exitBranch": 6
             },
             {
-                "Duration": 0
+                "Duration": 0,
+                "ImagesOffsets": {
+                    "Column": 0,
+                    "Row": 0
+                },
+                "exitBranch": 6
             }
         ],
         "UseExitBranching": true

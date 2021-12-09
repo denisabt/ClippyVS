@@ -164,9 +164,14 @@ namespace Recoding.ClippyVSPackage
                 }
 
                 Animations.Add(animation.Name, new Tuple<DoubleAnimationUsingKeyFrames, DoubleAnimationUsingKeyFrames>(xDoubleAnimation, yDoubleAnimation));
-
+                xDoubleAnimation.Changed += XDoubleAnimation_Changed;
                 xDoubleAnimation.Completed += xDoubleAnimation_Completed;
             }
+        }
+
+        private void XDoubleAnimation_Changed(object sender, EventArgs e)
+        {
+            Debug.WriteLine("Clippy: Animation changing");
         }
 
         /// <summary>
