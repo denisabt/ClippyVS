@@ -70,11 +70,6 @@ namespace Recoding.ClippyVSPackage
         private List<ClippyAnimation> allAnimations = new List<ClippyAnimation>();
 
         /// <summary>
-        /// The time dispatcher to perform the animations in a random way
-        /// </summary>
-        private DispatcherTimer WPFAnimationsDispatcher;
-
-        /// <summary>
         /// Default ctor
         /// </summary>
         public Clippy(Canvas canvas)
@@ -158,7 +153,6 @@ namespace Recoding.ClippyVSPackage
                     DiscreteDoubleKeyFrame yKeyFrame = new DiscreteDoubleKeyFrame(ClipHeight * -lastRow, KeyTime.FromTimeSpan(TimeSpan.FromSeconds(timeOffset)));
 
                     timeOffset += ((double)frame.Duration / 1000);
-                    Debug.WriteLine(string.Format("TimeOffset will be {0}", timeOffset));
                     xDoubleAnimation.KeyFrames.Add(xKeyFrame);
                     yDoubleAnimation.KeyFrames.Add(yKeyFrame);
                 }
@@ -171,7 +165,7 @@ namespace Recoding.ClippyVSPackage
 
         private void XDoubleAnimation_Changed(object sender, EventArgs e)
         {
-            Debug.WriteLine("Clippy: Animation changing");
+     //       Debug.WriteLine("Clippy: Animation changing");
         }
 
         /// <summary>

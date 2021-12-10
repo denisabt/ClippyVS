@@ -535,7 +535,7 @@
                 "exitBranch": 12
             },
             {
-                "Duration": 100,
+                "Duration": 500,
                 "ImagesOffsets": {
                     "Column": 8,
                     "Row": 2
@@ -543,7 +543,11 @@
                 "exitBranch": 13
             },
             {
-                "Duration": 0
+                "Duration": 0,
+                "ImagesOffsets": {
+                    "Column": 0,
+                    "Row": 0
+                },
             }
         ]
     },

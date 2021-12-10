@@ -138,6 +138,17 @@ namespace Recoding.ClippyVSPackage
 
             #endregion
 
+
+            //// /TEMP
+
+            if (_showMerlin)
+                ReviveMerlin();
+            else
+                ReviveClippy();
+        }
+
+        private void PopulateContextMenu()
+        {
             var values = Enum.GetValues(typeof(ClippyAnimation));
             if (_showMerlin)
             {
@@ -146,6 +157,7 @@ namespace Recoding.ClippyVSPackage
             //// TEMP: create a voice for each animation in the context menu
 #if DEBUG
             var pMenu = (ContextMenu)this.Resources["cmButton"];
+            pMenu.Items.Clear();
 
             foreach (var val in values)
             {
@@ -157,18 +169,17 @@ namespace Recoding.ClippyVSPackage
                 menuItem.Click += cmdTestAnimation_Click;
                 pMenu.Items.Add(menuItem);
             }
-            //// /TEMP
 #endif
 
-            if (_showMerlin)
-                ReviveMerlin();
-            else
-                ReviveClippy();
         }
 
         public void ReviveClippy()
         {
-            Merlin = null;
+            if (Merlin != null)
+            {
+                Merlin.Dispose();
+                Merlin = null;
+            }
             _showMerlin = false;
 
             ClippySpriteContainer.Width = 124;
@@ -179,14 +190,21 @@ namespace Recoding.ClippyVSPackage
 
             Clippy = new Clippy((Canvas)this.FindName("ClippyCanvas"));
             Clippy.StartAnimation(ClippyAnimation.Idle1_1);
+
+            PopulateContextMenu();
         }
 
         public void ReviveMerlin()
         {
-            Clippy = null;
+            if (Clippy != null)
+            {
+                Clippy.Dispose();
+                Clippy = null;
+            }
+
             _showMerlin = true;
             this.Width = 128;
-            this.Height = 128; 
+            this.Height = 128;
             ClippyGrid.Width = 150;
             ClippyGrid.Height = 150;
             ClippyCanvas.Height = 150;
@@ -194,6 +212,8 @@ namespace Recoding.ClippyVSPackage
 
             Merlin = new Merlin((Canvas)this.FindName("ClippyCanvas"));
             Merlin.StartAnimation(MerlinAnimations.Idle1_1);
+
+            PopulateContextMenu();
         }
 
         private void RegisterToDteEvents()

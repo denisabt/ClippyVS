@@ -11,7 +11,6 @@ using System.Windows.Resources;
 using System.Windows.Threading;
 using System.Linq;
 using Recoding.ClippyVSPackage;
-using System.Diagnostics;
 
 namespace SharedProject1.AssistImpl
 {
@@ -224,8 +223,6 @@ MerlinAnimations.LookLeftBlink };
                     DiscreteDoubleKeyFrame yKeyFrame = new DiscreteDoubleKeyFrame(ClipHeight * -lastRow, KeyTime.FromTimeSpan(TimeSpan.FromSeconds(timeOffset)));
 
                     timeOffset += ((double)frame.Duration / 1000);
-                    Debug.WriteLine("TimeOffset will be {0}", timeOffset);
-
                     xDoubleAnimation.KeyFrames.Add(xKeyFrame);
                     yDoubleAnimation.KeyFrames.Add(yKeyFrame);
                 }
@@ -238,7 +235,7 @@ MerlinAnimations.LookLeftBlink };
 
         private void XDoubleAnimation_Changed(object sender, EventArgs e)
         {
-            Debug.WriteLine("Merlin: Animation changing");
+            //Debug.WriteLine("Merlin: Animation changing");
         }
 
         /// <summary>

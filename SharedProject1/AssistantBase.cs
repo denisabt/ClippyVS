@@ -1,12 +1,19 @@
-﻿using System.IO;
+﻿using System;
+using System.IO;
 using System.Text;
 using System.Windows.Controls;
 using System.Windows.Media.Imaging;
+using System.Windows.Threading;
 
 namespace Recoding.ClippyVSPackage
 {
-    public class AssistantBase
+    public class AssistantBase : IDisposable
     {
+        /// <summary>
+        /// The time dispatcher to perform the animations in a random way
+        /// </summary>
+        protected DispatcherTimer WPFAnimationsDispatcher;
+
         /// <summary>
         /// The sprite with all the animation stages for Clippy
         /// </summary>
@@ -47,6 +54,11 @@ namespace Recoding.ClippyVSPackage
                 streamString = reader.ReadToEnd();
             }
             return streamString;
+        }
+
+        public void Dispose()
+        {
+            WPFAnimationsDispatcher.Stop();
         }
     }
 }
