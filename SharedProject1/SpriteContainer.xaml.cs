@@ -189,7 +189,7 @@ namespace Recoding.ClippyVSPackage
             ClippyCanvas.Height = 93;
 
             Clippy = new Clippy((Canvas)this.FindName("ClippyCanvas"));
-            Clippy.StartAnimation(ClippyAnimation.Idle1_1);
+            Clippy.StartAnimation(ClippyAnimation.Greeting);
 
             PopulateContextMenu();
         }
@@ -201,7 +201,7 @@ namespace Recoding.ClippyVSPackage
                 Clippy.Dispose();
                 Clippy = null;
             }
-
+                
             _showMerlin = true;
             this.Width = 128;
             this.Height = 128;
@@ -211,7 +211,7 @@ namespace Recoding.ClippyVSPackage
 
 
             Merlin = new Merlin((Canvas)this.FindName("ClippyCanvas"));
-            Merlin.StartAnimation(MerlinAnimations.Idle1_1);
+            Merlin.StartAnimation(MerlinAnimations.Greet);
 
             PopulateContextMenu();
         }

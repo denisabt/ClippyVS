@@ -57,8 +57,9 @@ namespace Recoding.ClippyVSPackage
         }
 
         public void Dispose()
-        {
-            WPFAnimationsDispatcher.Stop();
+        { 
+            if (WPFAnimationsDispatcher != null)    
+                WPFAnimationsDispatcher.Stop();
         }
     }
 }

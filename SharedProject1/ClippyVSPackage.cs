@@ -101,13 +101,15 @@ namespace Recoding.ClippyVSPackage
         /// </summary>
         private void MenuItemCallback(object sender, EventArgs e)
         {
+           
             if (SpriteContainer == null)
             {
                 SpriteContainer = new SpriteContainer(this);
             }
 
             //Application.Current.Windows.OfType<SpriteContainer>().First().Show();
-            SpriteContainer.Show();
+            //SpriteContainer.Show();
+            SpriteContainer.ReviveClippy();
 
         }
     }
