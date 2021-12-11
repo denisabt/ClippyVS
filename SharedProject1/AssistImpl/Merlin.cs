@@ -11,6 +11,7 @@ using System.Windows.Resources;
 using System.Windows.Threading;
 using System.Linq;
 using Recoding.ClippyVSPackage;
+using System.Diagnostics;
 
 namespace SharedProject1.AssistImpl
 {
@@ -214,17 +215,21 @@ MerlinAnimations.LookLeftBlink };
                     {
                         lastCol = frame.ImagesOffsets.Column;
                         lastRow = frame.ImagesOffsets.Row;
+
+                        // X
+                        DiscreteDoubleKeyFrame xKeyFrame = new DiscreteDoubleKeyFrame(ClipWidth * -lastCol, KeyTime.FromTimeSpan(TimeSpan.FromSeconds(timeOffset)));
+
+                        // Y
+                        DiscreteDoubleKeyFrame yKeyFrame = new DiscreteDoubleKeyFrame(ClipHeight * -lastRow, KeyTime.FromTimeSpan(TimeSpan.FromSeconds(timeOffset)));
+
+                        timeOffset += ((double)frame.Duration / 1000);
+                        xDoubleAnimation.KeyFrames.Add(xKeyFrame);
+                        yDoubleAnimation.KeyFrames.Add(yKeyFrame);
                     }
-
-                    // X
-                    DiscreteDoubleKeyFrame xKeyFrame = new DiscreteDoubleKeyFrame(ClipWidth * -lastCol, KeyTime.FromTimeSpan(TimeSpan.FromSeconds(timeOffset)));
-
-                    // Y
-                    DiscreteDoubleKeyFrame yKeyFrame = new DiscreteDoubleKeyFrame(ClipHeight * -lastRow, KeyTime.FromTimeSpan(TimeSpan.FromSeconds(timeOffset)));
-
-                    timeOffset += ((double)frame.Duration / 1000);
-                    xDoubleAnimation.KeyFrames.Add(xKeyFrame);
-                    yDoubleAnimation.KeyFrames.Add(yKeyFrame);
+                    else
+                    {
+                        Debug.WriteLine("ImageOffsets was null");
+                    }
                 }
 
                 Animations.Add(animation.Name, new Tuple<DoubleAnimationUsingKeyFrames, DoubleAnimationUsingKeyFrames>(xDoubleAnimation, yDoubleAnimation));
@@ -271,7 +276,8 @@ MerlinAnimations.LookLeftBlink };
         public void StartAnimation(MerlinAnimations animations, bool byPassCurrentAnimation = false)
         {
             ThreadHelper.JoinableTaskFactory.Run(
-                async delegate {
+                async delegate
+                {
                     await StartAnimationAsync(animations, byPassCurrentAnimation);
                 });
         }
