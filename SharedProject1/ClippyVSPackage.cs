@@ -27,7 +27,7 @@ namespace Recoding.ClippyVSPackage
 
     public sealed class ClippyVisualStudioPackage : AsyncPackage
     {
-        public SpriteContainer SpriteContainer { get; private set; }
+        public SpriteContainer SpriteContainer { get; set; }
 
         /// <summary>
         /// Default ctor
@@ -86,7 +86,12 @@ namespace Recoding.ClippyVSPackage
             var writableSettingsStore = shellSettingsManager.GetWritableSettingsStore(SettingsScope.UserSettings);
 
             IClippyVSSettings settings = new ClippyVSSettings(writableSettingsStore);
-            SpriteContainer = new SpriteContainer(this);
+
+
+            if (settings.SelectedAssistantName.Contains("merlin"))
+                SpriteContainer = new SpriteContainer(this, true);
+            else
+                SpriteContainer = new SpriteContainer(this, false);
 
             if (settings.ShowAtStartup)
                 SpriteContainer.Show();

@@ -68,7 +68,7 @@ namespace SharedProject1
         {
             // Switch to the main thread - the call to AddCommand in Command2's constructor requires
             // the UI thread.
-            //await ThreadHelper.JoinableTaskFactory.SwitchToMainThreadAsync(package.DisposalToken);
+            await ThreadHelper.JoinableTaskFactory.SwitchToMainThreadAsync(package.DisposalToken);
 
             OleMenuCommandService commandService = await package.GetServiceAsync(typeof(IMenuCommandService)) as OleMenuCommandService;
             Instance = new Command2(package, commandService);
@@ -83,15 +83,16 @@ namespace SharedProject1
         /// <param name="e">Event args.</param>
         private void Execute(object sender, EventArgs e)
         {
+            // we'll want to refactor and move this logic to the package
             ThreadHelper.ThrowIfNotOnUIThread();
             var visibleAssistants = Application.Current.Windows.OfType<SpriteContainer>();
             if (!visibleAssistants.Any())
             {
-                SpriteContainer container = new SpriteContainer(package, true);
+                (package as ClippyVisualStudioPackage).SpriteContainer = new SpriteContainer(package, true);
             }
 
             Application.Current.Windows.OfType<SpriteContainer>().First().Show();
-            ((Recoding.ClippyVSPackage.ClippyVisualStudioPackage)this.package).SpriteContainer.ReviveMerlin();
+            ((ClippyVisualStudioPackage)this.package).SpriteContainer.ReviveMerlin();
         }
     }
 

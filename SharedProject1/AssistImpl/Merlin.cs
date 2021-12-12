@@ -288,12 +288,20 @@ MerlinAnimations.LookLeftBlink };
         /// <param name="animationType"></param>
         public async System.Threading.Tasks.Task StartAnimationAsync(MerlinAnimations animationType, bool byPassCurrentAnimation = false)
         {
-            if (!IsAnimating || byPassCurrentAnimation)
+            try
             {
-                IsAnimating = true;
-                await ThreadHelper.JoinableTaskFactory.SwitchToMainThreadAsync();
-                clippedImage.BeginAnimation(Canvas.LeftProperty, Animations[animationType.ToString()].Item1);
-                clippedImage.BeginAnimation(Canvas.TopProperty, Animations[animationType.ToString()].Item2);
+                if (!IsAnimating || byPassCurrentAnimation)
+                {
+                    Debug.WriteLine("Triggering Merlin " + animationType);
+                    IsAnimating = true;
+                    await ThreadHelper.JoinableTaskFactory.SwitchToMainThreadAsync();
+                    clippedImage.BeginAnimation(Canvas.LeftProperty, Animations[animationType.ToString()].Item1);
+                    clippedImage.BeginAnimation(Canvas.TopProperty, Animations[animationType.ToString()].Item2);
+                }
+            }
+            catch (Exception e)
+            {
+                Debug.WriteLine("StartAnimAsyncException Merlin " + animationType);
             }
 
         }

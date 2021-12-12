@@ -7,9 +7,11 @@
         /// </summary>
         bool ShowAtStartup { get; set; }
 
+        string SelectedAssistantName { get; set; }
+
         /// <summary>
         /// Performs the store of the instance of this interface to the user's settings
         /// </summary>
-        void Store();
+        void SaveSettings();
     }
 }

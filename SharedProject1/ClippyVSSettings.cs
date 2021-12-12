@@ -22,9 +22,19 @@ namespace Recoding.ClippyVSPackage
         private const string ShowAtStartupStoreName = "ShowAtStartup";
 
         /// <summary>
+        /// If true shows clippy at the VS startup
+        /// </summary>
+        public string SelectedAssistantName { get; set; } = "";
+
+        /// <summary>
+        /// String identifier for startup boolean in settings store
+        /// </summary>
+        private const string SelectedAssistantNameName = "SelectedAssistantName";
+
+        /// <summary>
         /// The real store in which the settings will be saved
         /// </summary>
-        readonly WritableSettingsStore writableSettingsStore;
+        private readonly WritableSettingsStore writableSettingsStore;
 
         #region -- Constructors --
 
@@ -44,7 +54,7 @@ namespace Recoding.ClippyVSPackage
          /// <summary>
         /// Performs the store of the instance of this interface to the user's settings
         /// </summary>
-        public void Store()
+        public void SaveSettings()
         {
             try
             {
@@ -54,6 +64,7 @@ namespace Recoding.ClippyVSPackage
                 }
 
                 writableSettingsStore.SetBoolean(Constants.SettingsCollectionPath, ShowAtStartupStoreName, ShowAtStartup);
+                writableSettingsStore.SetString(Constants.SettingsCollectionPath, SelectedAssistantNameName, SelectedAssistantName);
                 Debug.WriteLine("Setting stored which is {0}", ShowAtStartup);
             }
             catch (Exception ex)
@@ -73,7 +84,8 @@ namespace Recoding.ClippyVSPackage
                 if (writableSettingsStore.PropertyExists(Constants.SettingsCollectionPath, ShowAtStartupStoreName))
                 {
                     ShowAtStartup = writableSettingsStore.GetBoolean(Constants.SettingsCollectionPath, ShowAtStartupStoreName);
-                    Debug.WriteLine("Setting loaded which is {0}", ShowAtStartup);
+                    SelectedAssistantName = writableSettingsStore.GetString(Constants.SettingsCollectionPath, SelectedAssistantNameName);
+                    Debug.WriteLine("Setting loaded which is {0} {1}", ShowAtStartup, SelectedAssistantName);
                 }
             }
             catch (ArgumentException ex)

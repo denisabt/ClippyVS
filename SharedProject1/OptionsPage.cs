@@ -10,31 +10,12 @@ namespace Recoding.ClippyVSPackage
     [Guid(Constants.guidOptionsPage)]
     public class OptionsPage : DialogPage
     {
-        private WritableSettingsStore _store;
-        IClippyVSSettings settings
-        {
-            get
-            {
-                var s = GetClippySettings();
-                return s;
-            }
-        }
+        private readonly WritableSettingsStore _store;
 
-        private IClippyVSSettings GetClippySettings()
-        {
-            ThreadHelper.ThrowIfNotOnUIThread();
-            bool res = false;
-            if (_store.PropertyExists(Constants.SettingsCollectionPath, "ShowAtStartup"))
-            {
-                res = _store.GetBoolean(Constants.SettingsCollectionPath, "ShowAtStartup");
-                
-            }
-
-            return new ClippyVSSettings(_store)
-            {
-                ShowAtStartup = res
-            };
-        }
+        [Category("General")]
+        [Description("If true shows Clippy at the VS startup")]
+        [DisplayName("Show at startup")]
+        public bool ShowAtStartup { get; set; }
 
         public OptionsPage()
         {
@@ -42,11 +23,6 @@ namespace Recoding.ClippyVSPackage
             var settingsManager = new ShellSettingsManager(ServiceProvider.GlobalProvider);
             _store = settingsManager.GetWritableSettingsStore(SettingsScope.UserSettings);
         }
-
-        [Category("General")]
-        [Description("If true shows Clippy at the VS startup")]
-        [DisplayName("Show at startup")]
-        public bool ShowAtStartup { get; set; }
 
         /// <summary>
         /// Handles "activate" messages from the Visual Studio environment.
@@ -58,7 +34,6 @@ namespace Recoding.ClippyVSPackage
         protected override void OnActivate(CancelEventArgs e)
         {
             base.OnActivate(e);
-
             BindSettings();
         }
 
@@ -69,9 +44,8 @@ namespace Recoding.ClippyVSPackage
         /// This method is called when VS wants to save the user's 
         /// changes (for example, when the user clicks OK in the dialog).
         /// </devdoc>
-        protected override async void OnApply(PageApplyEventArgs e)
+        protected override void OnApply(PageApplyEventArgs e)
         {
-            await ThreadHelper.JoinableTaskFactory.SwitchToMainThreadAsync();
             var shellSettingsManager = new ShellSettingsManager(ServiceProvider.GlobalProvider);
             var writableSettingsStore = shellSettingsManager.GetWritableSettingsStore(SettingsScope.UserSettings);
 
@@ -80,13 +54,27 @@ namespace Recoding.ClippyVSPackage
                 ShowAtStartup = ShowAtStartup
             };
 
-            appliedValues.Store();
+            appliedValues.SaveSettings();
             base.OnApply(e);
+        }
+
+        private IClippyVSSettings GetClippySettings()
+        {
+            bool res = false;
+            if (_store.PropertyExists(Constants.SettingsCollectionPath, "ShowAtStartup"))
+            {
+                res = _store.GetBoolean(Constants.SettingsCollectionPath, "ShowAtStartup");
+            }
+
+            return new ClippyVSSettings(_store)
+            {
+                ShowAtStartup = res
+            };
         }
 
         private void BindSettings()
         {
-            ShowAtStartup = settings.ShowAtStartup;
+            ShowAtStartup = GetClippySettings().ShowAtStartup;
         }
     }
 }
