@@ -2,7 +2,6 @@
 using EnvDTE80;
 using Microsoft.VisualStudio.Settings;
 using Microsoft.VisualStudio.Shell;
-using Microsoft.VisualStudio.Shell.Interop;
 using Microsoft.VisualStudio.Shell.Settings;
 using Recoding.ClippyVSPackage.Configurations;
 using SharedProject1.AssistImpl;
@@ -43,6 +42,7 @@ namespace Recoding.ClippyVSPackage
 
         private readonly DocumentEvents _docEvents;
         private readonly BuildEvents _buildEvents;
+        private readonly FindEvents _findEvents;
         private ProjectItemsEvents _projectItemsEvents;
         private ProjectItemsEvents _csharpProjectItemsEvents;
 
@@ -74,6 +74,7 @@ namespace Recoding.ClippyVSPackage
             var dte = (DTE)package.GetServiceAsync(typeof(DTE)).ConfigureAwait(true).GetAwaiter().GetResult();
             _docEvents = dte.Events.DocumentEvents;
             _buildEvents = dte.Events.BuildEvents;
+            _findEvents = dte.Events.FindEvents;
 
             RegisterToDteEvents();
 
@@ -103,7 +104,7 @@ namespace Recoding.ClippyVSPackage
             }
             catch (ArgumentException ex)
             {
-                Console.WriteLine($"SettingsStore Exception while reading: {ex.Message}");
+                Console.WriteLine($@"SettingsStore Exception while reading: {ex.Message}");
             }
 
             if (!storedRelativeTop.HasValue || !storedRelativeLeft.HasValue)
@@ -219,12 +220,15 @@ namespace Recoding.ClippyVSPackage
 
         private void RegisterToDteEvents()
         {
+            ThreadHelper.ThrowIfNotOnUIThread();
             _docEvents.DocumentOpening += DocumentEvents_DocumentOpening;
             _docEvents.DocumentSaved += DocumentEvents_DocumentSaved;
             _docEvents.DocumentClosing += DocEvents_DocumentClosing;
 
             _buildEvents.OnBuildBegin += BuildEvents_OnBuildBegin;
             _buildEvents.OnBuildDone += BuildEvents_OnBuildDone;
+
+            _findEvents.FindDone += FindEventsClass_FindDone;
 
             ThreadHelper.ThrowIfNotOnUIThread();
             var dte = _package.GetServiceAsync(typeof(DTE)).ConfigureAwait(true).GetAwaiter().GetResult() as DTE;
@@ -240,7 +244,7 @@ namespace Recoding.ClippyVSPackage
                 this._projectItemsEvents.ItemRenamed += ProjectItemsEvents_ItemRenamed;
             }
 
-            this._csharpProjectItemsEvents = dte.Events.GetObject("CSharpProjectItemsEvents") as EnvDTE.ProjectItemsEvents;
+            this._csharpProjectItemsEvents = dte.Events.GetObject("CSharpProjectItemsEvents") as ProjectItemsEvents;
             if (this._csharpProjectItemsEvents == null)
                 return;
 
@@ -265,7 +269,6 @@ namespace Recoding.ClippyVSPackage
                 Merlin.StartAnimation(MerlinAnimations.DoMagic2, true);
             else
                 Clippy.StartAnimation(ClippyAnimation.EmptyTrash, true);
-
         }
 
         private void ProjectItemsEvents_ItemAdded(ProjectItem projectItem)
@@ -286,7 +289,7 @@ namespace Recoding.ClippyVSPackage
 
         }
 
-        private void BuildEvents_OnBuildDone(EnvDTE.vsBuildScope scope, EnvDTE.vsBuildAction action)
+        private void BuildEvents_OnBuildDone(vsBuildScope scope, vsBuildAction action)
         {
             if (_showMerlin)
                 Merlin.StartAnimation(MerlinAnimations.Congratulate, true);
@@ -295,7 +298,7 @@ namespace Recoding.ClippyVSPackage
 
         }
 
-        private void DocEvents_DocumentClosing(EnvDTE.Document document)
+        private void DocEvents_DocumentClosing(Document document)
         {
             if (_showMerlin)
                 Merlin.StartAnimation(MerlinAnimations.GestureDown, true);
@@ -304,7 +307,7 @@ namespace Recoding.ClippyVSPackage
 
         }
 
-        private void BuildEvents_OnBuildBegin(EnvDTE.vsBuildScope scope, EnvDTE.vsBuildAction action)
+        private void BuildEvents_OnBuildBegin(vsBuildScope scope, vsBuildAction action)
         {
             if (_showMerlin)
                 Merlin.StartAnimation(MerlinAnimations.Processing, true); // GetTechy
@@ -313,7 +316,7 @@ namespace Recoding.ClippyVSPackage
 
         }
 
-        private void DocumentEvents_DocumentSaved(EnvDTE.Document document)
+        private void DocumentEvents_DocumentSaved(Document document)
         {
             if (_showMerlin)
                 Merlin.StartAnimation(MerlinAnimations.Congratulate2, true);
@@ -423,10 +426,10 @@ namespace Recoding.ClippyVSPackage
                 try
                 {
                     var merlinAnimation = (MerlinAnimations)Enum.Parse(typeof(MerlinAnimations),
-                        (sender as MenuItem).Header.ToString());
+                        ((MenuItem)sender).Header.ToString());
                     Merlin.StartAnimation(merlinAnimation, true);
                 }
-                catch (Exception e1)
+                catch (Exception)
                 {
                     // NOP
                 }
@@ -435,10 +438,13 @@ namespace Recoding.ClippyVSPackage
             {
                 try
                 {
-                    var animation = (ClippyAnimation)Enum.Parse(typeof(ClippyAnimation), (sender as MenuItem).Header.ToString());
+                    var menuItem = sender as MenuItem;
+                    if (menuItem == null) return;
+
+                    var animation = (ClippyAnimation)Enum.Parse(typeof(ClippyAnimation), menuItem.Header.ToString());
                     Clippy.StartAnimation(animation, true);
                 }
-                catch (Exception e2)
+                catch (Exception)
                 {
                     // NOP
                 }
@@ -489,7 +495,7 @@ namespace Recoding.ClippyVSPackage
             }
             catch
             {
-
+                //NOP
             }
         }
 

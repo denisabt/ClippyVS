@@ -7,7 +7,6 @@ using System.Windows.Controls;
 using System.Windows.Media;
 using System.Windows.Media.Animation;
 using System.Windows.Media.Imaging;
-using System.Windows.Resources;
 using System.Windows.Threading;
 using System.Linq;
 
@@ -112,9 +111,14 @@ namespace Recoding.ClippyVSPackage
 
             var info = Application.GetResourceStream(uri);
 
-            var storedAnimations = Newtonsoft.Json.JsonConvert.DeserializeObject<List<ClippySingleAnimation>>(StreamToString(info.Stream));
+            if (info == null) return;
+
+            var storedAnimations =
+                Newtonsoft.Json.JsonConvert.DeserializeObject<List<ClippySingleAnimation>>(StreamToString(info.Stream));
 
             _animations = new Dictionary<string, Tuple<DoubleAnimationUsingKeyFrames, DoubleAnimationUsingKeyFrames>>();
+
+            if (storedAnimations == null) return;
 
             foreach (var animation in storedAnimations)
             {
@@ -141,17 +145,21 @@ namespace Recoding.ClippyVSPackage
                     }
 
                     // X
-                    var xKeyFrame = new DiscreteDoubleKeyFrame(ClipWidth * -lastCol, KeyTime.FromTimeSpan(TimeSpan.FromSeconds(timeOffset)));
+                    var xKeyFrame = new DiscreteDoubleKeyFrame(ClipWidth * -lastCol,
+                        KeyTime.FromTimeSpan(TimeSpan.FromSeconds(timeOffset)));
 
                     // Y
-                    var yKeyFrame = new DiscreteDoubleKeyFrame(ClipHeight * -lastRow, KeyTime.FromTimeSpan(TimeSpan.FromSeconds(timeOffset)));
+                    var yKeyFrame = new DiscreteDoubleKeyFrame(ClipHeight * -lastRow,
+                        KeyTime.FromTimeSpan(TimeSpan.FromSeconds(timeOffset)));
 
                     timeOffset += ((double)frame.Duration / 1000);
                     xDoubleAnimation.KeyFrames.Add(xKeyFrame);
                     yDoubleAnimation.KeyFrames.Add(yKeyFrame);
                 }
 
-                _animations.Add(animation.Name, new Tuple<DoubleAnimationUsingKeyFrames, DoubleAnimationUsingKeyFrames>(xDoubleAnimation, yDoubleAnimation));
+                _animations.Add(animation.Name,
+                    new Tuple<DoubleAnimationUsingKeyFrames, DoubleAnimationUsingKeyFrames>(xDoubleAnimation,
+                        yDoubleAnimation));
                 xDoubleAnimation.Changed += XDoubleAnimation_Changed;
                 xDoubleAnimation.Completed += xDoubleAnimation_Completed;
             }
@@ -177,8 +185,10 @@ namespace Recoding.ClippyVSPackage
         /// </summary>
         private void RegisterIdleRandomAnimations()
         {
-            WpfAnimationsDispatcher = new DispatcherTimer();
-            WpfAnimationsDispatcher.Interval = TimeSpan.FromSeconds(IdleAnimationTimeout);
+            WpfAnimationsDispatcher = new DispatcherTimer
+            {
+                Interval = TimeSpan.FromSeconds(IdleAnimationTimeout)
+            };
             WpfAnimationsDispatcher.Tick += WPFAnimationsDispatcher_Tick;
 
             WpfAnimationsDispatcher.Start();

@@ -50,13 +50,7 @@ namespace SharedProject1
         /// <summary>
         /// Gets the service provider from the owner package.
         /// </summary>
-        private IAsyncServiceProvider ServiceProvider
-        {
-            get
-            {
-                return this._package;
-            }
-        }
+        private IAsyncServiceProvider ServiceProvider => _package;
 
         /// <summary>
         /// Initializes the singleton instance of the command.

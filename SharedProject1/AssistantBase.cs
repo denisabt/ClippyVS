@@ -18,12 +18,7 @@ namespace Recoding.ClippyVSPackage
         /// The sprite with all the animation stages for Clippy
         /// </summary>
         protected BitmapSource Sprite;
-
-        /// <summary>
-        /// The actual Clippy container that works as a clipping mask
-        /// </summary>
-        public Canvas ClippyCanvas { get; private set; }
-
+        
         /// <summary>
         /// The image that holds the sprite
         /// </summary>
@@ -47,7 +42,7 @@ namespace Recoding.ClippyVSPackage
         /// <returns></returns>
         public static string StreamToString(Stream stream)
         {
-            string streamString = string.Empty;
+            string streamString;
             stream.Position = 0;
             using (StreamReader reader = new StreamReader(stream, Encoding.UTF8))
             {

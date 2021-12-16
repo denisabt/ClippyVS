@@ -7,7 +7,6 @@ using System.Windows.Controls;
 using System.Windows.Media;
 using System.Windows.Media.Animation;
 using System.Windows.Media.Imaging;
-using System.Windows.Resources;
 using System.Windows.Threading;
 using System.Linq;
 using Recoding.ClippyVSPackage;
@@ -119,9 +118,13 @@ MerlinAnimations.Idle12};
             if (info == null) 
                 return;
 
-            var storedAnimations = Newtonsoft.Json.JsonConvert.DeserializeObject<List<ClippySingleAnimation>>(StreamToString(info.Stream));
+            // Can go to Constructor/Init
+            var storedAnimations = 
+                Newtonsoft.Json.JsonConvert.DeserializeObject<List<ClippySingleAnimation>>(StreamToString(info.Stream));
 
             _animations = new Dictionary<string, Tuple<DoubleAnimationUsingKeyFrames, DoubleAnimationUsingKeyFrames>>();
+
+            if (storedAnimations == null) return;
 
             foreach (var animation in storedAnimations)
             {
@@ -216,6 +219,7 @@ MerlinAnimations.Idle12};
         /// Start a specific animation
         /// </summary>
         /// <param name="animationType"></param>
+        /// <param name="byPassCurrentAnimation">   </param>
         public async System.Threading.Tasks.Task StartAnimationAsync(MerlinAnimations animationType, bool byPassCurrentAnimation = false)
         {
             try
@@ -223,9 +227,10 @@ MerlinAnimations.Idle12};
                 if (!IsAnimating || byPassCurrentAnimation)
                 {
                     var animation = _animations[animationType.ToString()];
-                    var item1 = animation.Item1;
+                    if (animation == null) return;
+
                     Debug.WriteLine("Triggering Merlin " + animationType);
-                    Debug.WriteIf((animation != null), animation.Item1.ToString() + animation.Item2);
+                    Debug.WriteLine(animation.Item1.ToString() + animation.Item2);
                     IsAnimating = true;
                     await ThreadHelper.JoinableTaskFactory.SwitchToMainThreadAsync();
                     ClippedImage.BeginAnimation(Canvas.LeftProperty, animation.Item1);

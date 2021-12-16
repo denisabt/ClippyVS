@@ -41,7 +41,7 @@ namespace Recoding.ClippyVSPackage
         /// <summary>
         /// Constructor for service injection
         /// </summary>
-        /// <param name="vsServiceProvider"></param>
+        /// <param name="store">Settings Store</param>
         [ImportingConstructor]
         public ClippyVsSettings(WritableSettingsStore store)
         {

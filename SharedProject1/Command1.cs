@@ -2,7 +2,6 @@
 using System;
 using System.ComponentModel.Design;
 using System.Globalization;
-using System.Windows;
 using System.Windows.Forms;
 using Task = System.Threading.Tasks.Task;
 
@@ -33,19 +32,12 @@ namespace Recoding.ClippyVSPackage
         }
 
         /// <summary>
-        /// VS Package that provides this command, not null.
-        /// </summary>
-        private readonly AsyncPackage _package;
-
-        /// <summary>
         /// Initializes a new instance of the <see cref="Command1"/> class.
         /// Adds our command handlers for menu (commands must exist in the command table file)
         /// </summary>
-        /// <param name="package">Owner package, not null.</param>
         /// <param name="commandService">Command service to add command to, not null.</param>
-        private Command1(AsyncPackage asyncPackage, OleMenuCommandService commandService)
+        private Command1(OleMenuCommandService commandService)
         {
-            _package = asyncPackage ?? throw new ArgumentNullException(nameof(asyncPackage));
             commandService = commandService ?? throw new ArgumentNullException(nameof(commandService));
 
             var menuCommandId = new CommandID(CommandSet, CommandId);
@@ -64,7 +56,7 @@ namespace Recoding.ClippyVSPackage
             //await ThreadHelper.JoinableTaskFactory.SwitchToMainThreadAsync(package.DisposalToken);
 
             OleMenuCommandService commandService = await package.GetServiceAsync(typeof(IMenuCommandService)) as OleMenuCommandService;
-            Instance = new Command1(package, commandService);
+            Instance = new Command1(commandService);
         }
 
         /// <summary>
@@ -81,7 +73,7 @@ namespace Recoding.ClippyVSPackage
             string title = "Command1";
 
             // Show a message box to prove we were here
-            System.Windows.Forms.MessageBox.Show(message, title, MessageBoxButtons.OK, MessageBoxIcon.Information);
+            MessageBox.Show(message, title, MessageBoxButtons.OK, MessageBoxIcon.Information);
         }
     }
 }
