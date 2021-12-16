@@ -7,7 +7,7 @@ using System.Runtime.InteropServices;
 
 namespace Recoding.ClippyVSPackage
 {
-    [Guid(Constants.guidOptionsPage)]
+    [Guid(Constants.GuidOptionsPage)]
     public class OptionsPage : DialogPage
     {
         private readonly WritableSettingsStore _store;
@@ -46,10 +46,11 @@ namespace Recoding.ClippyVSPackage
         /// </devdoc>
         protected override void OnApply(PageApplyEventArgs e)
         {
+            ThreadHelper.ThrowIfNotOnUIThread();
             var shellSettingsManager = new ShellSettingsManager(ServiceProvider.GlobalProvider);
             var writableSettingsStore = shellSettingsManager.GetWritableSettingsStore(SettingsScope.UserSettings);
 
-            IClippyVSSettings appliedValues = new ClippyVSSettings(writableSettingsStore)
+            IClippyVsSettings appliedValues = new ClippyVsSettings(writableSettingsStore)
             {
                 ShowAtStartup = ShowAtStartup
             };
@@ -58,7 +59,7 @@ namespace Recoding.ClippyVSPackage
             base.OnApply(e);
         }
 
-        private IClippyVSSettings GetClippySettings()
+        private IClippyVsSettings GetClippySettings()
         {
             bool res = false;
             if (_store.PropertyExists(Constants.SettingsCollectionPath, "ShowAtStartup"))
@@ -66,7 +67,7 @@ namespace Recoding.ClippyVSPackage
                 res = _store.GetBoolean(Constants.SettingsCollectionPath, "ShowAtStartup");
             }
 
-            return new ClippyVSSettings(_store)
+            return new ClippyVsSettings(_store)
             {
                 ShowAtStartup = res
             };

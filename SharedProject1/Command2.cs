@@ -2,8 +2,6 @@
 using Recoding.ClippyVSPackage;
 using System;
 using System.ComponentModel.Design;
-using System.Linq;
-using System.Windows;
 
 namespace SharedProject1
 {
@@ -22,7 +20,7 @@ namespace SharedProject1
         /// <summary>
         /// VS Package that provides this command, not null.
         /// </summary>
-        private readonly AsyncPackage package;
+        private readonly AsyncPackage _package;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="Command2"/> class.
@@ -32,11 +30,11 @@ namespace SharedProject1
         /// <param name="commandService">Command service to add command to, not null.</param>
         private Command2(AsyncPackage package, OleMenuCommandService commandService)
         {
-            this.package = package ?? throw new ArgumentNullException(nameof(package));
+            this._package = package ?? throw new ArgumentNullException(nameof(package));
             commandService = commandService ?? throw new ArgumentNullException(nameof(commandService));
 
-            var menuCommandID = new CommandID(CommandSet, CommandId);
-            var menuItem = new MenuCommand(this.Execute, menuCommandID);
+            var menuCommandId = new CommandID(CommandSet, CommandId);
+            var menuItem = new MenuCommand(this.Execute, menuCommandId);
             commandService.AddCommand(menuItem);
         }
 
@@ -56,7 +54,7 @@ namespace SharedProject1
         {
             get
             {
-                return this.package;
+                return this._package;
             }
         }
 
@@ -85,14 +83,7 @@ namespace SharedProject1
         {
             // we'll want to refactor and move this logic to the package
             ThreadHelper.ThrowIfNotOnUIThread();
-            var visibleAssistants = Application.Current.Windows.OfType<SpriteContainer>();
-            if (!visibleAssistants.Any())
-            {
-                (package as ClippyVisualStudioPackage).SpriteContainer = new SpriteContainer(package, true);
-            }
-
-            Application.Current.Windows.OfType<SpriteContainer>().First().Show();
-            ((ClippyVisualStudioPackage)this.package).SpriteContainer.ReviveMerlin();
+            ((ClippyVisualStudioPackage)_package).ReviveMerlinCommand();
         }
     }
 

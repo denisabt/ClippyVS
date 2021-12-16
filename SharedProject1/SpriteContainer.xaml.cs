@@ -8,6 +8,7 @@ using Recoding.ClippyVSPackage.Configurations;
 using SharedProject1.AssistImpl;
 using System;
 using System.Diagnostics;
+using System.Globalization;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
@@ -156,7 +157,7 @@ namespace Recoding.ClippyVSPackage
             }
             //// TEMP: create a voice for each animation in the context menu
 #if DEBUG
-            var pMenu = (ContextMenu)this.Resources["cmButton"];
+            var pMenu = (ContextMenu)this.Resources["CmButton"];
             pMenu.Items.Clear();
 
             foreach (var val in values)
@@ -285,7 +286,7 @@ namespace Recoding.ClippyVSPackage
 
         }
 
-        private void BuildEvents_OnBuildDone(EnvDTE.vsBuildScope Scope, EnvDTE.vsBuildAction Action)
+        private void BuildEvents_OnBuildDone(EnvDTE.vsBuildScope scope, EnvDTE.vsBuildAction action)
         {
             if (_showMerlin)
                 Merlin.StartAnimation(MerlinAnimations.Congratulate, true);
@@ -294,7 +295,7 @@ namespace Recoding.ClippyVSPackage
 
         }
 
-        private void DocEvents_DocumentClosing(EnvDTE.Document Document)
+        private void DocEvents_DocumentClosing(EnvDTE.Document document)
         {
             if (_showMerlin)
                 Merlin.StartAnimation(MerlinAnimations.GestureDown, true);
@@ -303,7 +304,7 @@ namespace Recoding.ClippyVSPackage
 
         }
 
-        private void BuildEvents_OnBuildBegin(EnvDTE.vsBuildScope Scope, EnvDTE.vsBuildAction Action)
+        private void BuildEvents_OnBuildBegin(EnvDTE.vsBuildScope scope, EnvDTE.vsBuildAction action)
         {
             if (_showMerlin)
                 Merlin.StartAnimation(MerlinAnimations.Processing, true); // GetTechy
@@ -312,16 +313,16 @@ namespace Recoding.ClippyVSPackage
 
         }
 
-        private void DocumentEvents_DocumentSaved(EnvDTE.Document Document)
+        private void DocumentEvents_DocumentSaved(EnvDTE.Document document)
         {
             if (_showMerlin)
-                Merlin.StartAnimation(MerlinAnimations.Congratulate_2, true);
+                Merlin.StartAnimation(MerlinAnimations.Congratulate2, true);
             else
                 Clippy.StartAnimation(ClippyAnimation.Save, true);
 
         }
 
-        private void DocumentEvents_DocumentOpening(string DocumentPath, bool ReadOnly)
+        private void DocumentEvents_DocumentOpening(string documentPath, bool readOnly)
         {
 
             if (_showMerlin)
@@ -374,9 +375,11 @@ namespace Recoding.ClippyVSPackage
 
         private void Grid_MouseRightButtonUp(object sender, MouseButtonEventArgs e)
         {
-            ContextMenu cm = this.FindResource("cmButton") as ContextMenu;
-            cm.PlacementTarget = sender as Button;
-            cm.IsOpen = true;
+            if (this.FindResource("CmButton") is ContextMenu cm)
+            {
+                cm.PlacementTarget = sender as Button;
+                cm.IsOpen = true;
+            }
         }
 
         private async void cmdClose_Click(object sender, RoutedEventArgs e)
@@ -384,9 +387,9 @@ namespace Recoding.ClippyVSPackage
             var window = this;
 
             if (_showMerlin)
-                Merlin.StartAnimation(MerlinAnimations.Wave, true);
+                await Merlin.StartAnimationAsync(MerlinAnimations.Wave, true);
             else
-                Clippy.StartAnimation(ClippyAnimation.GoodBye, true);
+                await Clippy.StartAnimationAsync(ClippyAnimation.GoodBye, true);
 
             // XXX Revert, doesn't work
             //while (clippy.IsAnimating || merlin.IsAnimating) { }
@@ -401,15 +404,15 @@ namespace Recoding.ClippyVSPackage
             Random rmd = new Random();
             if (!_showMerlin)
             {
-                var random_int = rmd.Next(0, Clippy.AllAnimations.Count);
+                var randomInt = rmd.Next(0, Clippy.AllAnimations.Count);
 
-                Clippy.StartAnimation(Clippy.AllAnimations[random_int]);
+                Clippy.StartAnimation(Clippy.AllAnimations[randomInt]);
             }
             else
             {
-                var random_int = rmd.Next(0, Merlin.AllAnimations.Count);
+                var randomInt = rmd.Next(0, Merlin.AllAnimations.Count);
 
-                Merlin.StartAnimation(Merlin.AllAnimations[random_int]);
+                Merlin.StartAnimation(Merlin.AllAnimations[randomInt]);
             }
         }
 
@@ -461,11 +464,11 @@ namespace Recoding.ClippyVSPackage
             {
                 if (_showMerlin)
                 {
-                    Merlin.StartAnimation(MerlinAnimations.Idle1_1, true);
+                    Merlin.StartAnimation(MerlinAnimations.Idle11, true);
                 }
                 else
                 {
-                    Clippy.StartAnimation(ClippyAnimation.Idle1_1, true);
+                    Clippy.StartAnimation(ClippyAnimation.Idle11, true);
                 }
             }
         }
@@ -557,8 +560,8 @@ namespace Recoding.ClippyVSPackage
                 _userSettingsStore.CreateCollection(Constants.SettingsCollectionPath);
             }
 
-            _userSettingsStore.SetString(Constants.SettingsCollectionPath, nameof(RelativeTop), relativeTop.ToString());
-            _userSettingsStore.SetString(Constants.SettingsCollectionPath, nameof(RelativeLeft), relativeLeft.ToString());
+            _userSettingsStore.SetString(Constants.SettingsCollectionPath, nameof(RelativeTop), relativeTop.ToString(CultureInfo.InvariantCulture));
+            _userSettingsStore.SetString(Constants.SettingsCollectionPath, nameof(RelativeLeft), relativeLeft.ToString(CultureInfo.InvariantCulture));
         }
     }
 }

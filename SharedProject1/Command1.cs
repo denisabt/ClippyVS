@@ -35,7 +35,7 @@ namespace Recoding.ClippyVSPackage
         /// <summary>
         /// VS Package that provides this command, not null.
         /// </summary>
-        private readonly AsyncPackage package;
+        private readonly AsyncPackage _package;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="Command1"/> class.
@@ -45,11 +45,11 @@ namespace Recoding.ClippyVSPackage
         /// <param name="commandService">Command service to add command to, not null.</param>
         private Command1(AsyncPackage asyncPackage, OleMenuCommandService commandService)
         {
-            package = asyncPackage ?? throw new ArgumentNullException(nameof(asyncPackage));
+            _package = asyncPackage ?? throw new ArgumentNullException(nameof(asyncPackage));
             commandService = commandService ?? throw new ArgumentNullException(nameof(commandService));
 
-            var menuCommandID = new CommandID(CommandSet, CommandId);
-            var menuItem = new MenuCommand(Execute, menuCommandID);
+            var menuCommandId = new CommandID(CommandSet, CommandId);
+            var menuItem = new MenuCommand(Execute, menuCommandId);
             commandService.AddCommand(menuItem);
         }
 

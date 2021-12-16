@@ -24,136 +24,63 @@ namespace SharedProject1.AssistImpl
         /// The URI for the sprite with all the animation stages for Clippy
         /// </summary>
         //private static string spriteResourceUri = "pack://application:,,,/ClippyVSPackage;component/clippy.png";
-        private static string spriteResourceUri = "pack://application:,,,/ClippyVs2022;component/merlin_map.png";
+        private static readonly string SpriteResourceUri = "pack://application:,,,/ClippyVs2022;component/merlin_map.png";
 
         /// <summary>
         /// The URI for the animations json definition
         /// </summary>
         //private static string animationsResourceUri = "pack://application:,,,/ClippyVSPackage;component/animations.json";
-        private static string animationsResourceUri = "pack://application:,,,/ClippyVs2022;component/merlin_agent.js";
-
-        /// <summary>
-        /// The with of the frame
-        /// </summary>
-        private static int clipWidth = 128;
+        private static readonly string AnimationsResourceUri = "pack://application:,,,/ClippyVs2022;component/merlin_agent.js";
 
         /// <summary>
         /// The height of the frame
         /// </summary>
-        private static int clipHeight = 128;
+        public static int ClipHeight { get; set; } = 128;
 
-        public static int ClipHeight { get => clipHeight; set => clipHeight = value; }
-        public static int ClipWidth { get => clipWidth; set => clipWidth = value; }
-        public List<MerlinAnimations> AllAnimations { get => allAnimations; }
+        /// <summary>
+        /// The with of the frame
+        /// </summary>
+        public static int ClipWidth { get; set; } = 128;
+
+        /// <summary>
+        /// The list of all the available animations
+        /// </summary>
+        public List<MerlinAnimations> AllAnimations { get; } = new List<MerlinAnimations>();
 
         /// <summary>
         /// The list of couples of Columns/Rows double animations
         /// </summary>
-        private static Dictionary<string, Tuple<DoubleAnimationUsingKeyFrames, DoubleAnimationUsingKeyFrames>> Animations;
+        private static Dictionary<string, Tuple<DoubleAnimationUsingKeyFrames, DoubleAnimationUsingKeyFrames>> _animations;
 
         /// <summary>
         /// All the animations that represents an Idle state
         /// </summary>
         public static List<MerlinAnimations> IdleAnimations = new List<MerlinAnimations>() {
             MerlinAnimations.MoveLeft,
-MerlinAnimations.Congratulate,
-MerlinAnimations.Hide,
-MerlinAnimations.Pleased,
-MerlinAnimations.Acknowledge,
-MerlinAnimations.Thinking,
-MerlinAnimations.Suggest,
-MerlinAnimations.Explain,
-MerlinAnimations.Decline,
-MerlinAnimations.DontRecognize,
-MerlinAnimations.Writing,
-MerlinAnimations.Write,
-MerlinAnimations.Idle3_2,
-MerlinAnimations.Idle3_1,
-MerlinAnimations.Congratulate_2,
-MerlinAnimations.StartListening,
-MerlinAnimations.Idle2_2,
-MerlinAnimations.Announce,
-MerlinAnimations.GetAttention,
-MerlinAnimations.Idle2_1,
-MerlinAnimations.GestureLeft,
-MerlinAnimations.Surprised,
-MerlinAnimations.GestureRight,
-MerlinAnimations.Idle1_4,
-MerlinAnimations.LookLeftReturn,
-MerlinAnimations.GestureUp,
-MerlinAnimations.Idle1_1,
-MerlinAnimations.Idle1_3,
-MerlinAnimations.Idle1_2,
-MerlinAnimations.Read,
-MerlinAnimations.Processing,
-MerlinAnimations.Wave,
-MerlinAnimations.DoMagic1,
-MerlinAnimations.DoMagic2,
-MerlinAnimations.LookRight,
-MerlinAnimations.Alert,
-MerlinAnimations.MoveRight,
-MerlinAnimations.Reading,
-MerlinAnimations.GetAttentionContinued,
-MerlinAnimations.WriteContinued,
-MerlinAnimations.Confused,
-MerlinAnimations.LookRightBlink,
-MerlinAnimations.Search,
-MerlinAnimations.Uncertain,
-MerlinAnimations.LookLeft,
-MerlinAnimations.LookDownReturn,
-MerlinAnimations.Hearing_4,
-MerlinAnimations.LookUpReturn,
-MerlinAnimations.Hearing_1,
-MerlinAnimations.Greet,
-MerlinAnimations.Hearing_3,
-MerlinAnimations.WriteReturn,
-MerlinAnimations.Hearing_2,
-MerlinAnimations.GetAttentionReturn,
-MerlinAnimations.RestPose,
-MerlinAnimations.LookDownBlink,
-MerlinAnimations.LookUpBlink,
-MerlinAnimations.Think,
-MerlinAnimations.Blink,
-MerlinAnimations.Show,
-MerlinAnimations.LookRightReturn,
-MerlinAnimations.StopListening,
-MerlinAnimations.MoveDown,
-MerlinAnimations.ReadContinued,
-MerlinAnimations.LookDown,
-MerlinAnimations.Sad,
-MerlinAnimations.Process,
-MerlinAnimations.LookUp,
-MerlinAnimations.GestureDown,
-MerlinAnimations.ReadReturn,
-MerlinAnimations.Searching,
-MerlinAnimations.MoveUp,
-MerlinAnimations.LookLeftBlink };
+MerlinAnimations.Idle32,
+MerlinAnimations.Idle31,
+MerlinAnimations.Idle22,
+MerlinAnimations.Idle21,
+MerlinAnimations.Idle14,
+MerlinAnimations.Idle11,
+MerlinAnimations.Idle13,
+MerlinAnimations.Idle12};
 
-
-        /// <summary>
-        /// The list of all the available animations
-        /// </summary>
-        private List<MerlinAnimations> allAnimations = new List<MerlinAnimations>();
-
-        /// <summary>
-        /// The time dispatcher to perform the animations in a random way
-        /// </summary>
-        private DispatcherTimer WPFAnimationsDispatcher;
 
         /// <summary>
         /// Default ctor
         /// </summary>
-        public Merlin(Canvas canvas)
+        public Merlin(Panel canvas)
         {
-            var spResUri = spriteResourceUri;
+            var spResUri = SpriteResourceUri;
 #if Dev19
-            spResUri = spriteResourceUri.Replace("ClippyVs2022", "ClippyVSPackage");
+            spResUri = SpriteResourceUri.Replace("ClippyVs2022", "ClippyVSPackage");
 #endif
 #if Dev22
 #endif
             this.Sprite = new BitmapImage(new Uri(spResUri, UriKind.RelativeOrAbsolute));
 
-            clippedImage = new Image
+            ClippedImage = new Image
             {
                 Source = Sprite,
                 Stretch = Stretch.None
@@ -162,16 +89,16 @@ MerlinAnimations.LookLeftBlink };
             if (canvas == null) return;
 
             canvas.Children.Clear();
-            canvas.Children.Add(clippedImage);
+            canvas.Children.Add(ClippedImage);
 
-            if (Animations == null)
+            if (_animations == null)
                 RegisterAnimations();
 
 
             //XX Requires testing..
-            allAnimations = new List<MerlinAnimations>();
+            AllAnimations = new List<MerlinAnimations>();
             var values = Enum.GetValues(typeof(MerlinAnimations));
-            allAnimations.AddRange(values.Cast<MerlinAnimations>());
+            AllAnimations.AddRange(values.Cast<MerlinAnimations>());
             RegisterIdleRandomAnimations();
         }
 
@@ -180,47 +107,48 @@ MerlinAnimations.LookLeftBlink };
         /// </summary>
         private void RegisterAnimations()
         {
-            var spResUri = animationsResourceUri;
+            var spResUri = AnimationsResourceUri;
 
 #if Dev19
             spResUri = spResUri.Replace("ClippyVs2022", "ClippyVSPackage");
 #endif
-            Uri uri = new Uri(spResUri, UriKind.RelativeOrAbsolute);
+            var uri = new Uri(spResUri, UriKind.RelativeOrAbsolute);
 
-            StreamResourceInfo info = Application.GetResourceStream(uri);
+            var info = Application.GetResourceStream(uri);
 
-            List<ClippySingleAnimation> storedAnimations = Newtonsoft.Json.JsonConvert.DeserializeObject<List<ClippySingleAnimation>>(StreamToString(info.Stream));
+            if (info == null) 
+                return;
 
-            Animations = new Dictionary<string, Tuple<DoubleAnimationUsingKeyFrames, DoubleAnimationUsingKeyFrames>>();
+            var storedAnimations = Newtonsoft.Json.JsonConvert.DeserializeObject<List<ClippySingleAnimation>>(StreamToString(info.Stream));
 
-            foreach (ClippySingleAnimation animation in storedAnimations)
+            _animations = new Dictionary<string, Tuple<DoubleAnimationUsingKeyFrames, DoubleAnimationUsingKeyFrames>>();
+
+            foreach (var animation in storedAnimations)
             {
-                DoubleAnimationUsingKeyFrames xDoubleAnimation = new DoubleAnimationUsingKeyFrames
+                var xDoubleAnimation = new DoubleAnimationUsingKeyFrames
                 {
                     FillBehavior = FillBehavior.HoldEnd
                 };
 
-                DoubleAnimationUsingKeyFrames yDoubleAnimation = new DoubleAnimationUsingKeyFrames
+                var yDoubleAnimation = new DoubleAnimationUsingKeyFrames
                 {
                     FillBehavior = FillBehavior.HoldEnd
                 };
 
-                int lastCol = 0;
-                int lastRow = 0;
                 double timeOffset = 0;
 
                 foreach (Recoding.ClippyVSPackage.Configurations.Frame frame in animation.Frames)
                 {
                     if (frame.ImagesOffsets != null)
                     {
-                        lastCol = frame.ImagesOffsets.Column;
-                        lastRow = frame.ImagesOffsets.Row;
+                        var lastCol = frame.ImagesOffsets.Column;
+                        var lastRow = frame.ImagesOffsets.Row;
 
                         // X
-                        DiscreteDoubleKeyFrame xKeyFrame = new DiscreteDoubleKeyFrame(ClipWidth * -lastCol, KeyTime.FromTimeSpan(TimeSpan.FromSeconds(timeOffset)));
+                        var xKeyFrame = new DiscreteDoubleKeyFrame(ClipWidth * -lastCol, KeyTime.FromTimeSpan(TimeSpan.FromSeconds(timeOffset)));
 
                         // Y
-                        DiscreteDoubleKeyFrame yKeyFrame = new DiscreteDoubleKeyFrame(ClipHeight * -lastRow, KeyTime.FromTimeSpan(TimeSpan.FromSeconds(timeOffset)));
+                        var yKeyFrame = new DiscreteDoubleKeyFrame(ClipHeight * -lastRow, KeyTime.FromTimeSpan(TimeSpan.FromSeconds(timeOffset)));
 
                         timeOffset += ((double)frame.Duration / 1000);
                         xDoubleAnimation.KeyFrames.Add(xKeyFrame);
@@ -232,9 +160,9 @@ MerlinAnimations.LookLeftBlink };
                     }
                 }
 
-                Animations.Add(animation.Name, new Tuple<DoubleAnimationUsingKeyFrames, DoubleAnimationUsingKeyFrames>(xDoubleAnimation, yDoubleAnimation));
+                _animations.Add(animation.Name, new Tuple<DoubleAnimationUsingKeyFrames, DoubleAnimationUsingKeyFrames>(xDoubleAnimation, yDoubleAnimation));
                 xDoubleAnimation.Changed += XDoubleAnimation_Changed;
-                xDoubleAnimation.Completed += xDoubleAnimation_Completed;
+                xDoubleAnimation.Completed += XDoubleAnimation_Completed;
             }
         }
 
@@ -248,7 +176,7 @@ MerlinAnimations.LookLeftBlink };
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        void xDoubleAnimation_Completed(object sender, EventArgs e)
+        private void XDoubleAnimation_Completed(object sender, EventArgs e)
         {
             IsAnimating = false;
         }
@@ -258,19 +186,21 @@ MerlinAnimations.LookLeftBlink };
         /// </summary>
         private void RegisterIdleRandomAnimations()
         {
-            WPFAnimationsDispatcher = new DispatcherTimer();
-            WPFAnimationsDispatcher.Interval = TimeSpan.FromSeconds(IdleAnimationTimeout);
-            WPFAnimationsDispatcher.Tick += WPFAnimationsDispatcher_Tick;
+            WpfAnimationsDispatcher = new DispatcherTimer
+            {
+                Interval = TimeSpan.FromSeconds(IdleAnimationTimeout)
+            };
+            WpfAnimationsDispatcher.Tick += WPFAnimationsDispatcher_Tick;
 
-            WPFAnimationsDispatcher.Start();
+            WpfAnimationsDispatcher.Start();
         }
 
-        void WPFAnimationsDispatcher_Tick(object sender, EventArgs e)
+        private void WPFAnimationsDispatcher_Tick(object sender, EventArgs e)
         {
-            Random rmd = new Random();
-            int random_int = rmd.Next(0, IdleAnimations.Count);
+            var rmd = new Random();
+            var randomInt = rmd.Next(0, IdleAnimations.Count);
 
-            StartAnimation(IdleAnimations[random_int]);
+            StartAnimation(IdleAnimations[randomInt]);
         }
 
         public void StartAnimation(MerlinAnimations animations, bool byPassCurrentAnimation = false)
@@ -292,11 +222,14 @@ MerlinAnimations.LookLeftBlink };
             {
                 if (!IsAnimating || byPassCurrentAnimation)
                 {
+                    var animation = _animations[animationType.ToString()];
+                    var item1 = animation.Item1;
                     Debug.WriteLine("Triggering Merlin " + animationType);
+                    Debug.WriteIf((animation != null), animation.Item1.ToString() + animation.Item2);
                     IsAnimating = true;
                     await ThreadHelper.JoinableTaskFactory.SwitchToMainThreadAsync();
-                    clippedImage.BeginAnimation(Canvas.LeftProperty, Animations[animationType.ToString()].Item1);
-                    clippedImage.BeginAnimation(Canvas.TopProperty, Animations[animationType.ToString()].Item2);
+                    ClippedImage.BeginAnimation(Canvas.LeftProperty, animation.Item1);
+                    ClippedImage.BeginAnimation(Canvas.TopProperty, animation.Item2);
                 }
             }
             catch (Exception e)

@@ -1,5 +1,4 @@
-﻿
-using Microsoft.VisualStudio.Shell;
+﻿using Microsoft.VisualStudio.Shell;
 using Recoding.ClippyVSPackage.Configurations;
 using System;
 using System.Collections.Generic;
@@ -11,7 +10,6 @@ using System.Windows.Media.Imaging;
 using System.Windows.Resources;
 using System.Windows.Threading;
 using System.Linq;
-using System.Diagnostics;
 
 namespace Recoding.ClippyVSPackage
 {
@@ -24,38 +22,39 @@ namespace Recoding.ClippyVSPackage
         /// The URI for the sprite with all the animation stages for Clippy
         /// </summary>
         //private static string spriteResourceUri = "pack://application:,,,/ClippyVSPackage;component/clippy.png";
-        private static string spriteResourceUri = "pack://application:,,,/ClippyVs2022;component/clippy.png";
+        private static readonly string SpriteResourceUri = "pack://application:,,,/ClippyVs2022;component/clippy.png";
 
         /// <summary>
         /// The URI for the animations json definition
         /// </summary>
         //private static string animationsResourceUri = "pack://application:,,,/ClippyVSPackage;component/animations.json";
-        private static string animationsResourceUri = "pack://application:,,,/ClippyVs2022;component/animations.json";
-
-        /// <summary>
-        /// The with of the frame
-        /// </summary>
-        private static int clipWidth = 124;
+        private static readonly string AnimationsResourceUri = "pack://application:,,,/ClippyVs2022;component/animations.json";
 
         /// <summary>
         /// The height of the frame
         /// </summary>
-        private static int clipHeight = 93;
+        public static int ClipHeight { get; set; } = 93;
 
-        public static int ClipHeight { get => clipHeight; set => clipHeight = value; }
-        public static int ClipWidth { get => clipWidth; set => clipWidth = value; }
-        public List<ClippyAnimation> AllAnimations { get => allAnimations; }
+        /// <summary>
+        /// The with of the frame
+        /// </summary>
+        public static int ClipWidth { get; set; } = 124;
+
+        /// <summary>
+        /// The list of all the available animations
+        /// </summary>
+        public List<ClippyAnimation> AllAnimations { get; } = new List<ClippyAnimation>();
 
         /// <summary>
         /// The list of couples of Columns/Rows double animations
         /// </summary>
-        private static Dictionary<string, Tuple<DoubleAnimationUsingKeyFrames, DoubleAnimationUsingKeyFrames>> Animations;
+        private static Dictionary<string, Tuple<DoubleAnimationUsingKeyFrames, DoubleAnimationUsingKeyFrames>> _animations;
 
         /// <summary>
         /// All the animations that represents an Idle state
         /// </summary>
-        private static List<ClippyAnimation> IdleAnimations = new List<ClippyAnimation>() {
-            ClippyAnimation.Idle1_1,
+        private static readonly List<ClippyAnimation> IdleAnimations = new List<ClippyAnimation>() {
+            ClippyAnimation.Idle11,
             ClippyAnimation.IdleRopePile,
             ClippyAnimation.IdleAtom,
             ClippyAnimation.IdleEyeBrowRaise,
@@ -65,24 +64,19 @@ namespace Recoding.ClippyVSPackage
             ClippyAnimation.IdleSnooze };
 
         /// <summary>
-        /// The list of all the available animations
-        /// </summary>
-        private List<ClippyAnimation> allAnimations = new List<ClippyAnimation>();
-
-        /// <summary>
         /// Default ctor
         /// </summary>
         public Clippy(Canvas canvas)
         {
-            var spResUri = spriteResourceUri;
+            var spResUri = SpriteResourceUri;
 #if Dev19
-            spResUri = spriteResourceUri.Replace("ClippyVs2022", "ClippyVSPackage");
+            spResUri = SpriteResourceUri.Replace("ClippyVs2022", "ClippyVSPackage");
 #endif
 #if Dev22
 #endif
             this.Sprite = new BitmapImage(new Uri(spResUri, UriKind.RelativeOrAbsolute));
 
-            clippedImage = new Image
+            ClippedImage = new Image
             {
                 Source = Sprite,
                 Stretch = Stretch.None
@@ -91,16 +85,16 @@ namespace Recoding.ClippyVSPackage
             if (canvas == null) return;
 
             canvas.Children.Clear();
-            canvas.Children.Add(clippedImage);
+            canvas.Children.Add(ClippedImage);
 
-            if (Animations == null)
+            if (_animations == null)
                 RegisterAnimations();
 
 
             //XX Requires testing..
-            allAnimations = new List<ClippyAnimation>();
+            AllAnimations = new List<ClippyAnimation>();
             var values = Enum.GetValues(typeof(ClippyAnimation));
-            allAnimations.AddRange(values.Cast<ClippyAnimation>());
+            AllAnimations.AddRange(values.Cast<ClippyAnimation>());
             RegisterIdleRandomAnimations();
         }
 
@@ -109,36 +103,36 @@ namespace Recoding.ClippyVSPackage
         /// </summary>
         private void RegisterAnimations()
         {
-            var spResUri = animationsResourceUri;
+            var spResUri = AnimationsResourceUri;
             
 #if Dev19
             spResUri = spResUri.Replace("ClippyVs2022", "ClippyVSPackage");
 #endif
-            Uri uri = new Uri(spResUri, UriKind.RelativeOrAbsolute);
+            var uri = new Uri(spResUri, UriKind.RelativeOrAbsolute);
 
-            StreamResourceInfo info = Application.GetResourceStream(uri);
+            var info = Application.GetResourceStream(uri);
 
-            List<ClippySingleAnimation> storedAnimations = Newtonsoft.Json.JsonConvert.DeserializeObject<List<ClippySingleAnimation>>(StreamToString(info.Stream));
+            var storedAnimations = Newtonsoft.Json.JsonConvert.DeserializeObject<List<ClippySingleAnimation>>(StreamToString(info.Stream));
 
-            Animations = new Dictionary<string, Tuple<DoubleAnimationUsingKeyFrames, DoubleAnimationUsingKeyFrames>>();
+            _animations = new Dictionary<string, Tuple<DoubleAnimationUsingKeyFrames, DoubleAnimationUsingKeyFrames>>();
 
-            foreach (ClippySingleAnimation animation in storedAnimations)
+            foreach (var animation in storedAnimations)
             {
-                DoubleAnimationUsingKeyFrames xDoubleAnimation = new DoubleAnimationUsingKeyFrames
+                var xDoubleAnimation = new DoubleAnimationUsingKeyFrames
                 {
                     FillBehavior = FillBehavior.HoldEnd
                 };
 
-                DoubleAnimationUsingKeyFrames yDoubleAnimation = new DoubleAnimationUsingKeyFrames
+                var yDoubleAnimation = new DoubleAnimationUsingKeyFrames
                 {
                     FillBehavior = FillBehavior.HoldEnd
                 };
 
-                int lastCol = 0;
-                int lastRow = 0;
+                var lastCol = 0;
+                var lastRow = 0;
                 double timeOffset = 0;
 
-                foreach (Configurations.Frame frame in animation.Frames)
+                foreach (var frame in animation.Frames)
                 {
                     if (frame.ImagesOffsets != null)
                     {
@@ -147,17 +141,17 @@ namespace Recoding.ClippyVSPackage
                     }
 
                     // X
-                    DiscreteDoubleKeyFrame xKeyFrame = new DiscreteDoubleKeyFrame(ClipWidth * -lastCol, KeyTime.FromTimeSpan(TimeSpan.FromSeconds(timeOffset)));
+                    var xKeyFrame = new DiscreteDoubleKeyFrame(ClipWidth * -lastCol, KeyTime.FromTimeSpan(TimeSpan.FromSeconds(timeOffset)));
 
                     // Y
-                    DiscreteDoubleKeyFrame yKeyFrame = new DiscreteDoubleKeyFrame(ClipHeight * -lastRow, KeyTime.FromTimeSpan(TimeSpan.FromSeconds(timeOffset)));
+                    var yKeyFrame = new DiscreteDoubleKeyFrame(ClipHeight * -lastRow, KeyTime.FromTimeSpan(TimeSpan.FromSeconds(timeOffset)));
 
                     timeOffset += ((double)frame.Duration / 1000);
                     xDoubleAnimation.KeyFrames.Add(xKeyFrame);
                     yDoubleAnimation.KeyFrames.Add(yKeyFrame);
                 }
 
-                Animations.Add(animation.Name, new Tuple<DoubleAnimationUsingKeyFrames, DoubleAnimationUsingKeyFrames>(xDoubleAnimation, yDoubleAnimation));
+                _animations.Add(animation.Name, new Tuple<DoubleAnimationUsingKeyFrames, DoubleAnimationUsingKeyFrames>(xDoubleAnimation, yDoubleAnimation));
                 xDoubleAnimation.Changed += XDoubleAnimation_Changed;
                 xDoubleAnimation.Completed += xDoubleAnimation_Completed;
             }
@@ -183,19 +177,19 @@ namespace Recoding.ClippyVSPackage
         /// </summary>
         private void RegisterIdleRandomAnimations()
         {
-            WPFAnimationsDispatcher = new DispatcherTimer();
-            WPFAnimationsDispatcher.Interval = TimeSpan.FromSeconds(IdleAnimationTimeout);
-            WPFAnimationsDispatcher.Tick += WPFAnimationsDispatcher_Tick;
+            WpfAnimationsDispatcher = new DispatcherTimer();
+            WpfAnimationsDispatcher.Interval = TimeSpan.FromSeconds(IdleAnimationTimeout);
+            WpfAnimationsDispatcher.Tick += WPFAnimationsDispatcher_Tick;
 
-            WPFAnimationsDispatcher.Start();
+            WpfAnimationsDispatcher.Start();
         }
 
-        void WPFAnimationsDispatcher_Tick(object sender, EventArgs e)
+        private void WPFAnimationsDispatcher_Tick(object sender, EventArgs e)
         {
-            Random rmd = new Random();
-            int random_int = rmd.Next(0, IdleAnimations.Count);
+            var rmd = new Random();
+            var randomInt = rmd.Next(0, IdleAnimations.Count);
 
-            StartAnimation(IdleAnimations[random_int]);
+            StartAnimation(IdleAnimations[randomInt]);
         }
 
         public void StartAnimation(ClippyAnimation animations, bool byPassCurrentAnimation = false)
@@ -210,14 +204,15 @@ namespace Recoding.ClippyVSPackage
         /// Start a specific animation
         /// </summary>
         /// <param name="animationType"></param>
+        /// <param name="byPassCurrentAnimation"></param>
         public async System.Threading.Tasks.Task StartAnimationAsync(ClippyAnimation animationType, bool byPassCurrentAnimation = false)
         {
             if (!IsAnimating || byPassCurrentAnimation)
             {
                 IsAnimating = true;
                 await ThreadHelper.JoinableTaskFactory.SwitchToMainThreadAsync();
-                clippedImage.BeginAnimation(Canvas.LeftProperty, Animations[animationType.ToString()].Item1);
-                clippedImage.BeginAnimation(Canvas.TopProperty, Animations[animationType.ToString()].Item2);
+                ClippedImage.BeginAnimation(Canvas.LeftProperty, _animations[animationType.ToString()].Item1);
+                ClippedImage.BeginAnimation(Canvas.TopProperty, _animations[animationType.ToString()].Item2);
             }
             
         }

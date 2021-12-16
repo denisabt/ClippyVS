@@ -8,8 +8,8 @@ namespace Recoding.ClippyVSPackage
     /// <summary>
     /// Instance class to represent the ClippyVS user's settings
     /// </summary>
-    [Export(typeof(IClippyVSSettings))]
-    public class ClippyVSSettings : IClippyVSSettings
+    [Export(typeof(IClippyVsSettings))]
+    public class ClippyVsSettings : IClippyVsSettings
     {
         /// <summary>
         /// If true shows clippy at the VS startup
@@ -34,7 +34,7 @@ namespace Recoding.ClippyVSPackage
         /// <summary>
         /// The real store in which the settings will be saved
         /// </summary>
-        private readonly WritableSettingsStore writableSettingsStore;
+        private readonly WritableSettingsStore _writableSettingsStore;
 
         #region -- Constructors --
 
@@ -43,9 +43,9 @@ namespace Recoding.ClippyVSPackage
         /// </summary>
         /// <param name="vsServiceProvider"></param>
         [ImportingConstructor]
-        public ClippyVSSettings(WritableSettingsStore store)
+        public ClippyVsSettings(WritableSettingsStore store)
         {
-            writableSettingsStore = store;
+            _writableSettingsStore = store;
             LoadSettings();
         }
 
@@ -58,13 +58,13 @@ namespace Recoding.ClippyVSPackage
         {
             try
             {
-                if (!writableSettingsStore.CollectionExists(Constants.SettingsCollectionPath))
+                if (!_writableSettingsStore.CollectionExists(Constants.SettingsCollectionPath))
                 {
-                    writableSettingsStore.CreateCollection(Constants.SettingsCollectionPath);
+                    _writableSettingsStore.CreateCollection(Constants.SettingsCollectionPath);
                 }
 
-                writableSettingsStore.SetBoolean(Constants.SettingsCollectionPath, ShowAtStartupStoreName, ShowAtStartup);
-                writableSettingsStore.SetString(Constants.SettingsCollectionPath, SelectedAssistantNameName, SelectedAssistantName);
+                _writableSettingsStore.SetBoolean(Constants.SettingsCollectionPath, ShowAtStartupStoreName, ShowAtStartup);
+                _writableSettingsStore.SetString(Constants.SettingsCollectionPath, SelectedAssistantNameName, SelectedAssistantName);
                 Debug.WriteLine("Setting stored which is {0}", ShowAtStartup);
             }
             catch (Exception ex)
@@ -81,10 +81,10 @@ namespace Recoding.ClippyVSPackage
             try
             {
                 // Tries to retrieve the configurations if previously saved
-                if (writableSettingsStore.PropertyExists(Constants.SettingsCollectionPath, ShowAtStartupStoreName))
+                if (_writableSettingsStore.PropertyExists(Constants.SettingsCollectionPath, ShowAtStartupStoreName))
                 {
-                    ShowAtStartup = writableSettingsStore.GetBoolean(Constants.SettingsCollectionPath, ShowAtStartupStoreName);
-                    SelectedAssistantName = writableSettingsStore.GetString(Constants.SettingsCollectionPath, SelectedAssistantNameName);
+                    ShowAtStartup = _writableSettingsStore.GetBoolean(Constants.SettingsCollectionPath, ShowAtStartupStoreName);
+                    SelectedAssistantName = _writableSettingsStore.GetString(Constants.SettingsCollectionPath, SelectedAssistantNameName);
                     Debug.WriteLine("Setting loaded which is {0} {1}", ShowAtStartup, SelectedAssistantName);
                 }
             }

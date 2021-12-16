@@ -1,8 +1,8 @@
 ﻿namespace Recoding.ClippyVSPackage
 {
-    static class PkgCmdIDList
+    static class PkgCmdIdList
     {
-        public const uint cmdShowClippy = 0x100;
-        public const uint cmdShowMerlin = 0x101;
+        public const uint CmdShowClippy = 0x100;
+        public const uint CmdShowMerlin = 0x101;
     };
 }

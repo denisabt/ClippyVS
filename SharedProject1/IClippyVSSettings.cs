@@ -1,6 +1,6 @@
 ﻿namespace Recoding.ClippyVSPackage
 {
-    public interface IClippyVSSettings
+    public interface IClippyVsSettings
     {
         /// <summary>
         /// If true shows clippy at the VS startup

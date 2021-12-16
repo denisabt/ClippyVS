@@ -12,7 +12,7 @@ namespace Recoding.ClippyVSPackage
         /// <summary>
         /// The time dispatcher to perform the animations in a random way
         /// </summary>
-        protected DispatcherTimer WPFAnimationsDispatcher;
+        protected DispatcherTimer WpfAnimationsDispatcher;
 
         /// <summary>
         /// The sprite with all the animation stages for Clippy
@@ -27,7 +27,7 @@ namespace Recoding.ClippyVSPackage
         /// <summary>
         /// The image that holds the sprite
         /// </summary>
-        protected Image clippedImage;
+        protected Image ClippedImage;
 
         /// <summary>
         /// Seconds between a random idle animation and another
@@ -58,8 +58,8 @@ namespace Recoding.ClippyVSPackage
 
         public void Dispose()
         { 
-            if (WPFAnimationsDispatcher != null)    
-                WPFAnimationsDispatcher.Stop();
+            if (WpfAnimationsDispatcher != null)    
+                WpfAnimationsDispatcher.Stop();
         }
     }
 }

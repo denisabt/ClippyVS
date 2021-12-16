@@ -11,7 +11,7 @@
 		Closing="ClippySpriteContainer_Closing" 
 		IsVisibleChanged="ClippySpriteContainer_IsVisibleChanged">
     <Window.Resources>
-        <ContextMenu x:Key="cmButton">
+        <ContextMenu x:Key="CmButton">
             <MenuItem x:Name="cmdRandom" Header="Surprise me" Click="cmdRandom_Click" />
             <Separator />
             <MenuItem x:Name="cmdClose" Header="Please, leave me alone" Click="cmdClose_Click"  />
