@@ -71,12 +71,13 @@ namespace Recoding.ClippyVSPackage
             //    .ConfigureAwait(true).GetAwaiter().GetResult() as IVsActivityLog;
             //if (activityLog == null) return;
             //System.Windows.Forms.MessageBox.Show("Found the activity log service.");
-            var dte = (DTE)package.GetServiceAsync(typeof(DTE)).ConfigureAwait(true).GetAwaiter().GetResult();
+            var dte = (EnvDTE.DTE)package.GetServiceAsync(typeof(EnvDTE.DTE)).ConfigureAwait(true).GetAwaiter().GetResult();
             _docEvents = dte.Events.DocumentEvents;
             _buildEvents = dte.Events.BuildEvents;
             _findEvents = dte.Events.FindEvents;
+            //_projectItemsEvents = dte.Events.Proj
 
-            RegisterToDteEvents();
+            RegisterToDteEvents(dte);
 
             this.Owner.LocationChanged += Owner_LocationChanged;
             this.Owner.StateChanged += Owner_StateOrSizeChanged;
@@ -203,7 +204,7 @@ namespace Recoding.ClippyVSPackage
                 Clippy.Dispose();
                 Clippy = null;
             }
-                
+
             _showMerlin = true;
             this.Width = 128;
             this.Height = 128;
@@ -218,7 +219,7 @@ namespace Recoding.ClippyVSPackage
             PopulateContextMenu();
         }
 
-        private void RegisterToDteEvents()
+        private void RegisterToDteEvents(EnvDTE.DTE dte)
         {
             ThreadHelper.ThrowIfNotOnUIThread();
             _docEvents.DocumentOpening += DocumentEvents_DocumentOpening;
@@ -229,28 +230,28 @@ namespace Recoding.ClippyVSPackage
             _buildEvents.OnBuildDone += BuildEvents_OnBuildDone;
 
             _findEvents.FindDone += FindEventsClass_FindDone;
-
-            ThreadHelper.ThrowIfNotOnUIThread();
-            var dte = _package.GetServiceAsync(typeof(DTE)).ConfigureAwait(true).GetAwaiter().GetResult() as DTE;
-
-            if (dte == null)
-                return;
-
-            if (dte.Events is Events2 events2)
+            try
             {
-                this._projectItemsEvents = events2.ProjectItemsEvents;
-                this._projectItemsEvents.ItemAdded += ProjectItemsEvents_ItemAdded;
-                this._projectItemsEvents.ItemRemoved += ProjectItemsEvents_ItemRemoved;
-                this._projectItemsEvents.ItemRenamed += ProjectItemsEvents_ItemRenamed;
+                if (_projectItemsEvents is Events2 events2)
+                {
+                    this._projectItemsEvents = events2.ProjectItemsEvents;
+                    this._projectItemsEvents.ItemAdded += ProjectItemsEvents_ItemAdded;
+                    this._projectItemsEvents.ItemRemoved += ProjectItemsEvents_ItemRemoved;
+                    this._projectItemsEvents.ItemRenamed += ProjectItemsEvents_ItemRenamed;
+                }
+
+                this._csharpProjectItemsEvents = dte.Events.GetObject("CSharpProjectItemsEvents") as ProjectItemsEvents;
+                if (this._csharpProjectItemsEvents == null)
+                    return;
+
+                this._csharpProjectItemsEvents.ItemAdded += ProjectItemsEvents_ItemAdded;
+                this._csharpProjectItemsEvents.ItemRemoved += ProjectItemsEvents_ItemRemoved;
+                this._csharpProjectItemsEvents.ItemRenamed += ProjectItemsEvents_ItemRenamed;
             }
-
-            this._csharpProjectItemsEvents = dte.Events.GetObject("CSharpProjectItemsEvents") as ProjectItemsEvents;
-            if (this._csharpProjectItemsEvents == null)
-                return;
-
-            this._csharpProjectItemsEvents.ItemAdded += ProjectItemsEvents_ItemAdded;
-            this._csharpProjectItemsEvents.ItemRemoved += ProjectItemsEvents_ItemRemoved;
-            this._csharpProjectItemsEvents.ItemRenamed += ProjectItemsEvents_ItemRenamed;
+            catch (Exception exev)
+            {
+                Debug.WriteLine("Events binding failure");
+            }
         }
 
         #region -- IDE Event Handlers --
@@ -470,7 +471,7 @@ namespace Recoding.ClippyVSPackage
             {
                 if (_showMerlin)
                 {
-                    Merlin.StartAnimation(MerlinAnimations.Idle11, true);
+                    Merlin.StartAnimation(MerlinAnimations.Idle1_1, true);
                 }
                 else
                 {

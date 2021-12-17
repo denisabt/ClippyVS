@@ -9,6 +9,7 @@ using System.Windows.Media.Animation;
 using System.Windows.Media.Imaging;
 using System.Windows.Threading;
 using System.Linq;
+using System.Diagnostics;
 
 namespace Recoding.ClippyVSPackage
 {
@@ -103,7 +104,7 @@ namespace Recoding.ClippyVSPackage
         private void RegisterAnimations()
         {
             var spResUri = AnimationsResourceUri;
-            
+
 #if Dev19
             spResUri = spResUri.Replace("ClippyVs2022", "ClippyVSPackage");
 #endif
@@ -167,7 +168,7 @@ namespace Recoding.ClippyVSPackage
 
         private void XDoubleAnimation_Changed(object sender, EventArgs e)
         {
-     //       Debug.WriteLine("Clippy: Animation changing");
+            //       Debug.WriteLine("Clippy: Animation changing");
         }
 
         /// <summary>
@@ -205,8 +206,9 @@ namespace Recoding.ClippyVSPackage
         public void StartAnimation(ClippyAnimation animations, bool byPassCurrentAnimation = false)
         {
             ThreadHelper.JoinableTaskFactory.Run(
-                async delegate {
-                    await StartAnimationAsync(animations,byPassCurrentAnimation);
+                async delegate
+                {
+                    await StartAnimationAsync(animations, byPassCurrentAnimation);
                 });
         }
 
@@ -221,10 +223,16 @@ namespace Recoding.ClippyVSPackage
             {
                 IsAnimating = true;
                 await ThreadHelper.JoinableTaskFactory.SwitchToMainThreadAsync();
-                ClippedImage.BeginAnimation(Canvas.LeftProperty, _animations[animationType.ToString()].Item1);
-                ClippedImage.BeginAnimation(Canvas.TopProperty, _animations[animationType.ToString()].Item2);
+                if (_animations.ContainsKey(animationType.ToString()))
+                {
+                    ClippedImage.BeginAnimation(Canvas.LeftProperty, _animations[animationType.ToString()].Item1);
+                    ClippedImage.BeginAnimation(Canvas.TopProperty, _animations[animationType.ToString()].Item2);
+                } else
+                {
+                    Debug.WriteLine("Animation {0} not found!", animationType.ToString());
+                }
             }
-            
+
         }
     }
 }

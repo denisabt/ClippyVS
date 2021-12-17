@@ -75,7 +75,6 @@ namespace SharedProject1
         /// <param name="e">Event args.</param>
         private void Execute(object sender, EventArgs e)
         {
-            // we'll want to refactor and move this logic to the package
             ThreadHelper.ThrowIfNotOnUIThread();
             ((ClippyVisualStudioPackage)_package).ReviveMerlinCommand();
         }

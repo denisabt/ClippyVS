@@ -51,7 +51,7 @@ namespace Recoding.ClippyVSPackage
 
         #endregion
 
-         /// <summary>
+        /// <summary>
         /// Performs the store of the instance of this interface to the user's settings
         /// </summary>
         public void SaveSettings()
@@ -83,14 +83,18 @@ namespace Recoding.ClippyVSPackage
                 // Tries to retrieve the configurations if previously saved
                 if (_writableSettingsStore.PropertyExists(Constants.SettingsCollectionPath, ShowAtStartupStoreName))
                 {
-                    ShowAtStartup = _writableSettingsStore.GetBoolean(Constants.SettingsCollectionPath, ShowAtStartupStoreName);
-                    SelectedAssistantName = _writableSettingsStore.GetString(Constants.SettingsCollectionPath, SelectedAssistantNameName);
-                    Debug.WriteLine("Setting loaded which is {0} {1}", ShowAtStartup, SelectedAssistantName);
+                    ShowAtStartup = _writableSettingsStore.GetBoolean(Constants.SettingsCollectionPath, ShowAtStartupStoreName, false);
                 }
+
+                if (_writableSettingsStore.PropertyExists(Constants.SettingsCollectionPath, SelectedAssistantNameName))
+                {
+                    SelectedAssistantName = _writableSettingsStore.GetString(Constants.SettingsCollectionPath, SelectedAssistantNameName, "");
+                }
+                Debug.WriteLine("Setting loaded which is {0} {1}", ShowAtStartup, SelectedAssistantName);
             }
             catch (ArgumentException ex)
             {
-                Debug.Fail(ex.Message);
+                Debug.WriteLine("Loading Settings failed with error " + ex.Message);
             }
         }
     }

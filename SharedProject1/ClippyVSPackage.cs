@@ -58,6 +58,11 @@ namespace Recoding.ClippyVSPackage
                 if (Application.Current.MainWindow != null)
                     Application.Current.MainWindow.ContentRendered += MainWindow_ContentRendered;
 
+                var shellSettingsManager = new ShellSettingsManager(ServiceProvider.GlobalProvider);
+                var writableSettingsStore = shellSettingsManager.GetWritableSettingsStore(SettingsScope.UserSettings);
+
+                Settings = new ClippyVsSettings(writableSettingsStore);
+
                 // Add our command handlers for menu (commands must exist in the .vsct file)
                 if (await GetServiceAsync(typeof(IMenuCommandService)) is OleMenuCommandService mcs)
                 {
@@ -94,16 +99,26 @@ namespace Recoding.ClippyVSPackage
             SpriteContainer.ReviveMerlin();
         }
 
+
+        internal void ReviveClippyCommand()
+        {
+            var visibleAssistants = Application.Current.Windows.OfType<SpriteContainer>();
+            if (!visibleAssistants.Any())
+            {
+                SpriteContainer = new SpriteContainer(this, true);
+            }
+
+            Settings.SelectedAssistantName = "Clippy";
+            Settings.SaveSettings();
+
+            Application.Current.Windows.OfType<SpriteContainer>().First().Show();
+            SpriteContainer.ReviveClippy();
+        }
+
         private async void MainWindow_ContentRendered(object sender, EventArgs e)
         {
             var token = new CancellationToken();
             await ThreadHelper.JoinableTaskFactory.SwitchToMainThreadAsync(token);
-            var shellSettingsManager = new ShellSettingsManager(ServiceProvider.GlobalProvider);
-            var writableSettingsStore = shellSettingsManager.GetWritableSettingsStore(SettingsScope.UserSettings);
-
-            Settings = new ClippyVsSettings(writableSettingsStore);
-
-
             SpriteContainer = Settings.SelectedAssistantName.Contains("merlin") ? new SpriteContainer(this, true) : new SpriteContainer(this);
 
             if (Settings.ShowAtStartup)
@@ -119,16 +134,9 @@ namespace Recoding.ClippyVSPackage
         /// </summary>
         private void MenuItemCallback(object sender, EventArgs e)
         {
-           
-            if (SpriteContainer == null)
-            {
-                SpriteContainer = new SpriteContainer(this);
-            }
 
-            //Application.Current.Windows.OfType<SpriteContainer>().First().Show();
-            //SpriteContainer.Show();
-            SpriteContainer.ReviveClippy();
-
+            ThreadHelper.ThrowIfNotOnUIThread();
+            ((ClippyVisualStudioPackage)this).ReviveClippyCommand();
         }
     }
 }

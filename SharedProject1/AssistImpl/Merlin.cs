@@ -56,14 +56,14 @@ namespace SharedProject1.AssistImpl
         /// </summary>
         public static List<MerlinAnimations> IdleAnimations = new List<MerlinAnimations>() {
             MerlinAnimations.MoveLeft,
-MerlinAnimations.Idle32,
-MerlinAnimations.Idle31,
-MerlinAnimations.Idle22,
-MerlinAnimations.Idle21,
-MerlinAnimations.Idle14,
-MerlinAnimations.Idle11,
-MerlinAnimations.Idle13,
-MerlinAnimations.Idle12};
+MerlinAnimations.Idle3_2,
+MerlinAnimations.Idle3_1,
+MerlinAnimations.Idle2_2,
+MerlinAnimations.Idle2_1,
+MerlinAnimations.Idle1_4,
+MerlinAnimations.Idle1_1,
+MerlinAnimations.Idle1_3,
+MerlinAnimations.Idle1_2};
 
 
         /// <summary>
@@ -164,6 +164,8 @@ MerlinAnimations.Idle12};
                 }
 
                 _animations.Add(animation.Name, new Tuple<DoubleAnimationUsingKeyFrames, DoubleAnimationUsingKeyFrames>(xDoubleAnimation, yDoubleAnimation));
+                Debug.WriteLine("Added Merlin Anim {0}", animation.Name);
+
                 xDoubleAnimation.Changed += XDoubleAnimation_Changed;
                 xDoubleAnimation.Completed += XDoubleAnimation_Completed;
             }
