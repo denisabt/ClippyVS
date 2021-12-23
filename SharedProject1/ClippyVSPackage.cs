@@ -74,9 +74,15 @@ namespace Recoding.ClippyVSPackage
                     var menuCommand2Id = new CommandID(Constants.GuidClippyVsCmdSet, (int)PkgCmdIdList.CmdShowMerlin);
                     var menuItem2 = new MenuCommand(MenuItemCallback, menuCommand2Id);
                     mcs.AddCommand(menuItem2);
+
+                    var menuCommandGeniusId = new CommandID(Constants.GuidClippyVsCmdSet, (int)PkgCmdIdList.cmdidCommandGenius);
+                    var menuItemGenius = new MenuCommand(MenuItemCallback, menuCommandGeniusId);
+                    mcs.AddCommand(menuItemGenius);
                 }
+
                 await Command1.InitializeAsync(this).ConfigureAwait(true);
-                await Command2.InitializeAsync(this);
+                await Command2.InitializeAsync(this).ConfigureAwait(true);
+                await CommandGenius.InitializeAsync(this).ConfigureAwait(true);
             }
             catch (Exception e)
             {

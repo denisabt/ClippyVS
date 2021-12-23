@@ -14,6 +14,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)Clippy.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ClippyVSPackage.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ClippyVSSettings.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)CommandGenius.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Command1.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Command2.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Configurations\Animation.cs">
