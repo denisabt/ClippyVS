@@ -23,6 +23,11 @@ namespace Recoding.ClippyVSPackage
         public static readonly Guid CommandSet = new Guid("fbed79a9-1faa-4dc3-9f96-9fb39d31bfdb");
 
         /// <summary>
+        /// VS Package that provides this command, not null.
+        /// </summary>
+        private readonly AsyncPackage _package;
+
+        /// <summary>
         /// Gets the instance of the command.
         /// </summary>
         public static CommandGenius Instance
@@ -36,13 +41,15 @@ namespace Recoding.ClippyVSPackage
         /// Adds our command handlers for menu (commands must exist in the command table file)
         /// </summary>
         /// <param name="commandService">Command service to add command to, not null.</param>
-        private CommandGenius(OleMenuCommandService commandService)
+        private CommandGenius(OleMenuCommandService commandService, AsyncPackage package)
         {
             //commandService = commandService ?? throw new ArgumentNullException(nameof(commandService));
-
+           
             var menuCommandId = new CommandID(CommandSet, CommandId);
             var menuItem = new MenuCommand(Execute, menuCommandId);
             commandService.AddCommand(menuItem);
+
+            _package = package;
         }
 
         /// <summary>
@@ -56,7 +63,8 @@ namespace Recoding.ClippyVSPackage
             //await ThreadHelper.JoinableTaskFactory.SwitchToMainThreadAsync(package.DisposalToken);
 
             OleMenuCommandService commandService = await package.GetServiceAsync(typeof(IMenuCommandService)) as OleMenuCommandService;
-            Instance = new CommandGenius(commandService);
+            
+            Instance = new CommandGenius(commandService, package);
         }
 
         /// <summary>
@@ -69,11 +77,7 @@ namespace Recoding.ClippyVSPackage
         private void Execute(object sender, EventArgs e)
         {
             ThreadHelper.ThrowIfNotOnUIThread();
-            string message = string.Format(CultureInfo.CurrentCulture, "Inside {0}.MenuItemCallback()", this.GetType().FullName);
-            string title = "CommandGenius";
-
-            // Show a message box to prove we were here
-            MessageBox.Show(message, title, MessageBoxButtons.OK, MessageBoxIcon.Information);
+            ((ClippyVisualStudioPackage)_package).ReviveGeniusCommand();
         }
     }
 }

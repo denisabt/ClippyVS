@@ -121,6 +121,21 @@ namespace Recoding.ClippyVSPackage
             SpriteContainer.ReviveClippy();
         }
 
+        internal void ReviveGeniusCommand()
+        {
+            var visibleAssistants = Application.Current.Windows.OfType<SpriteContainer>();
+            if (!visibleAssistants.Any())
+            {
+                SpriteContainer = new SpriteContainer(this, true);
+            }
+
+            Settings.SelectedAssistantName = "Genius";
+            Settings.SaveSettings();
+
+            Application.Current.Windows.OfType<SpriteContainer>().First().Show();
+            SpriteContainer.ReviveGenius();
+        }
+
         private async void MainWindow_ContentRendered(object sender, EventArgs e)
         {
             var token = new CancellationToken();
