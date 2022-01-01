@@ -11,6 +11,10 @@ using System.Windows.Threading;
 using System.Linq;
 using Recoding.ClippyVSPackage;
 using System.Diagnostics;
+using System.Windows.Resources;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Converters;
+using Newtonsoft.Json.Serialization;
 using Recoding.ClippyVSPackage.Configurations.Legacy;
 
 namespace SharedProject1.AssistImpl
@@ -115,19 +119,20 @@ GeniusAnimations.Idle9};
 #endif
             var uri = new Uri(spResUri, UriKind.RelativeOrAbsolute);
 
-            var info = Application.GetResourceStream(uri);
+            var animJStream = Application.GetResourceStream(uri);
 
-            if (info == null) 
+            if (animJStream == null) 
                 return;
 
             // Can go to Constructor/Init
-            var storedAnimations = 
-                Newtonsoft.Json.JsonConvert.DeserializeObject<List<GeniusSingleAnimation>>(StreamToString(info.Stream));
+            List<string> errors = new List<string>();
+            
 
-            _animations = new Dictionary<string, Tuple<DoubleAnimationUsingKeyFrames, DoubleAnimationUsingKeyFrames>>();
-
+            var storedAnimations = DeserializeAnimations(animJStream, errors);
             if (storedAnimations == null) return;
 
+            _animations = new Dictionary<string, Tuple<DoubleAnimationUsingKeyFrames, DoubleAnimationUsingKeyFrames>>();
+            
             foreach (var animation in storedAnimations)
             {
                 var xDoubleAnimation = new DoubleAnimationUsingKeyFrames
@@ -150,15 +155,21 @@ GeniusAnimations.Idle9};
                         var lastRow = frame.ImagesOffsets[0][1];
 
                         // Pixels in Json, we need to divide by frame width/height
-                        lastCol = lastCol / ClipHeight;
-                        lastRow = lastRow / ClipWidth;
+                        //lastCol = lastCol / ClipHeight;
+                        //lastRow = lastRow / ClipWidth;
 
                         // X
-                        var xKeyFrame = new DiscreteDoubleKeyFrame(ClipWidth * -lastCol, KeyTime.FromTimeSpan(TimeSpan.FromSeconds(timeOffset)));
+                        var xKeyFrame = new DiscreteDoubleKeyFrame(lastCol * -1, KeyTime.FromTimeSpan(TimeSpan.FromSeconds(timeOffset)));
 
                         // Y
-                        var yKeyFrame = new DiscreteDoubleKeyFrame(ClipHeight * -lastRow, KeyTime.FromTimeSpan(TimeSpan.FromSeconds(timeOffset)));
+                        var yKeyFrame = new DiscreteDoubleKeyFrame( lastRow * -1, KeyTime.FromTimeSpan(TimeSpan.FromSeconds(timeOffset)));
 
+
+                        Debug.WriteLine("Genius "+ animation.Name+" - adding X:" + xKeyFrame.Value +"/"+ xKeyFrame.KeyTime);
+                        Debug.WriteLine("Genius "+ animation.Name+" - adding Y:"  + yKeyFrame.Value + "/" + yKeyFrame.KeyTime);
+
+                        // XXXX Remove slowdown
+                        //timeOffset += ((double)frame.Duration / 1000 * 4);
                         timeOffset += ((double)frame.Duration / 1000);
                         xDoubleAnimation.KeyFrames.Add(xKeyFrame);
                         yDoubleAnimation.KeyFrames.Add(yKeyFrame);
@@ -170,11 +181,35 @@ GeniusAnimations.Idle9};
                 }
 
                 _animations.Add(animation.Name, new Tuple<DoubleAnimationUsingKeyFrames, DoubleAnimationUsingKeyFrames>(xDoubleAnimation, yDoubleAnimation));
-                Debug.WriteLine("Added Genius Anim {0}", animation.Name);
+                Debug.WriteLine("Added Genius Anim {0}" + animation.Name);
+                Debug.WriteLine("...  Frame Count: " + xDoubleAnimation.KeyFrames.Count + " - " +
+                                yDoubleAnimation.KeyFrames.Count);
 
                 xDoubleAnimation.Changed += XDoubleAnimation_Changed;
                 xDoubleAnimation.Completed += XDoubleAnimation_Completed;
             }
+        }
+
+        private static List<GeniusSingleAnimation> DeserializeAnimations(StreamResourceInfo animJStream, List<string> errors)
+        {
+            var storedAnimations =
+                JsonConvert.DeserializeObject<List<GeniusSingleAnimation>>(StreamToString(animJStream.Stream),
+                    new JsonSerializerSettings
+                    {
+                        Error = delegate(object sender, ErrorEventArgs args)
+                        {
+                            errors.Add(args.ErrorContext.Error.Message);
+                            args.ErrorContext.Handled = true;
+                        },
+                        MissingMemberHandling = MissingMemberHandling.Error,
+                        NullValueHandling = NullValueHandling.Include
+                    });
+            return storedAnimations;
+        }
+
+        private void DeserializeError(object sender, ErrorEventArgs e)
+        {
+            Debug.WriteLine(e);
         }
 
         private void XDoubleAnimation_Changed(object sender, EventArgs e)
