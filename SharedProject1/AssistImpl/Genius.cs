@@ -168,6 +168,7 @@ GeniusAnimations.Idle9};
                         Debug.WriteLine("Genius "+ animation.Name+" - adding X:" + xKeyFrame.Value +"/"+ xKeyFrame.KeyTime);
                         Debug.WriteLine("Genius "+ animation.Name+" - adding Y:"  + yKeyFrame.Value + "/" + yKeyFrame.KeyTime);
 
+                        // Sendmail is f...cked.... fix, reverse engineer or something.
                         // XXXX Remove slowdown
                         //timeOffset += ((double)frame.Duration / 1000 * 4);
                         timeOffset += ((double)frame.Duration / 1000);
