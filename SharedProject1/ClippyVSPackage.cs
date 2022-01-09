@@ -140,7 +140,18 @@ namespace Recoding.ClippyVSPackage
         {
             var token = new CancellationToken();
             await ThreadHelper.JoinableTaskFactory.SwitchToMainThreadAsync(token);
-            SpriteContainer = Settings.SelectedAssistantName.Contains("merlin") ? new SpriteContainer(this, true) : new SpriteContainer(this);
+            switch (Settings.SelectedAssistantName)
+            {
+                case "Genius":
+                    SpriteContainer = new SpriteContainer(this, false, true);
+                    break;
+                case "Merlin":
+                    SpriteContainer = new SpriteContainer(this, true, false);
+                    break;
+                default:
+                    SpriteContainer = new SpriteContainer(this, false, false);
+                    break;
+            }
 
             if (Settings.ShowAtStartup)
                 SpriteContainer.Show();

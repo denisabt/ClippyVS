@@ -13,7 +13,6 @@ using Recoding.ClippyVSPackage;
 using System.Diagnostics;
 using System.Windows.Resources;
 using Newtonsoft.Json;
-using Newtonsoft.Json.Converters;
 using Newtonsoft.Json.Serialization;
 using Recoding.ClippyVSPackage.Configurations.Legacy;
 
@@ -121,18 +120,18 @@ GeniusAnimations.Idle9};
 
             var animJStream = Application.GetResourceStream(uri);
 
-            if (animJStream == null) 
+            if (animJStream == null)
                 return;
 
             // Can go to Constructor/Init
             List<string> errors = new List<string>();
-            
+
 
             var storedAnimations = DeserializeAnimations(animJStream, errors);
             if (storedAnimations == null) return;
 
             _animations = new Dictionary<string, Tuple<DoubleAnimationUsingKeyFrames, DoubleAnimationUsingKeyFrames>>();
-            
+
             foreach (var animation in storedAnimations)
             {
                 var xDoubleAnimation = new DoubleAnimationUsingKeyFrames
@@ -151,29 +150,41 @@ GeniusAnimations.Idle9};
                 {
                     if (frame.ImagesOffsets != null)
                     {
-                        var lastCol = frame.ImagesOffsets[0][0];
-                        var lastRow = frame.ImagesOffsets[0][1];
+                        var i = 0; // get rid of this once overlay processing is implemented
+                        //var overlays = frame.ImagesOffsets.Count;
+                        //for (int i = 0; i < overlays; i++)
+                        //{
+                            Debug.WriteLine("Processing Overlay " + i);
+                            Debug.WriteLine("Overlay is actually - layers - displayed at the same time...");
+                            if (frame.ImagesOffsets.Count > 1)
+                            {
+                                // we grab overlay one if present, otherwise default/0
+                                i = 1;
+                            }
+                            var lastCol = frame.ImagesOffsets[i][0];
+                            var lastRow = frame.ImagesOffsets[i][1];
 
-                        // Pixels in Json, we need to divide by frame width/height
-                        //lastCol = lastCol / ClipHeight;
-                        //lastRow = lastRow / ClipWidth;
+                            // Pixels in Json, we need to divide by frame width/height
+                            //lastCol = lastCol / ClipHeight;
+                            //lastRow = lastRow / ClipWidth;
 
-                        // X
-                        var xKeyFrame = new DiscreteDoubleKeyFrame(lastCol * -1, KeyTime.FromTimeSpan(TimeSpan.FromSeconds(timeOffset)));
+                            // X
+                            var xKeyFrame = new DiscreteDoubleKeyFrame(lastCol * -1, KeyTime.FromTimeSpan(TimeSpan.FromSeconds(timeOffset)));
 
-                        // Y
-                        var yKeyFrame = new DiscreteDoubleKeyFrame( lastRow * -1, KeyTime.FromTimeSpan(TimeSpan.FromSeconds(timeOffset)));
+                            // Y
+                            var yKeyFrame = new DiscreteDoubleKeyFrame(lastRow * -1, KeyTime.FromTimeSpan(TimeSpan.FromSeconds(timeOffset)));
 
 
-                        Debug.WriteLine("Genius "+ animation.Name+" - adding X:" + xKeyFrame.Value +"/"+ xKeyFrame.KeyTime);
-                        Debug.WriteLine("Genius "+ animation.Name+" - adding Y:"  + yKeyFrame.Value + "/" + yKeyFrame.KeyTime);
+                            Debug.WriteLine("Genius " + animation.Name + " - adding X:" + xKeyFrame.Value + "/" + xKeyFrame.KeyTime);
+                            Debug.WriteLine("Genius " + animation.Name + " - adding Y:" + yKeyFrame.Value + "/" + yKeyFrame.KeyTime);
 
-                        // Sendmail is f...cked.... fix, reverse engineer or something.
-                        // XXXX Remove slowdown
-                        //timeOffset += ((double)frame.Duration / 1000 * 4);
-                        timeOffset += ((double)frame.Duration / 1000);
-                        xDoubleAnimation.KeyFrames.Add(xKeyFrame);
-                        yDoubleAnimation.KeyFrames.Add(yKeyFrame);
+                            // Sendmail is f...cked.... fix, reverse engineer or something.
+                            // XXXX Remove slowdown
+                            //timeOffset += ((double)frame.Duration / 1000 * 4);
+                            timeOffset += ((double)frame.Duration / 1000);
+                            xDoubleAnimation.KeyFrames.Add(xKeyFrame);
+                            yDoubleAnimation.KeyFrames.Add(yKeyFrame);
+                        //}
                     }
                     else
                     {
@@ -197,7 +208,7 @@ GeniusAnimations.Idle9};
                 JsonConvert.DeserializeObject<List<GeniusSingleAnimation>>(StreamToString(animJStream.Stream),
                     new JsonSerializerSettings
                     {
-                        Error = delegate(object sender, ErrorEventArgs args)
+                        Error = delegate (object sender, ErrorEventArgs args)
                         {
                             errors.Add(args.ErrorContext.Error.Message);
                             args.ErrorContext.Handled = true;

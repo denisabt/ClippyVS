@@ -41,10 +41,9 @@ namespace Recoding.ClippyVSPackage
         /// Adds our command handlers for menu (commands must exist in the command table file)
         /// </summary>
         /// <param name="commandService">Command service to add command to, not null.</param>
+        /// <param name="package">The Shell Package</param>
         private CommandGenius(OleMenuCommandService commandService, AsyncPackage package)
         {
-            //commandService = commandService ?? throw new ArgumentNullException(nameof(commandService));
-           
             var menuCommandId = new CommandID(CommandSet, CommandId);
             var menuItem = new MenuCommand(Execute, menuCommandId);
             commandService.AddCommand(menuItem);

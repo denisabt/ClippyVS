@@ -51,8 +51,9 @@ namespace Recoding.ClippyVSPackage
         /// <summary>
         /// Default ctor
         /// </summary>
-        /// <param name="package"></param>
-        /// <param name="showMerlin"></param>
+        /// <param name="package">The Shell Package</param>
+        /// <param name="showMerlin">Indicates if Merlin should be shown - get rid of this soon</param>
+        /// <param name="showGenius">Indicates if Genius should be shown - dito</param>
         public SpriteContainer(AsyncPackage package, bool showMerlin = false, bool showGenius = false)
         {
             this._package = package;
@@ -449,7 +450,7 @@ namespace Recoding.ClippyVSPackage
             if (_showMerlin)
                 await Merlin.StartAnimationAsync(MerlinAnimations.Wave, true);
             else if (_showGenius)
-                Genius.StartAnimation(GeniusAnimations.Goodbye);
+                await Genius.StartAnimationAsync(GeniusAnimations.Goodbye);
             else
                 await Clippy.StartAnimationAsync(ClippyAnimation.GoodBye, true);
 
