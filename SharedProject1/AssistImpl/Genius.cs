@@ -46,6 +46,11 @@ namespace SharedProject1.AssistImpl
         public static int ClipWidth { get; set; } = 124;
 
         /// <summary>
+        /// The image that holds the sprite
+        /// </summary>
+        protected Image ClippedImage1;
+
+        /// <summary>
         /// The list of all the available animations
         /// </summary>
         public List<GeniusAnimations> AllAnimations { get; } = new List<GeniusAnimations>();
@@ -89,18 +94,21 @@ GeniusAnimations.Idle9};
                 Source = Sprite,
                 Stretch = Stretch.None
             };
-            var ClippedImage2 = new Image
+            ClippedImage1 = new Image
             {
                 Source = Sprite,
                 Stretch = Stretch.None
             };
-            ClippedImage2.Visibility = Visibility.Hidden;
+
+            //ClippedImage1.Visibility = Visibility.Hidden;
+            ClippedImage.Visibility = Visibility.Hidden;
 
             if (canvas == null) return;
 
             canvas.Children.Clear();
             canvas.Children.Add(ClippedImage);
-            canvas.Children.Add(ClippedImage2);
+            
+            //find canvas2andaddimage
 
             if (_animations == null)
                 RegisterAnimations();
@@ -199,15 +207,17 @@ GeniusAnimations.Idle9};
                             // XXXX Remove slowdown
                             //timeOffset += ((double)frame.Duration / 1000 * 4);
                             timeOffset += ((double)frame.Duration / 1000);
+                            xDoubleAnimation.KeyFrames.Add(new DiscreteDoubleKeyFrame());
+                            yDoubleAnimation.KeyFrames.Add(new DiscreteDoubleKeyFrame());
+                            xDoubleAnimation1.KeyFrames.Add(new DiscreteDoubleKeyFrame());
+                            yDoubleAnimation1.KeyFrames.Add(new DiscreteDoubleKeyFrame());
+                            xDoubleAnimation2.KeyFrames.Add(new DiscreteDoubleKeyFrame());
+                            yDoubleAnimation2.KeyFrames.Add(new DiscreteDoubleKeyFrame());
                             switch (i)
                             {
                                 case 0:
-                                    xDoubleAnimation.KeyFrames.Add(xKeyFrame);
-                                    yDoubleAnimation.KeyFrames.Add(yKeyFrame);
-                                    xDoubleAnimation1.KeyFrames.Add(new DiscreteDoubleKeyFrame());
-                                    yDoubleAnimation1.KeyFrames.Add(new DiscreteDoubleKeyFrame());
-                                    xDoubleAnimation2.KeyFrames.Add(new DiscreteDoubleKeyFrame());
-                                    yDoubleAnimation2.KeyFrames.Add(new DiscreteDoubleKeyFrame());
+                                    xDoubleAnimation.KeyFrames.Insert(idx, xKeyFrame);
+                                    yDoubleAnimation.KeyFrames.Insert(idx, yKeyFrame);
                                     break;
                                 case 1:
                                     xDoubleAnimation1.KeyFrames.Insert(idx,xKeyFrame);
@@ -219,8 +229,6 @@ GeniusAnimations.Idle9};
                                     break;
 
                             }
-                            
-
                         }
 
                         idx++;
@@ -325,12 +333,17 @@ GeniusAnimations.Idle9};
                     var animation = _animations[animationType.ToString()];
                     if (animation == null) return;
 
+                    var animation1 = _animations.GetAnimation1(animationType.ToString());
                     Debug.WriteLine("Triggering Genius " + animationType);
                     Debug.WriteLine(animation.Item1.ToString() + animation.Item2);
                     IsAnimating = true;
                     await ThreadHelper.JoinableTaskFactory.SwitchToMainThreadAsync();
-                    ClippedImage.BeginAnimation(Canvas.LeftProperty, animation.Item1);
-                    ClippedImage.BeginAnimation(Canvas.TopProperty, animation.Item2);
+                    //ClippedImage.BeginAnimation(Canvas.LeftProperty, animation.Item1);
+                    //ClippedImage.BeginAnimation(Canvas.TopProperty, animation.Item2);
+
+                    
+                    ClippedImage1.BeginAnimation(Canvas.LeftProperty, animation1.Item1);
+                    ClippedImage1.BeginAnimation(Canvas.TopProperty, animation1.Item2);
                 }
             }
             catch (Exception e)
@@ -375,5 +388,7 @@ GeniusAnimations.Idle9};
 
 
         public Tuple<DoubleAnimationUsingKeyFrames, DoubleAnimationUsingKeyFrames> this[string animName] => _animations0[animName];
+        public Tuple<DoubleAnimationUsingKeyFrames, DoubleAnimationUsingKeyFrames> GetAnimation2(string animName) => _animations2[animName];
+        public Tuple<DoubleAnimationUsingKeyFrames, DoubleAnimationUsingKeyFrames> GetAnimation1(string animName) => _animations1[animName];
     }
 }
