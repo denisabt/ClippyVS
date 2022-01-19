@@ -101,8 +101,8 @@ GeniusAnimations.Idle9};
                 Stretch = Stretch.None
             };
 
-            ClippedImage1.Visibility = Visibility.Hidden;
             ClippedImage.Visibility = Visibility.Visible;
+            ClippedImage1.Visibility = Visibility.Visible;
 
             if (canvas == null) return;
 
@@ -282,7 +282,7 @@ GeniusAnimations.Idle9};
         private void XDoubleAnimation_Completed(object sender, EventArgs e)
         {
             IsAnimating = false;
-            ClippedImage1.Visibility = Visibility.Collapsed;
+            ClippedImage.Visibility = Visibility.Visible;
         }
 
         /// <summary>

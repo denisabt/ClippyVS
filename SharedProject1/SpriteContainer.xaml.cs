@@ -240,13 +240,14 @@ namespace Recoding.ClippyVSPackage
                 Clippy = null;
             }
 
-            _showGenius = true;
+            _showGenius = true; 
             _showMerlin = false;
             this.Width = 124;
             this.Height = 93;
             ClippyGrid.Width = 124;
             ClippyGrid.Height = 93;
             AssistantCanvasOverlay0.Height = 93;
+            AssistantCanvasOverlay1.Visibility = Visibility.Visible;
 
             // Genius has to layers, thus overlay 0 and 1 need to be passed for this one.
             Genius = new Genius((Canvas)FindName("AssistantCanvasOverlay0"), (Canvas)FindName("AssistantCanvasOverlay1"));
