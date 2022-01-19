@@ -72,10 +72,10 @@ namespace Recoding.ClippyVSPackage
                     mcs.AddCommand(menuItem);
 
                     var menuCommand2Id = new CommandID(Constants.GuidClippyVsCmdSet, (int)PkgCmdIdList.CmdShowMerlin);
-                    var menuItem2 = new MenuCommand(MenuItemCallback, menuCommand2Id);
+                    var menuItem2 = new OleMenuCommand(MenuItemCallback, menuCommand2Id);
                     mcs.AddCommand(menuItem2);
 
-                    var menuCommandGeniusId = new CommandID(Constants.GuidClippyVsCmdSet, (int)PkgCmdIdList.cmdidCommandGenius);
+                    var menuCommandGeniusId = new CommandID(Constants.GuidClippyVsCmdSet, (int)PkgCmdIdList.CmdidCommandGenius);
                     var menuItemGenius = new MenuCommand(MenuItemCallback, menuCommandGeniusId);
                     mcs.AddCommand(menuItemGenius);
                 }

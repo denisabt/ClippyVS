@@ -200,9 +200,10 @@ namespace Recoding.ClippyVSPackage
             ClippySpriteContainer.Height = 93;
             ClippyGrid.Width = 124;
             ClippyGrid.Height = 93;
-            ClippyCanvas.Height = 93;
+            AssistantCanvasOverlay0.Height = 93;
+            AssistantCanvasOverlay1.Visibility = Visibility.Hidden;
 
-            Clippy = new Clippy((Canvas)this.FindName("ClippyCanvas"));
+            Clippy = new Clippy((Canvas)FindName("AssistantCanvasOverlay0"));
             Clippy.StartAnimation(ClippyAnimation.Greeting);
 
             PopulateContextMenu();
@@ -222,10 +223,10 @@ namespace Recoding.ClippyVSPackage
             this.Height = 128;
             ClippyGrid.Width = 150;
             ClippyGrid.Height = 150;
-            ClippyCanvas.Height = 150;
+            AssistantCanvasOverlay0.Height = 150;
+            AssistantCanvasOverlay1.Visibility = Visibility.Hidden;
 
-
-            Merlin = new Merlin((Canvas)this.FindName("ClippyCanvas"));
+            Merlin = new Merlin((Canvas)this.FindName("AssistantCanvasOverlay0"));
             Merlin.StartAnimation(MerlinAnimations.Greet);
 
             PopulateContextMenu();
@@ -245,10 +246,10 @@ namespace Recoding.ClippyVSPackage
             this.Height = 93;
             ClippyGrid.Width = 124;
             ClippyGrid.Height = 93;
-            ClippyCanvas.Height = 93;
+            AssistantCanvasOverlay0.Height = 93;
 
-
-            Genius = new Genius((Canvas)this.FindName("ClippyCanvas"));
+            // Genius has to layers, thus overlay 0 and 1 need to be passed for this one.
+            Genius = new Genius((Canvas)FindName("AssistantCanvasOverlay0"), (Canvas)FindName("AssistantCanvasOverlay1"));
             Genius.StartAnimation(GeniusAnimations.Greeting);
 
             PopulateContextMenu();
