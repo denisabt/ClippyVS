@@ -11,6 +11,7 @@ using Microsoft.VisualStudio;
 using System.Runtime.InteropServices;
 using System.Linq;
 using SharedProject1;
+using Task = System.Threading.Tasks.Task;
 
 namespace Recoding.ClippyVSPackage
 {
@@ -138,23 +139,35 @@ namespace Recoding.ClippyVSPackage
 
         private async void MainWindow_ContentRendered(object sender, EventArgs e)
         {
-            var token = new CancellationToken();
-            await ThreadHelper.JoinableTaskFactory.SwitchToMainThreadAsync(token);
-            switch (Settings.SelectedAssistantName)
-            {
-                case "Genius":
-                    SpriteContainer = new SpriteContainer(this, false, true);
-                    break;
-                case "Merlin":
-                    SpriteContainer = new SpriteContainer(this, true, false);
-                    break;
-                default:
-                    SpriteContainer = new SpriteContainer(this, false, false);
-                    break;
-            }
+            await MainWindow_ContentRenderedAsync();
+        }
 
-            if (Settings.ShowAtStartup)
-                SpriteContainer.Show();
+        private async Task MainWindow_ContentRenderedAsync()
+        {
+            try
+            {
+                var token = new CancellationToken();
+                await ThreadHelper.JoinableTaskFactory.SwitchToMainThreadAsync(token);
+                switch (Settings.SelectedAssistantName)
+                {
+                    case "Genius":
+                        SpriteContainer = new SpriteContainer(this, false, true);
+                        break;
+                    case "Merlin":
+                        SpriteContainer = new SpriteContainer(this, true);
+                        break;
+                    default:
+                        SpriteContainer = new SpriteContainer(this);
+                        break;
+                }
+
+                if (Settings.ShowAtStartup)
+                    SpriteContainer.Show();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Application Exception occured. Closing.");
+            }
         }
 
         #endregion
@@ -168,7 +181,7 @@ namespace Recoding.ClippyVSPackage
         {
 
             ThreadHelper.ThrowIfNotOnUIThread();
-            ((ClippyVisualStudioPackage)this).ReviveClippyCommand();
+            this.ReviveClippyCommand();
         }
     }
 }

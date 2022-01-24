@@ -1,5 +1,4 @@
 ﻿using EnvDTE;
-using EnvDTE80;
 using Microsoft.VisualStudio.Settings;
 using Microsoft.VisualStudio.Shell;
 using Microsoft.VisualStudio.Shell.Settings;
@@ -45,7 +44,6 @@ namespace Recoding.ClippyVSPackage
         private readonly DocumentEvents _docEvents;
         private readonly BuildEvents _buildEvents;
         private readonly FindEvents _findEvents;
-        private ProjectItemsEvents _projectItemsEvents;
         private ProjectItemsEvents _csharpProjectItemsEvents;
 
         /// <summary>
@@ -75,7 +73,7 @@ namespace Recoding.ClippyVSPackage
             //    .ConfigureAwait(true).GetAwaiter().GetResult() as IVsActivityLog;
             //if (activityLog == null) return;
             //System.Windows.Forms.MessageBox.Show("Found the activity log service.");
-            var dte = (EnvDTE.DTE)package.GetServiceAsync(typeof(EnvDTE.DTE)).ConfigureAwait(true).GetAwaiter().GetResult();
+            var dte = (DTE)package.GetServiceAsync(typeof(DTE)).ConfigureAwait(true).GetAwaiter().GetResult();
             _docEvents = dte.Events.DocumentEvents;
             _buildEvents = dte.Events.BuildEvents;
             _findEvents = dte.Events.FindEvents;
@@ -256,7 +254,7 @@ namespace Recoding.ClippyVSPackage
             PopulateContextMenu();
         }
 
-        private void RegisterToDteEvents(EnvDTE.DTE dte)
+        private void RegisterToDteEvents(DTE dte)
         {
             ThreadHelper.ThrowIfNotOnUIThread();
             _docEvents.DocumentOpening += DocumentEvents_DocumentOpening;
@@ -269,14 +267,7 @@ namespace Recoding.ClippyVSPackage
             _findEvents.FindDone += FindEventsClass_FindDone;
             try
             {
-                if (_projectItemsEvents is Events2 events2)
-                {
-                    this._projectItemsEvents = events2.ProjectItemsEvents;
-                    this._projectItemsEvents.ItemAdded += ProjectItemsEvents_ItemAdded;
-                    this._projectItemsEvents.ItemRemoved += ProjectItemsEvents_ItemRemoved;
-                    this._projectItemsEvents.ItemRenamed += ProjectItemsEvents_ItemRenamed;
-                }
-
+                // RIP Project Events - is there a replacement ? Please Check...
                 this._csharpProjectItemsEvents = dte.Events.GetObject("CSharpProjectItemsEvents") as ProjectItemsEvents;
                 if (this._csharpProjectItemsEvents == null)
                     return;
@@ -287,7 +278,7 @@ namespace Recoding.ClippyVSPackage
             }
             catch (Exception exev)
             {
-                Debug.WriteLine("Events binding failure");
+                Debug.WriteLine("Events binding failure {0}", exev.Message);
             }
         }
 
