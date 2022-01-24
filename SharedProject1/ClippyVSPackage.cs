@@ -48,7 +48,7 @@ namespace Recoding.ClippyVSPackage
         /// Initialization of the package; this method is called right after the package is sited, so this is the place
         /// where you can put all the initialization code that rely on services provided by VisualStudio.
         /// </summary>
-        protected override async System.Threading.Tasks.Task InitializeAsync(CancellationToken cancellationToken, IProgress<ServiceProgressData> progress)
+        protected override async Task InitializeAsync(CancellationToken cancellationToken, IProgress<ServiceProgressData> progress)
         {
             try
             {
@@ -166,7 +166,7 @@ namespace Recoding.ClippyVSPackage
             }
             catch (Exception ex)
             {
-                MessageBox.Show("Application Exception occured. Closing.");
+                MessageBox.Show("Application Exception occured. Closing." + Environment.NewLine + ex.Message);
             }
         }
 
