@@ -156,7 +156,9 @@ namespace Recoding.ClippyVSPackage
 
         private void PopulateContextMenu()
         {
-            var values = Enum.GetValues(typeof(ClippyAnimation));
+
+#if DEBUG
+var values = Enum.GetValues(typeof(ClippyAnimation));
             if (_showMerlin)
             {
                 values = Enum.GetValues(typeof(MerlinAnimations));
@@ -166,7 +168,6 @@ namespace Recoding.ClippyVSPackage
                 values = Enum.GetValues(typeof(GeniusAnimations));
             }
             //// TEMP: create a voice for each animation in the context menu
-#if DEBUG
             var pMenu = (ContextMenu)this.Resources["CmButton"];
             pMenu.Items.Clear();
 
