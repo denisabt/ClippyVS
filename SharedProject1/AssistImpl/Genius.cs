@@ -200,7 +200,7 @@ GeniusAnimations.Idle9};
                             yDoubleAnimation1.KeyFrames.Add(new DiscreteDoubleKeyFrame());
                             xDoubleAnimation2.KeyFrames.Add(new DiscreteDoubleKeyFrame());
                             yDoubleAnimation2.KeyFrames.Add(new DiscreteDoubleKeyFrame());
-
+                            
                             //Overlay is actually - layers - displayed at the same time...
                             var lastCol = frame.ImagesOffsets[layerNum][0];
                             var lastRow = frame.ImagesOffsets[layerNum][1];
@@ -208,7 +208,7 @@ GeniusAnimations.Idle9};
                             // X and Y
                             var xKeyFrame = new DiscreteDoubleKeyFrame(lastCol * -1, KeyTime.FromTimeSpan(TimeSpan.FromSeconds(timeOffset)));
                             var yKeyFrame = new DiscreteDoubleKeyFrame(lastRow * -1, KeyTime.FromTimeSpan(TimeSpan.FromSeconds(timeOffset)));
-
+                            
                             switch (layerNum)
                             {
                                 case 0:
@@ -224,8 +224,10 @@ GeniusAnimations.Idle9};
                                     yDoubleAnimation2.KeyFrames.Insert(frameIndex, yKeyFrame);
                                     break;
                             }
-                        }
 
+                            Debug.WriteLine("LastRowLastCol 0 and 1 are : " + lastRow + " " + lastCol + " Layer " + layerNum);
+                        }
+                        
                         //timeOffset += ((double)frame.Duration / 1000 * 4);
                         timeOffset += ((double)frame.Duration / 1000);
                         frameIndex++;
@@ -248,6 +250,11 @@ GeniusAnimations.Idle9};
 
                 xDoubleAnimation.Completed += XDoubleAnimation_Completed;
             }
+        }
+
+        private void YKeyFrame_Changed(object sender, EventArgs e)
+        {
+            Debug.WriteLine("Keyframe changed!");
         }
 
         private static List<GeniusSingleAnimation> ParseAnimDescriptions()
@@ -409,6 +416,7 @@ GeniusAnimations.Idle9};
             int animMaxLayers)
         {
             _animations.Add(new LayeredAnimation(animName, layer0, layer1, animMaxLayers));
+            Debug.WriteLine("Added animation");
         }
 
         public LayeredAnimation this[string animName]
