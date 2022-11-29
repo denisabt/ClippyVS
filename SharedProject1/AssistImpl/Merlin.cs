@@ -147,8 +147,8 @@ MerlinAnimations.Idle1_2};
                     Debug.WriteLine(animation.Item1.ToString() + animation.Item2);
                     IsAnimating = true;
                     await ThreadHelper.JoinableTaskFactory.SwitchToMainThreadAsync();
-                    ClippedImage.BeginAnimation(Canvas.LeftProperty, animation.Item1);
-                    ClippedImage.BeginAnimation(Canvas.TopProperty, animation.Item2);
+                    AssistantFramesImage.BeginAnimation(Canvas.LeftProperty, animation.Item1);
+                    AssistantFramesImage.BeginAnimation(Canvas.TopProperty, animation.Item2);
                 }
             }
             catch (Exception)

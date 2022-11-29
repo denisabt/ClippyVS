@@ -25,8 +25,11 @@ namespace Recoding.ClippyVSPackage
         private Clippy Clippy { get; set; }
         private Merlin Merlin { get; set; }
         private Genius Genius { get; set; }
+        private Rocky Rocky { get; set; }
+
         private bool _showMerlin;
         private bool _showGenius;
+        private bool _showRocky;
 
         /// <summary>
         /// This VSIX package
@@ -54,11 +57,12 @@ namespace Recoding.ClippyVSPackage
         /// <param name="package">The Shell Package</param>
         /// <param name="showMerlin">Indicates if Merlin should be shown - get rid of this soon</param>
         /// <param name="showGenius">Indicates if Genius should be shown - dito</param>
-        public SpriteContainer(AsyncPackage package, bool showMerlin = false, bool showGenius = false)
+        public SpriteContainer(AsyncPackage package, bool showMerlin = false, bool showGenius = false, bool showRocky = false)
         {
             _package = package;
             _showMerlin = showMerlin;
             _showGenius = showGenius;
+            _showRocky = showRocky;
 
             SettingsManager settingsManager = new ShellSettingsManager(this._package);
             _userSettingsStore = settingsManager.GetWritableSettingsStore(SettingsScope.UserSettings);
@@ -74,13 +78,21 @@ namespace Recoding.ClippyVSPackage
             //    .ConfigureAwait(true).GetAwaiter().GetResult() as IVsActivityLog;
             //if (activityLog == null) return;
             //System.Windows.Forms.MessageBox.Show("Found the activity log service.");
+            
             var dte = (DTE)package.GetServiceAsync(typeof(DTE)).ConfigureAwait(true).GetAwaiter().GetResult();
             _docEvents = dte.Events.DocumentEvents;
             _buildEvents = dte.Events.BuildEvents;
             _findEvents = dte.Events.FindEvents;
             _projItemsEvents = dte.Events.MiscFilesEvents;
-            _debuggerEvents = dte.Events.DebuggerEvents;
-            //dte.Events.
+
+            try
+            {
+                _debuggerEvents = dte.Events.DebuggerEvents;
+            }
+            catch (Exception exx)
+            {
+                Debug.WriteLine(exx);
+            }
 
             RegisterToDteEvents(dte);
 
@@ -89,7 +101,7 @@ namespace Recoding.ClippyVSPackage
             Owner.SizeChanged += Owner_StateOrSizeChanged;
             LocationChanged += SpriteContainer_LocationChanged;
             #endregion
-            
+
 
             #region -- Restore Sprite postion --
             double? storedRelativeTop = null;
@@ -115,6 +127,8 @@ namespace Recoding.ClippyVSPackage
                 ReviveMerlin();
             else if (_showGenius)
                 ReviveGenius();
+            else if (_showRocky)
+                ReviveRocky();
             else
                 ReviveClippy();
         }
@@ -174,7 +188,11 @@ namespace Recoding.ClippyVSPackage
             {
                 values = Enum.GetValues(typeof(GeniusAnimations));
             }
-            
+            if (_showRocky)
+            {
+                values = Enum.GetValues(typeof(RockyAnimations));
+            }
+
             //// TEMP: create a voice for each animation in the context menu
             var pMenu = (ContextMenu)this.Resources["CmButton"];
             pMenu.Items.Clear();
@@ -185,7 +203,7 @@ namespace Recoding.ClippyVSPackage
                 {
                     Header = val.ToString(),
                     Name = "cmd" + val
-                }; 
+                };
                 menuItem.Click += CmdTestAnimation_Click;
                 pMenu.Items.Add(menuItem);
             }
@@ -202,6 +220,7 @@ namespace Recoding.ClippyVSPackage
             }
             _showMerlin = false;
             _showGenius = false;
+            _showRocky = false;
 
             ClippySpriteContainer.Width = 124;
             ClippySpriteContainer.Height = 93;
@@ -226,6 +245,8 @@ namespace Recoding.ClippyVSPackage
 
             _showMerlin = true;
             _showGenius = false;
+            _showRocky = false;
+
             this.Width = 128;
             this.Height = 128;
             ClippyGrid.Width = 150;
@@ -238,6 +259,30 @@ namespace Recoding.ClippyVSPackage
 
             PopulateContextMenu();
         }
+        public void ReviveRocky()
+        {
+            if (Clippy != null)
+            {
+                Clippy.Dispose();
+                Clippy = null;
+            }
+
+            _showMerlin = false;
+            _showGenius = false;
+            _showRocky = true;
+
+            this.Width = 93;
+            this.Height = 124;
+            ClippyGrid.Width = 150;
+            ClippyGrid.Height = 150;
+            AssistantCanvasOverlay0.Height = 150;
+            AssistantCanvasOverlay1.Visibility = Visibility.Hidden;
+
+            Rocky = new Rocky((Canvas)this.FindName("AssistantCanvasOverlay0"));
+            Rocky.StartAnimation(RockyAnimations.Wave);
+
+            PopulateContextMenu();
+        }
 
         public void ReviveGenius()
         {
@@ -247,8 +292,9 @@ namespace Recoding.ClippyVSPackage
                 Clippy = null;
             }
 
-            _showGenius = true; 
+            _showGenius = true;
             _showMerlin = false;
+            _showRocky = false;
             this.Width = 124;
             this.Height = 93;
             ClippyGrid.Width = 124;
@@ -266,6 +312,7 @@ namespace Recoding.ClippyVSPackage
         private void RegisterToDteEvents(DTE dte)
         {
             ThreadHelper.ThrowIfNotOnUIThread();
+            
             _docEvents.DocumentOpening += DocumentEvents_DocumentOpening;
             _docEvents.DocumentSaved += DocumentEvents_DocumentSaved;
             _docEvents.DocumentClosing += DocEvents_DocumentClosing;
@@ -455,6 +502,8 @@ namespace Recoding.ClippyVSPackage
                 await Merlin.StartAnimationAsync(MerlinAnimations.Wave, true);
             else if (_showGenius)
                 await Genius.StartAnimationAsync(GeniusAnimations.Goodbye);
+            else if (_showRocky)
+                await Rocky.StartAnimationAsync(RockyAnimations.Goodbye);
             else
                 await Clippy.StartAnimationAsync(ClippyAnimations.GoodBye, true);
 
@@ -466,17 +515,23 @@ namespace Recoding.ClippyVSPackage
         private void cmdRandom_Click(object sender, RoutedEventArgs e)
         {
             Random rmd = new Random();
-            if (!_showMerlin && !_showGenius)
+            if (!_showMerlin && !_showGenius && !_showRocky)
             {
                 var randomInt = rmd.Next(0, Clippy.AllAnimations.Count);
 
                 Clippy.StartAnimation(Clippy.AllAnimations[randomInt]);
             }
-            else if (_showGenius)
+            else if (_showGenius && !_showRocky)
             {
                 var randomInt = rmd.Next(0, Genius.AllAnimations.Count);
 
                 Genius.StartAnimation(Genius.AllAnimations[randomInt]);
+            }
+            else if (_showRocky)
+            {
+                var randomInt = rmd.Next(0, Rocky.AllAnimations.Count);
+
+                Rocky.StartAnimation(Rocky.AllAnimations[randomInt]);
             }
             else
             {
@@ -505,10 +560,15 @@ namespace Recoding.ClippyVSPackage
                             ((MenuItem)sender).Header.ToString());
                     Genius.StartAnimation(geniusAnimation, true);
                 }
+                else if (_showRocky)
+                {
+                    var rockyAnimation = (RockyAnimations)Enum.Parse(typeof(RockyAnimations),
+                            ((MenuItem)sender).Header.ToString());
+                    Rocky.StartAnimation(rockyAnimation, true);
+                }
                 else
                 {
-                    var menuItem = sender as MenuItem;
-                    if (menuItem == null) return;
+                    if (!(sender is MenuItem menuItem)) return;
 
                     var animation = (ClippyAnimations)Enum.Parse(typeof(ClippyAnimations), menuItem.Header.ToString());
                     Clippy.StartAnimation(animation, true);
@@ -545,6 +605,10 @@ namespace Recoding.ClippyVSPackage
                 else if (_showGenius)
                 {
                     Genius.StartAnimation(GeniusAnimations.Idle1, true);
+                }
+                else if (_showRocky)
+                {
+                    Rocky.StartAnimation(RockyAnimations.Greeting, true);
                 }
                 else
                 {

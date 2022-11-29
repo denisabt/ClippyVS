@@ -27,7 +27,19 @@ namespace Recoding.ClippyVSPackage
         /// <summary>
         /// The image that holds the sprite
         /// </summary>
-        protected Image ClippedImage;
+        protected Image AssistantFramesImage;
+
+        /// <summary>
+        /// The URI for the sprite with all the animation stages for Clippy
+        /// </summary>
+        //private static string spriteResourceUri = "pack://application:,,,/ClippyVSPackage;component/clippy.png";
+        protected static string SpriteResourceUri = "pack://application:,,,/ClippyVs2022;component/clippy.png";
+
+        /// <summary>
+        /// The URI for the animationses json definition
+        /// </summary>
+        //private static string animationsResourceUri = "pack://application:,,,/ClippyVSPackage;component/animations.json";
+        protected static string AnimationsResourceUri = "pack://application:,,,/ClippyVs2022;component/animations.json";
 
         /// <summary>
         /// Seconds between a random idle animation and another
@@ -78,7 +90,7 @@ namespace Recoding.ClippyVSPackage
             // pass BitmapImage
             this.Sprite = new BitmapImage(new Uri(spResUri, UriKind.RelativeOrAbsolute));
 
-            ClippedImage = new Image
+            AssistantFramesImage = new Image
             {
                 Source = Sprite,
                 Stretch = Stretch.None
@@ -87,7 +99,7 @@ namespace Recoding.ClippyVSPackage
             if (canvas == null) return;
 
             canvas.Children.Clear();
-            canvas.Children.Add(ClippedImage);
+            canvas.Children.Add(AssistantFramesImage);
         }
 
         protected Dictionary<string, Tuple<DoubleAnimationUsingKeyFrames, DoubleAnimationUsingKeyFrames>> RegisterAnimationsImpl(string animationsResourceUri,
@@ -108,47 +120,64 @@ namespace Recoding.ClippyVSPackage
                 return animations;
 
             // Can go to Constructor/Init
-            var storedAnimations =
-                Newtonsoft.Json.JsonConvert.DeserializeObject<List<ClippySingleAnimation>>(StreamToString(info.Stream));
-            
+            List<ClippySingleAnimation> storedAnimations = null;
+            try
+            {
+                storedAnimations =
+                    Newtonsoft.Json.JsonConvert.DeserializeObject<List<ClippySingleAnimation>>(StreamToString(info.Stream));
+            } catch (Exception exjson)
+            {
+                Console.Write(exjson.ToString());
+            }
+
             if (storedAnimations == null) return animations;
 
             foreach (var animation in storedAnimations)
             {
-                var xDoubleAnimation = new DoubleAnimationUsingKeyFrames
+                try
                 {
-                    FillBehavior = FillBehavior.HoldEnd
-                };
-
-                var yDoubleAnimation = new DoubleAnimationUsingKeyFrames
-                {
-                    FillBehavior = FillBehavior.HoldEnd
-                };
-
-                double timeOffset = 0;
-
-                foreach (var frame in animation.Frames)
-                {
-                    if (frame.ImagesOffsets != null)
+                    var xDoubleAnimation = new DoubleAnimationUsingKeyFrames
                     {
-                        var lastCol = frame.ImagesOffsets.Column;
-                        var lastRow = frame.ImagesOffsets.Row;
+                        FillBehavior = FillBehavior.HoldEnd
+                    };
 
-                        // X
-                        var xKeyFrame = new DiscreteDoubleKeyFrame(clipWidth * -lastCol, KeyTime.FromTimeSpan(TimeSpan.FromSeconds(timeOffset)));
+                    var yDoubleAnimation = new DoubleAnimationUsingKeyFrames
+                    {
+                        FillBehavior = FillBehavior.HoldEnd
+                    };
 
-                        // Y
-                        var yKeyFrame = new DiscreteDoubleKeyFrame(clipHeight * -lastRow, KeyTime.FromTimeSpan(TimeSpan.FromSeconds(timeOffset)));
+                    double timeOffset = 0;
 
-                        timeOffset += ((double)frame.Duration / 1000);
-                        xDoubleAnimation.KeyFrames.Add(xKeyFrame);
-                        yDoubleAnimation.KeyFrames.Add(yKeyFrame);
+                    foreach (var frame in animation.Frames)
+                    {
+                        if (frame.ImagesOffsets != null)
+                        {
+                            var lastCol = frame.ImagesOffsets.Column;
+                            var lastRow = frame.ImagesOffsets.Row;
+
+                            // X
+                            var xKeyFrame = new DiscreteDoubleKeyFrame(clipWidth * -lastCol,
+                                KeyTime.FromTimeSpan(TimeSpan.FromSeconds(timeOffset)));
+
+                            // Y
+                            var yKeyFrame = new DiscreteDoubleKeyFrame(clipHeight * -lastRow,
+                                KeyTime.FromTimeSpan(TimeSpan.FromSeconds(timeOffset)));
+
+                            timeOffset += ((double) frame.Duration / 1000);
+                            xDoubleAnimation.KeyFrames.Add(xKeyFrame);
+                            yDoubleAnimation.KeyFrames.Add(yKeyFrame);
+                        }
                     }
-                }
 
-                animations.Add(animation.Name, new Tuple<DoubleAnimationUsingKeyFrames, DoubleAnimationUsingKeyFrames>(xDoubleAnimation, yDoubleAnimation));
-                xDoubleAnimation.Completed += xDoubleAnimationCompleted;
-               
+                    animations.Add(animation.Name,
+                        new Tuple<DoubleAnimationUsingKeyFrames, DoubleAnimationUsingKeyFrames>(xDoubleAnimation,
+                            yDoubleAnimation));
+                    xDoubleAnimation.Completed += xDoubleAnimationCompleted;
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show("Error parsing animations");
+                }
             }
             return animations;
         }

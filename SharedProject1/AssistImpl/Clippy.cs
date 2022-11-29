@@ -2,11 +2,8 @@
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Media;
 using System.Windows.Media.Animation;
-using System.Windows.Media.Imaging;
 using System.Windows.Threading;
 using System.Linq;
 using System.Diagnostics;
@@ -18,18 +15,6 @@ namespace Recoding.ClippyVSPackage
     /// </summary>
     public class Clippy : AssistantBase
     {
-        /// <summary>
-        /// The URI for the sprite with all the animation stages for Clippy
-        /// </summary>
-        //private static string spriteResourceUri = "pack://application:,,,/ClippyVSPackage;component/clippy.png";
-        private static readonly string SpriteResourceUri = "pack://application:,,,/ClippyVs2022;component/clippy.png";
-
-        /// <summary>
-        /// The URI for the animationses json definition
-        /// </summary>
-        //private static string animationsResourceUri = "pack://application:,,,/ClippyVSPackage;component/animations.json";
-        private static readonly string AnimationsResourceUri = "pack://application:,,,/ClippyVs2022;component/animations.json";
-
         /// <summary>
         /// The height of the frame
         /// </summary>
@@ -68,6 +53,8 @@ namespace Recoding.ClippyVSPackage
         /// </summary>
         public Clippy(Canvas canvas)
         {
+            SpriteResourceUri = "pack://application:,,,/ClippyVs2022;component/clippy.png";
+            AnimationsResourceUri = "pack://application:,,,/ClippyVs2022;component/animations.json"; 
             InitAssistant(canvas, SpriteResourceUri);
 
             if (_animations == null)
@@ -141,8 +128,8 @@ namespace Recoding.ClippyVSPackage
                 await Microsoft.VisualStudio.Shell.ThreadHelper.JoinableTaskFactory.SwitchToMainThreadAsync();
                 if (_animations.ContainsKey(animationsType.ToString()))
                 {
-                    ClippedImage.BeginAnimation(Canvas.LeftProperty, _animations[animationsType.ToString()].Item1);
-                    ClippedImage.BeginAnimation(Canvas.TopProperty, _animations[animationsType.ToString()].Item2);
+                    AssistantFramesImage.BeginAnimation(Canvas.LeftProperty, _animations[animationsType.ToString()].Item1);
+                    AssistantFramesImage.BeginAnimation(Canvas.TopProperty, _animations[animationsType.ToString()].Item2);
                 } else
                 {
                     Debug.WriteLine("Animation {0} not found!", animationsType.ToString());

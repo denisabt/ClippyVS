@@ -79,11 +79,16 @@ namespace Recoding.ClippyVSPackage
                     var menuCommandGeniusId = new CommandID(Constants.GuidClippyVsCmdSet, (int)PkgCmdIdList.CmdidCommandGenius);
                     var menuItemGenius = new MenuCommand(MenuItemCallback, menuCommandGeniusId);
                     mcs.AddCommand(menuItemGenius);
+
+                    var menuCommandRockyId = new CommandID(Constants.GuidClippyVsCmdSet, (int)PkgCmdIdList.CmdidCommandRocky);
+                    var menuItemRocky = new MenuCommand(MenuItemCallback, menuCommandRockyId);
+                    mcs.AddCommand(menuItemRocky);
                 }
 
                 await Command1.InitializeAsync(this).ConfigureAwait(true);
-                await Command2.InitializeAsync(this).ConfigureAwait(true);
+                await CommandMerlin.InitializeAsync(this).ConfigureAwait(true);
                 await CommandGenius.InitializeAsync(this).ConfigureAwait(true);
+                await CommandRocky.InitializeAsync(this).ConfigureAwait(true);
             }
             catch (Exception e)
             {
@@ -138,6 +143,21 @@ namespace Recoding.ClippyVSPackage
             SpriteContainer.ReviveGenius();
         }
 
+        internal void ReviveRockyCommand()
+        {
+            var visibleAssistants = Application.Current.Windows.OfType<SpriteContainer>();
+            if (!visibleAssistants.Any())
+            {
+                SpriteContainer = new SpriteContainer(this, true);
+            }
+
+            Settings.SelectedAssistantName = "Rocky";
+            Settings.SaveSettings();
+
+            Application.Current.Windows.OfType<SpriteContainer>().First().Show();
+            SpriteContainer.ReviveRocky();
+        }
+
         private async void MainWindow_ContentRendered(object sender, EventArgs e)
         {
             await MainWindow_ContentRenderedAsync();
@@ -156,6 +176,9 @@ namespace Recoding.ClippyVSPackage
                         break;
                     case "Merlin":
                         SpriteContainer = new SpriteContainer(this, true);
+                        break;
+                    case "Rocky":
+                        SpriteContainer = new SpriteContainer(this, false, false, true);
                         break;
                     default:
                         SpriteContainer = new SpriteContainer(this);

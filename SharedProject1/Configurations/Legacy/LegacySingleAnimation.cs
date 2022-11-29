@@ -3,7 +3,7 @@
 namespace Recoding.ClippyVSPackage.Configurations.Legacy
 {
     /* ----- Genius and Legacy -------- */
-    public class GeniusSingleAnimation
+    public class WeblikeSingleAnimation
     {
         public string Name { get; set; }
         public List<Frame> Frames { get; set; }

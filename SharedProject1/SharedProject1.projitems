@@ -13,13 +13,16 @@
     <Compile Include="$(MSBuildThisFileDirectory)AssistImpl\Genius.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)AssistImpl\LayeredAnimation.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)AssistImpl\LayeredAnimations.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)AssistImpl\Rocky.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)AssistImpl\Merlin.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)AssistImpl\Clippy.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)AssistImpl\RockyGeniusBase.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)AssistImpl\WebLikeAssistant.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ClippyVSPackage.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ClippyVSSettings.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)CommandGenius.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Commands\Command1.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Commands\Command2.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Commands\CommandMerlin.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Configurations\ClippySingleAnimation.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -28,6 +31,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)Configurations\Frame.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Configurations\GeniusAnimations.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Configurations\Legacy\LegacySingleAnimation.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Configurations\RockyAnimations.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Configurations\MerlinAnimations.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Constants.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)GlobalSuppressions.cs" />
@@ -56,6 +60,7 @@
     <Content Include="$(MSBuildThisFileDirectory)LICENSE.txt">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
+    <Resource Include="$(MSBuildThisFileDirectory)Resources\Rocky\rocky_map.png" />
     <Resource Include="$(MSBuildThisFileDirectory)Resources\Merlin\merlin_map.png" />
     <Resource Include="$(MSBuildThisFileDirectory)Resources\Genius\genius_map.png" />
   </ItemGroup>
@@ -63,6 +68,7 @@
     <None Include="$(MSBuildThisFileDirectory)app.config" />
     <None Include="$(MSBuildThisFileDirectory)ClippyVSPackage.ruleset" />
     <None Include="$(MSBuildThisFileDirectory)Key.snk" />
+    <Resource Include="$(MSBuildThisFileDirectory)Resources\Rocky\rocky_agent.js" />
     <Resource Include="$(MSBuildThisFileDirectory)Resources\Merlin\merlin_agent.js" />
     <Resource Include="$(MSBuildThisFileDirectory)Resources\Merlin\merlin_sounds-mp3.js" />
     <Resource Include="$(MSBuildThisFileDirectory)Resources\Merlin\merlin_sounds-ogg.js" />

@@ -22,7 +22,7 @@ namespace SharedProject1.AssistImpl
     /// <summary>
     /// The core object that represents Clippy and its animations
     /// </summary>
-    public class Genius : AssistantBase
+    public class Genius : RockyGeniusBase
     {
         /// <summary>
         /// The URI for the sprite with all the animation stages for Clippy
@@ -45,11 +45,6 @@ namespace SharedProject1.AssistImpl
         /// The with of the frame
         /// </summary>
         public static int ClipWidth { get; } = 124;
-
-        /// <summary>
-        /// The image that holds the sprite
-        /// </summary>
-        private readonly Image _clippedImage1;
 
         /// <summary>
         /// The list of all the available animations
@@ -86,7 +81,7 @@ GeniusAnimations.Idle9};
 
             InitAssistant(canvas, SpriteResourceUri);
             // Might not be required XXX
-            ClippedImage.Visibility = Visibility.Visible;
+            AssistantFramesImage.Visibility = Visibility.Visible;
 
             _clippedImage1 = new Image
             {
@@ -110,80 +105,8 @@ GeniusAnimations.Idle9};
             RegisterIdleRandomAnimations();
         }
 
-        
-        /// <summary>
-        /// Registers all the animation definitions into a static property
-        /// </summary>
-        protected void RegisterAnimations()
-        {
-            var storedAnimations = ParseAnimDescriptions();
-            if (storedAnimations == null) return;
 
-            _animations = new LayeredAnimations(storedAnimations.Count);
-
-            foreach (var animation in storedAnimations)
-            {
-                RegisterAnimation(animation);
-            }
-        }
-
-        private void RegisterAnimation(GeniusSingleAnimation animation)
-        {
-            var xDoubleAnimation = new DoubleAnimationUsingKeyFrames
-            {
-                FillBehavior = FillBehavior.HoldEnd
-            };
-            var yDoubleAnimation = new DoubleAnimationUsingKeyFrames
-            {
-                FillBehavior = FillBehavior.HoldEnd
-            };
-            var visibility0 = new ObjectAnimationUsingKeyFrames();
-
-            var xDoubleAnimation1 = new DoubleAnimationUsingKeyFrames
-            {
-                FillBehavior = FillBehavior.HoldEnd
-            };
-            var yDoubleAnimation1 = new DoubleAnimationUsingKeyFrames
-            {
-                FillBehavior = FillBehavior.HoldEnd
-            };
-            var visibility1 = new ObjectAnimationUsingKeyFrames();
-
-            var xDoubleAnimation2 = new DoubleAnimationUsingKeyFrames
-            {
-                FillBehavior = FillBehavior.HoldEnd
-            };
-            var yDoubleAnimation2 = new DoubleAnimationUsingKeyFrames
-            {
-                FillBehavior = FillBehavior.HoldEnd
-            };
-            var visibility2 = new ObjectAnimationUsingKeyFrames();
-
-            double timeOffset = 0;
-            var frameIndex = 0;
-            var animationMaxLayers = 0;
-
-            foreach (var frame in animation.Frames)
-            {
-                animationMaxLayers = RegisterFrame(frame, animationMaxLayers, xDoubleAnimation, yDoubleAnimation, xDoubleAnimation1, yDoubleAnimation1, xDoubleAnimation2, yDoubleAnimation2, visibility0, visibility1, visibility2, ref timeOffset, ref frameIndex);
-            }
-
-            _animations.Add(animation.Name,
-                new Tuple<DoubleAnimationUsingKeyFrames, DoubleAnimationUsingKeyFrames>(xDoubleAnimation, yDoubleAnimation),
-                visibility0,
-                new Tuple<DoubleAnimationUsingKeyFrames, DoubleAnimationUsingKeyFrames>(xDoubleAnimation1, yDoubleAnimation1),
-                visibility1,
-                animationMaxLayers);
-
-            Debug.WriteLine("Added Genius Anim {0}" + animation.Name);
-            Debug.WriteLine("...  Frame Count: " + xDoubleAnimation.KeyFrames.Count + " - " +
-                            yDoubleAnimation.KeyFrames.Count);
-            Debug.WriteLine($"Animation {animation.Name} has {animationMaxLayers} layers");
-
-            xDoubleAnimation.Completed += XDoubleAnimation_Completed;
-        }
-
-        private static int RegisterFrame(Frame frame, int animationMaxLayers, DoubleAnimationUsingKeyFrames xDoubleAnimation,
+        public static int RegisterFrame(Frame frame, int animationMaxLayers, DoubleAnimationUsingKeyFrames xDoubleAnimation,
             DoubleAnimationUsingKeyFrames yDoubleAnimation, DoubleAnimationUsingKeyFrames xDoubleAnimation1,
             DoubleAnimationUsingKeyFrames yDoubleAnimation1, DoubleAnimationUsingKeyFrames xDoubleAnimation2,
             DoubleAnimationUsingKeyFrames yDoubleAnimation2, ObjectAnimationUsingKeyFrames visibility0, ObjectAnimationUsingKeyFrames visibility1, ObjectAnimationUsingKeyFrames visibility2, ref double timeOffset, ref int frameIndex)
@@ -259,61 +182,6 @@ GeniusAnimations.Idle9};
         }
 
 
-        private static List<GeniusSingleAnimation> ParseAnimDescriptions()
-        {
-            var spResUri = AnimationsResourceUri;
-
-#if Dev19
-            spResUri = spResUri.Replace("ClippyVs2022", "ClippyVSPackage");
-#endif
-            var uri = new Uri(spResUri, UriKind.RelativeOrAbsolute);
-
-            var animJStream = Application.GetResourceStream(uri);
-
-            if (animJStream == null)
-                return null;
-
-            // Can go to Constructor/Init
-            var errors = new List<string>();
-
-            var storedAnimations = DeserializeAnimations(animJStream, errors);
-            return storedAnimations;
-        }
-
-        private static List<GeniusSingleAnimation> DeserializeAnimations(StreamResourceInfo animJStream, List<string> errors)
-        {
-            var storedAnimations =
-                JsonConvert.DeserializeObject<List<GeniusSingleAnimation>>(StreamToString(animJStream.Stream),
-                    new JsonSerializerSettings
-                    {
-                        Error = delegate (object sender, ErrorEventArgs args)
-                        {
-                            errors.Add(args.ErrorContext.Error.Message);
-                            args.ErrorContext.Handled = true;
-                        },
-                        MissingMemberHandling = MissingMemberHandling.Error,
-                        NullValueHandling = NullValueHandling.Include
-                    });
-            return storedAnimations;
-        }
-
-        /// <summary>
-        /// Callback to execute at the end of an animation
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void XDoubleAnimation_Completed(object sender, EventArgs e)
-        {
-            IsAnimating = false;
-            ClippedImage.Visibility = Visibility.Visible;
-            if (ClippedImage.Parent is Canvas canvas)
-                canvas.Visibility = Visibility.Visible;
-
-            _clippedImage1.Visibility = Visibility.Hidden;
-            if (_clippedImage1.Parent is Canvas canvas1)
-                canvas1.Visibility=Visibility.Hidden;
-        }
-
         /// <summary>
         /// Registers a function to perform a subset of animations randomly (the idle ones)
         /// </summary>
@@ -371,9 +239,8 @@ GeniusAnimations.Idle9};
                         _clippedImage1.Visibility = Visibility.Visible;
                         ((Canvas) _clippedImage1.Parent).Visibility = Visibility.Visible;
                     }
-                    ClippedImage.BeginAnimation(Canvas.LeftProperty, animation.Layer0.Item1);
-                    ClippedImage.BeginAnimation(Canvas.TopProperty, animation.Layer0.Item2);
-                    
+                    AssistantFramesImage.BeginAnimation(Canvas.LeftProperty, animation.Layer0.Item1);
+                    AssistantFramesImage.BeginAnimation(Canvas.TopProperty, animation.Layer0.Item2);
 
                     _clippedImage1.BeginAnimation(Canvas.LeftProperty, animation.Layer1.Item1);
                     _clippedImage1.BeginAnimation(Canvas.TopProperty, animation.Layer1.Item2);

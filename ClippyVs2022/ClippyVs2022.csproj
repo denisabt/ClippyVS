@@ -34,7 +34,7 @@
     <OutputPath>bin\Debug\</OutputPath>
     <DefineConstants>TRACE;DEBUG;Dev22</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
+    <WarningLevel>1</WarningLevel>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -60,10 +60,15 @@
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Microsoft.VisualStudio.Interop">
-      <Version>17.0.31902.203</Version>
+      <Version>17.4.33103.184</Version>
     </PackageReference>
-    <PackageReference Include="Microsoft.VisualStudio.SDK" Version="17.0.31902.203" ExcludeAssets="runtime" />
-    <PackageReference Include="Microsoft.VSSDK.BuildTools" Version="17.0.5233" />
+    <PackageReference Include="Microsoft.VisualStudio.SDK" Version="17.4.33103.184" ExcludeAssets="runtime">
+      <IncludeAssets>compile; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+    <PackageReference Include="Microsoft.VSSDK.BuildTools" Version="17.4.2119">
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+      <PrivateAssets>all</PrivateAssets>
+    </PackageReference>
     <PackageReference Include="VSSDK.DTE.8">
       <Version>8.0.4</Version>
     </PackageReference>
