@@ -17,18 +17,6 @@ namespace SharedProject1.AssistImpl
     public class Merlin : AssistantBase
     {
         /// <summary>
-        /// The URI for the sprite with all the animation stages for Clippy
-        /// </summary>
-        //private static string spriteResourceUri = "pack://application:,,,/ClippyVSPackage;component/clippy.png";
-        private static readonly string SpriteResourceUri = "pack://application:,,,/ClippyVs2022;component/merlin_map.png";
-
-        /// <summary>
-        /// The URI for the animations json definition
-        /// </summary>
-        //private static string animationsResourceUri = "pack://application:,,,/ClippyVSPackage;component/animations.json";
-        private static readonly string AnimationsResourceUri = "pack://application:,,,/ClippyVs2022;component/merlin_agent.js";
-
-        /// <summary>
         /// The height of the frame
         /// </summary>
         public static int ClipHeight { get; } = 128;
@@ -68,6 +56,9 @@ MerlinAnimations.Idle1_2};
         /// </summary>
         public Merlin(Panel canvas)
         {
+            AnimationsResourceUri = "pack://application:,,,/ClippyVs2022;component/merlin_agent.js";
+            SpriteResourceUri = "pack://application:,,,/ClippyVs2022;component/merlin_map.png";
+
             InitAssistant(canvas, SpriteResourceUri);
 
             if (_animations == null)

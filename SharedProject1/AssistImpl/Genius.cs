@@ -28,13 +28,13 @@ namespace SharedProject1.AssistImpl
         /// The URI for the sprite with all the animation stages for Clippy
         /// </summary>
         //private static string spriteResourceUri = "pack://application:,,,/ClippyVSPackage;component/clippy.png";
-        private static readonly string SpriteResourceUri = "pack://application:,,,/ClippyVs2022;component/genius_map.png";
+        //private static readonly string SpriteResourceUri = "pack://application:,,,/ClippyVs2022;component/genius_map.png";
 
         /// <summary>
         /// The URI for the animations json definition
         /// </summary>
         //private static string animationsResourceUri = "pack://application:,,,/ClippyVSPackage;component/animations.json";
-        private static readonly string AnimationsResourceUri = "pack://application:,,,/ClippyVs2022;component/Genius.json";
+        //private static readonly string AnimationsResourceUri = "pack://application:,,,/ClippyVs2022;component/Genius.json";
 
         /// <summary>
         /// The height of the frame
@@ -54,7 +54,7 @@ namespace SharedProject1.AssistImpl
         /// <summary>
         /// The list of couples of Columns/Rows double animations , supports no overlays
         /// </summary>
-        private static LayeredAnimations _animations;
+        //private static LayeredAnimations _animations;
 
         /// <summary>
         /// All the animations that represents an Idle state
@@ -77,6 +77,9 @@ GeniusAnimations.Idle9};
         /// </summary>
         public Genius(Panel canvas, Panel canvas1)
         {
+            AnimationsResourceUri = "pack://application:,,,/ClippyVs2022;component/Genius.json";
+            SpriteResourceUri = "pack://application:,,,/ClippyVs2022;component/genius_map.png";
+
             if (canvas == null) return;
 
             InitAssistant(canvas, SpriteResourceUri);

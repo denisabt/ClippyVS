@@ -123,14 +123,21 @@ namespace Recoding.ClippyVSPackage
             PlaceContainer(storedRelativeTop, storedRelativeLeft);
             #endregion
 
-            if (_showMerlin)
-                ReviveMerlin();
-            else if (_showGenius)
-                ReviveGenius();
-            else if (_showRocky)
-                ReviveRocky();
-            else
-                ReviveClippy();
+            try
+            {
+                if (_showMerlin)
+                    ReviveMerlin();
+                else if (_showGenius)
+                    ReviveGenius();
+                else if (_showRocky)
+                    ReviveRocky();
+                else
+                    ReviveClippy();
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine(ex.ToString());
+            }
         }
 
 
@@ -273,9 +280,9 @@ namespace Recoding.ClippyVSPackage
 
             this.Width = 93;
             this.Height = 124;
-            ClippyGrid.Width = 150;
-            ClippyGrid.Height = 150;
-            AssistantCanvasOverlay0.Height = 150;
+            ClippyGrid.Width = 93;
+            ClippyGrid.Height = 124;
+            AssistantCanvasOverlay0.Height = 124;
             AssistantCanvasOverlay1.Visibility = Visibility.Hidden;
 
             Rocky = new Rocky((Canvas)this.FindName("AssistantCanvasOverlay0"));
@@ -332,11 +339,23 @@ namespace Recoding.ClippyVSPackage
                 _csharpProjectItemsEvents.ItemAdded += ProjectItemsEvents_ItemAdded;
                 _csharpProjectItemsEvents.ItemRemoved += ProjectItemsEvents_ItemRemoved;
                 _csharpProjectItemsEvents.ItemRenamed += ProjectItemsEvents_ItemRenamed;
+                _debuggerEvents.OnContextChanged += (process, program, thread, frame) => { };
+                _debuggerEvents.OnEnterBreakMode += _debuggerEvents_OnEnterBreakMode;
+                _debuggerEvents.OnExceptionThrown += ((string type, string name, int code, string description,
+                    ref dbgExceptionAction action) =>
+                {
+                    Debug.WriteLine("XYZ");
+                });
             }
             catch (Exception exev)
             {
                 Debug.WriteLine("Events binding failure {0}", exev.Message);
             }
+        }
+
+        private void _debuggerEvents_OnEnterBreakMode(dbgEventReason Reason, ref dbgExecutionAction ExecutionAction)
+        {
+            throw new NotImplementedException();
         }
 
         #region -- IDE Event Handlers --
