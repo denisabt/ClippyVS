@@ -86,6 +86,7 @@
     </PackageReference>
   </ItemGroup>
   <ItemGroup>
+    <Resource Include="Rocky.json" />
     <Resource Include="..\SharedFiles\Resources\clippy.png">
       <Link>clippy.png</Link>
     </Resource>

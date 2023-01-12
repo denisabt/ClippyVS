@@ -23,6 +23,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)CommandGenius.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Commands\Command1.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Commands\CommandMerlin.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Commands\CommandRocky.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Configurations\ClippySingleAnimation.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -68,7 +69,6 @@
     <None Include="$(MSBuildThisFileDirectory)app.config" />
     <None Include="$(MSBuildThisFileDirectory)ClippyVSPackage.ruleset" />
     <None Include="$(MSBuildThisFileDirectory)Key.snk" />
-    <Resource Include="$(MSBuildThisFileDirectory)Resources\Rocky\rocky_agent.js" />
     <Resource Include="$(MSBuildThisFileDirectory)Resources\Merlin\merlin_agent.js" />
     <Resource Include="$(MSBuildThisFileDirectory)Resources\Merlin\merlin_sounds-mp3.js" />
     <Resource Include="$(MSBuildThisFileDirectory)Resources\Merlin\merlin_sounds-ogg.js" />
@@ -91,8 +91,5 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-  </ItemGroup>
-  <ItemGroup>
-    <Folder Include="$(MSBuildThisFileDirectory)Commands\" />
   </ItemGroup>
 </Project>

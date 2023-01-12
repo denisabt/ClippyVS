@@ -1,7 +1,7 @@
 ﻿[
     {
-        "DeepIdle1": {
-            "frames": [
+         "Name":"DeepIdle1",
+            "Frames": [
                 {
                     "duration": 0,
                     "images": [
@@ -429,8 +429,8 @@
                 }
             ]
         },
-        "Congratulate": {
-            "frames": [
+        {  "Name" : "Congratulate",
+            "Frames": [
                 {
                     "duration": 80,
                     "images": [
@@ -1510,8 +1510,8 @@
                 }
             ]
         },
-        "Idle(1)": {
-            "frames": [
+        { "Name":"Idle(1)",
+            "Frames": [
                 {
                     "duration": 1450,
                     "images": [
@@ -1659,8 +1659,8 @@
                 }
             ]
         },
-        "Hide": {
-            "frames": [
+        { "Name":"Hide",
+            "Frames": [
                 {
                     "duration": 10,
                     "images": [
@@ -1702,8 +1702,8 @@
                 }
             ]
         },
-        "SendMail": {
-            "frames": [
+        { "Name":"SendMail",
+            "Frames": [
                 {
                     "duration": 0,
                     "images": [
@@ -2197,8 +2197,8 @@
                 }
             ]
         },
-        "Thinking": {
-            "frames": [
+        { "Name":"Thinking",
+            "Frames": [
                 {
                     "duration": 0,
                     "images": [
@@ -2329,8 +2329,8 @@
                 }
             ]
         },
-        "Idle(3)": {
-            "frames": [
+        { "Name":"Idle(3)",
+            "Frames": [
                 {
                     "duration": 1450,
                     "images": [
@@ -2446,8 +2446,8 @@
                 }
             ]
         },
-        "Explain": {
-            "frames": [
+        { "Name":"Explain",
+            "Frames": [
                 {
                     "duration": 0,
                     "images": [
@@ -2654,8 +2654,8 @@
                 }
             ]
         },
-        "Idle(5)": {
-            "frames": [
+        { "Name":"Idle(5)",
+            "Frames": [
                 {
                     "duration": 1450,
                     "images": [
@@ -4100,8 +4100,8 @@
                 }
             ]
         },
-        "Print": {
-            "frames": [
+        { "Name":"Print",
+            "Frames": [
                 {
                     "duration": 0,
                     "images": [
@@ -5012,8 +5012,8 @@
                 }
             ]
         },
-        "LookRight": {
-            "frames": [
+        { "Name":"LookRight",
+            "Frames": [
                 {
                     "duration": 0,
                     "images": [
@@ -5134,8 +5134,8 @@
                 }
             ]
         },
-        "GetAttention": {
-            "frames": [
+        { "Name":"GetAttention",
+            "Frames": [
                 {
                     "duration": 10,
                     "images": [
@@ -6267,8 +6267,8 @@
                 }
             ]
         },
-        "Save": {
-            "frames": [
+        { "Name":"Save",
+            "Frames": [
                 {
                     "duration": 0,
                     "images": [
@@ -6731,8 +6731,8 @@
                 }
             ]
         },
-        "GetTechy": {
-            "frames": [
+        { "Name":"GetTechy",
+            "Frames": [
                 {
                     "duration": 0,
                     "images": [
@@ -7160,8 +7160,8 @@
                 }
             ]
         },
-        "GestureUp": {
-            "frames": [
+        { "Name":"GestureUp",
+            "Frames": [
                 {
                     "duration": 0,
                     "images": [
@@ -7300,8 +7300,8 @@
                 }
             ]
         },
-        "Idle1_1": {
-            "frames": [
+        { "Name":"Idle1_1",
+            "Frames": [
                 {
                     "duration": 1450,
                     "images": [
@@ -8314,8 +8314,8 @@
                 }
             ]
         },
-        "Processing": {
-            "frames": [
+        { "Name":"Processing",
+            "Frames": [
                 {
                     "duration": 0,
                     "images": [
@@ -10672,8 +10672,8 @@
                 }
             ]
         },
-        "Alert": {
-            "frames": [
+        { "Name":"Alert",
+            "Frames": [
                 {
                     "duration": 0,
                     "images": [
@@ -10766,8 +10766,8 @@
                 }
             ]
         },
-        "LookUpRight": {
-            "frames": [
+        { "Name":"LookUpRight",
+            "Frames": [
                 {
                     "duration": 0,
                     "images": [
@@ -10897,8 +10897,8 @@
                 }
             ]
         },
-        "Idle(9)": {
-            "frames": [
+        { "Name":"Idle(9)",
+            "Frames": [
                 {
                     "duration": 0,
                     "images": [
@@ -13357,8 +13357,8 @@
                 }
             ]
         },
-        "Idle(7)": {
-            "frames": [
+        { "Name":"Idle(7)",
+            "Frames": [
                 {
                     "duration": 1450,
                     "images": [
@@ -13500,8 +13500,8 @@
                 }
             ]
         },
-        "GestureDown": {
-            "frames": [
+        { "Name":"GestureDown",
+            "Frames": [
                 {
                     "duration": 0,
                     "images": [
@@ -13631,8 +13631,8 @@
                 }
             ]
         },
-        "LookLeft": {
-            "frames": [
+        { "Name":"LookLeft",
+            "Frames": [
                 {
                     "duration": 0,
                     "images": [
@@ -13771,8 +13771,8 @@
                 }
             ]
         },
-        "Idle(2)": {
-            "frames": [
+        { "Name":"Idle(2)",
+            "Frames": [
                 {
                     "duration": 1450,
                     "images": [
@@ -14158,8 +14158,8 @@
                 }
             ]
         },
-        "LookUpLeft": {
-            "frames": [
+        { "Name":"LookUpLeft",
+            "Frames": [
                 {
                     "duration": 0,
                     "images": [
@@ -14298,8 +14298,8 @@
                 }
             ]
         },
-        "CheckingSomething": {
-            "frames": [
+        { "Name":"CheckingSomething",
+            "Frames": [
                 {
                     "duration": 0,
                     "images": [
@@ -14785,8 +14785,8 @@
                 }
             ]
         },
-        "Hearing_1": {
-            "frames": [
+        { "Name":"Hearing_1",
+            "Frames": [
                 {
                     "duration": 0,
                     "images": [
@@ -14960,8 +14960,8 @@
                 }
             ]
         },
-        "GetWizardy": {
-            "frames": [
+        { "Name":"GetWizardy",
+            "Frames": [
                 {
                     "duration": 0,
                     "images": [
@@ -15132,8 +15132,8 @@
                 }
             ]
         },
-        "GestureLeft": {
-            "frames": [
+        { "Name":"GestureLeft",
+            "Frames": [
                 {
                     "duration": 0,
                     "images": [
@@ -15272,8 +15272,8 @@
                 }
             ]
         },
-        "Wave": {
-            "frames": [
+        { "Name":"Wave",
+            "Frames": [
                 {
                     "duration": 0,
                     "images": [
@@ -15739,8 +15739,8 @@
                 }
             ]
         },
-        "Goodbye": {
-            "frames": [
+        { "Name":"Goodbye",
+            "Frames": [
                 {
                     "duration": 100,
                     "images": [
@@ -16660,8 +16660,8 @@
                 }
             ]
         },
-        "GestureRight": {
-            "frames": [
+        { "Name":"GestureRight",
+            "Frames": [
                 {
                     "duration": 0,
                     "images": [
@@ -16994,8 +16994,8 @@
                 }
             ]
         },
-        "Writing": {
-            "frames": [
+        { "Name":"Writing",
+            "Frames": [
                 {
                     "duration": 0,
                     "images": [
@@ -17665,8 +17665,8 @@
                 }
             ]
         },
-        "LookDownRight": {
-            "frames": [
+        { "Name":"LookDownRight",
+            "Frames": [
                 {
                     "duration": 0,
                     "images": [
@@ -17787,8 +17787,8 @@
                 }
             ]
         },
-        "GetArtsy": {
-            "frames": [
+        { "Name":"GetArtsy",
+            "Frames": [
                 {
                     "duration": 0,
                     "images": [
@@ -18114,8 +18114,8 @@
                 }
             ]
         },
-        "Show": {
-            "frames": [
+        { "Name":"Show",
+            "Frames": [
                 {
                     "duration": 10
                 },
@@ -18157,8 +18157,8 @@
                 }
             ]
         },
-        "LookDown": {
-            "frames": [
+        { "Name":"LookDown",
+            "Frames": [
                 {
                     "duration": 0,
                     "images": [
@@ -18288,8 +18288,8 @@
                 }
             ]
         },
-        "Searching": {
-            "frames": [
+        { "Name":"Searching",
+            "Frames": [
                 {
                     "duration": 0,
                     "images": [
@@ -18775,8 +18775,8 @@
                 }
             ]
         },
-        "Idle(4)": {
-            "frames": [
+        { "Name":"Idle(4)",
+            "Frames": [
                 {
                     "duration": 1450,
                     "images": [
@@ -19011,8 +19011,8 @@
                 }
             ]
         },
-        "EmptyTrash": {
-            "frames": [
+        { "Name":"EmptyTrash",
+            "Frames": [
                 {
                     "duration": 0,
                     "images": [
@@ -19813,8 +19813,8 @@
                 }
             ]
         },
-        "Greeting": {
-            "frames": [
+        { "Name":"Greeting",
+            "Frames": [
                 {
                     "duration": 0,
                     "branching": {
@@ -22629,8 +22629,8 @@
                 }
             ]
         },
-        "LookUp": {
-            "frames": [
+        { "Name":"LookUp",
+            "Frames": [
                 {
                     "duration": 0,
                     "images": [
@@ -22769,8 +22769,8 @@
                 }
             ]
         },
-        "Idle(6)": {
-            "frames": [
+        { "Name":"Idle(6)",
+            "Frames": [
                 {
                     "duration": 1450,
                     "images": [
@@ -22970,8 +22970,8 @@
                 }
             ]
         },
-        "RestPose": {
-            "frames": [
+        { "Name":"RestPose",
+            "Frames": [
                 {
                     "duration": 0,
                     "images": [
@@ -22983,8 +22983,8 @@
                 }
             ]
         },
-        "Idle(8)": {
-            "frames": [
+        { "Name":"Idle(8)",
+            "Frames": [
                 {
                     "duration": 1450,
                     "images": [
@@ -23784,8 +23784,8 @@
                 }
             ]
         },
-        "LookDownLeft": {
-            "frames": [
+        { "Name":"LookDownLeft",
+            "Frames": [
                 {
                     "duration": 0,
                     "images": [
@@ -23924,5 +23924,5 @@
                 }
             ]
         }
-    }
+    
 ]

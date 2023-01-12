@@ -17,7 +17,7 @@ namespace Recoding.ClippyVSPackage
         /// <summary>
         /// The time dispatcher to perform the animations in a random way
         /// </summary>
-        protected DispatcherTimer WpfAnimationsDispatcher;
+        protected static DispatcherTimer WpfAnimationsDispatcher;
 
         /// <summary>
         /// The sprite with all the animation stages for Clippy
@@ -172,7 +172,7 @@ namespace Recoding.ClippyVSPackage
                     animations.Add(animation.Name,
                         new Tuple<DoubleAnimationUsingKeyFrames, DoubleAnimationUsingKeyFrames>(xDoubleAnimation,
                             yDoubleAnimation));
-                    xDoubleAnimation.Completed += xDoubleAnimationCompleted;
+                   // xDoubleAnimation.Completed += xDoubleAnimationCompleted;
                 }
                 catch (Exception ex)
                 {

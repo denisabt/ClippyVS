@@ -54,6 +54,7 @@
     <Resource Include="..\SharedFiles\Resources\Genius\Genius.json">
       <Link>Genius.json</Link>
     </Resource>
+    <Resource Include="Rocky.json" />
     <None Include="source.extension.vsixmanifest">
       <SubType>Designer</SubType>
     </None>

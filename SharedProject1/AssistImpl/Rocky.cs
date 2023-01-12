@@ -5,6 +5,7 @@ using System.Windows.Controls;
 using System.Windows.Threading;
 using System.Linq;
 using System.Diagnostics;
+using System.Windows;
 using SharedProject1.Configurations;
 
 namespace SharedProject1.AssistImpl
@@ -17,114 +18,69 @@ namespace SharedProject1.AssistImpl
         /// <summary>
         /// The height of the frame
         /// </summary>
-        public static int ClipHeight { get; } = 124;
+        public static int ClipHeight { get; } = 93;
 
         /// <summary>
         /// The with of the frame
         /// </summary>
-        public static int ClipWidth { get; } = 93;
+        public static int ClipWidth { get; } = 124;
 
         /// <summary>
         /// The list of all the available animations
         /// </summary>
-        public List<RockyAnimations> AllAnimations { get; }
-
+        public List<RockyAnimations> AllAnimations { get; set; }
 
         /// <summary>
         /// All the animations that represents an Idle state
         /// </summary>
-        private static readonly List<RockyAnimations> IdleAnimations = new List<RockyAnimations>() {
+        private static readonly List<RockyAnimations> IdleAnimations = new List<RockyAnimations>
+        {
 
         RockyAnimations.DeepIdle1,
-
         RockyAnimations.Congratulate,
-
-        RockyAnimations.Idle_1,
-
-        RockyAnimations.Hide,
-
-        RockyAnimations.SendMail,
-
-        RockyAnimations.Thinking,
-
-        RockyAnimations.Idle_3,
-
-        RockyAnimations.Explain,
-
-        RockyAnimations.Idle_5,
-
-RockyAnimations.Print,
-
-        RockyAnimations.LookRight,
-
-        RockyAnimations.GetAttention,
-
-        RockyAnimations.Save,
-
-        RockyAnimations.GetTechy,
-
-        RockyAnimations.GestureUp,
-
-        RockyAnimations.Idle1_1,
-
-        RockyAnimations.Processing,
-
-        RockyAnimations.Alert,
-
-        RockyAnimations.LookUpRight,
-
-        RockyAnimations.Idle_9,
-
-        RockyAnimations.Idle_7,
-
-        RockyAnimations.GestureDown,
-
-        RockyAnimations.LookLeft,
-
-        RockyAnimations.Idle_2,
-
-        RockyAnimations.LookUpLeft,
-
-        RockyAnimations.CheckingSomething,
-
-        RockyAnimations.Hearing_1,
-
-        RockyAnimations.GetWizardy,
-
-        RockyAnimations.GestureLeft,
-
-        RockyAnimations.Wave,
-
-        RockyAnimations.Goodbye,
-
-        RockyAnimations.GestureRight,
-
-        RockyAnimations.Writing,
-
-        RockyAnimations.LookDownRight,
-
-        RockyAnimations.GetArtsy,
-
-        RockyAnimations.Show,
-
-        RockyAnimations.LookDown,
-
-        RockyAnimations.Searching,
-
-        RockyAnimations.Idle_4,
-
-        RockyAnimations.EmptyTrash,
-
-        RockyAnimations.Greeting,
-
-        RockyAnimations.LookUp,
-
-        RockyAnimations.Idle_6,
-
-        RockyAnimations.RestPose,
-
         RockyAnimations.Idle_8,
-
+        RockyAnimations.Hide,
+        RockyAnimations.SendMail,
+        RockyAnimations.Thinking,
+        RockyAnimations.Idle_3,
+        RockyAnimations.Explain,
+        RockyAnimations.Idle_5,
+RockyAnimations.Print,
+        RockyAnimations.LookRight,
+        RockyAnimations.GetAttention,
+        RockyAnimations.Save,
+        RockyAnimations.GetTechy,
+        RockyAnimations.GestureUp,
+        RockyAnimations.Idle1_1,
+        RockyAnimations.Processing,
+        RockyAnimations.Alert,
+        RockyAnimations.LookUpRight,
+        RockyAnimations.Idle_9,
+        RockyAnimations.Idle_7,
+        RockyAnimations.GestureDown,
+        RockyAnimations.LookLeft,
+        RockyAnimations.Idle_2,
+        RockyAnimations.LookUpLeft,
+        RockyAnimations.CheckingSomething,
+        RockyAnimations.Hearing_1,
+        RockyAnimations.GetWizardy,
+        RockyAnimations.GestureLeft,
+        RockyAnimations.Wave,
+        RockyAnimations.Goodbye,
+        RockyAnimations.GestureRight,
+        RockyAnimations.Writing,
+        RockyAnimations.LookDownRight,
+        RockyAnimations.GetArtsy,
+        RockyAnimations.Show,
+        RockyAnimations.LookDown,
+        RockyAnimations.Searching,
+        RockyAnimations.Idle_4,
+        RockyAnimations.EmptyTrash,
+        RockyAnimations.Greeting,
+        RockyAnimations.LookUp,
+        RockyAnimations.Idle_6,
+        RockyAnimations.RestPose,
+        RockyAnimations.Idle_8,
         RockyAnimations.LookDownLeft
     };
 
@@ -134,17 +90,30 @@ RockyAnimations.Print,
         public Rocky(Panel canvas)
         {
             SpriteResourceUri = "pack://application:,,,/ClippyVs2022;component/rocky_map.png";
-            AnimationsResourceUri = "pack://application:,,,/ClippyVs2022;component/rocky_agent.js"; 
+            AnimationsResourceUri = "pack://application:,,,/ClippyVs2022;component/rocky.json";
+            Animations = null;
             InitAssistant(canvas, SpriteResourceUri);
 
-            if (_animations == null)
-                RegisterAnimations();
+            RegisterAnimationsImpl();
+        }
 
-            //XX Requires testing..
-            AllAnimations = new List<RockyAnimations>();
-            var values = Enum.GetValues(typeof(RockyAnimations));
-            AllAnimations.AddRange(values.Cast<RockyAnimations>());
-            RegisterIdleRandomAnimations();
+        private void RegisterAnimationsImpl()
+        {
+            bool registerSuccess = false;
+            if (Animations == null)
+                registerSuccess = RegisterAnimations();
+
+            if (registerSuccess)
+            {
+                AllAnimations = new List<RockyAnimations>();
+                var values = Enum.GetValues(typeof(RockyAnimations));
+                AllAnimations.AddRange(values.Cast<RockyAnimations>());
+                RegisterIdleRandomAnimations();
+            }
+            else
+            {
+                MessageBox.Show(Application.Current.MainWindow, "Error when initializing Animations for \"Rocky\"" );
+            }
         }
 
         /// <summary>
@@ -152,7 +121,7 @@ RockyAnimations.Print,
         /// </summary>
         //private void RegisterAnimations()
         //{
-        //    _animations = RegisterAnimationsImpl(AnimationsResourceUri, XDoubleAnimation_Completed, ClipWidth, ClipHeight);
+        //    Animations = RegisterAnimationsImpl(AnimationsResourceUri, XDoubleAnimation_Completed, ClipWidth, ClipHeight);
         //}
 
         /// <summary>
@@ -174,6 +143,7 @@ RockyAnimations.Print,
             {
                 Interval = TimeSpan.FromSeconds(IdleAnimationTimeout)
             };
+            
             WpfAnimationsDispatcher.Tick += WPFAnimationsDispatcher_Tick;
 
             WpfAnimationsDispatcher.Start();
@@ -207,15 +177,19 @@ RockyAnimations.Print,
             {
                 if (!IsAnimating || byPassCurrentAnimation)
                 {
-                    var animation = _animations[animationType.ToString()];
+                    var animation = Animations[animationType.ToString()];
                     if (animation == null) return;
 
                     Debug.WriteLine("Triggering Rocky " + animationType);
                     Debug.WriteLine(animation.Layer0.ToString() + animation.Layer1);
-                    IsAnimating = true;
                     await ThreadHelper.JoinableTaskFactory.SwitchToMainThreadAsync();
                     AssistantFramesImage.BeginAnimation(Canvas.LeftProperty, animation.Layer0.Item1);
                     AssistantFramesImage.BeginAnimation(Canvas.TopProperty, animation.Layer1.Item1);
+                    IsAnimating = true;
+                }
+                else
+                {
+                    Debug.WriteLine("Rocky: Animation skipped, IsAnimating is true");
                 }
             }
             catch (Exception)
