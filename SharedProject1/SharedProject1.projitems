@@ -84,7 +84,9 @@
       <LastGenOutput>Resources1.Designer.cs</LastGenOutput>
       <Generator>ResXFileCodeGenerator</Generator>
     </EmbeddedResource>
-    <EmbeddedResource Include="$(MSBuildThisFileDirectory)VSPackage.resx" />
+    <EmbeddedResource Include="$(MSBuildThisFileDirectory)VSPackage.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+    </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
     <Page Include="$(MSBuildThisFileDirectory)SpriteContainer.xaml">

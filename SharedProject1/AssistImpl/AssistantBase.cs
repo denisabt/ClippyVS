@@ -1,7 +1,9 @@
 ﻿using Recoding.ClippyVSPackage.Configurations;
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.IO;
+using System.Resources;
 using System.Text;
 using System.Windows;
 using System.Windows.Controls;
@@ -83,12 +85,15 @@ namespace Recoding.ClippyVSPackage
             // ReSharper disable once RedundantAssignment
             var spResUri = spriteResourceUri;
 #if Dev19
-            spResUri = spriteResourceUri.Replace("ClippyVs2022", "ClippyVSPackage");
+            //spResUri = spriteResourceUri.Replace("ClippyVs2022", "ClippyVSPackage");
 #endif
 #if Dev22
 #endif
             // pass BitmapImage
-            this.Sprite = new BitmapImage(new Uri(spResUri, UriKind.RelativeOrAbsolute));
+            var uri = new Uri(spResUri, UriKind.RelativeOrAbsolute);
+            ResourceManager rm = Resources.ResourceManager;
+            var resourceSet = rm.GetResourceSet(CultureInfo.InvariantCulture, false, true);
+            this.Sprite = new BitmapImage(uri);
 
             AssistantFramesImage = new Image
             {

@@ -158,9 +158,9 @@ namespace Recoding.ClippyVSPackage
             SpriteContainer.ReviveRocky();
         }
 
-        private async void MainWindow_ContentRendered(object sender, EventArgs e)
+        private void MainWindow_ContentRendered(object sender, EventArgs e)
         {
-            await MainWindow_ContentRenderedAsync();
+             Task.WaitAll(MainWindow_ContentRenderedAsync());
         }
 
         private async Task MainWindow_ContentRenderedAsync()

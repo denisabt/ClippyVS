@@ -648,18 +648,34 @@ namespace Recoding.ClippyVSPackage
             {
                 if (_showMerlin)
                 {
+                    if (Merlin == null)
+                    {
+                        Merlin = new Merlin((Canvas)this.FindName("AssistantCanvasOverlay0"));
+                    }
                     Merlin.StartAnimation(MerlinAnimations.Idle1_1, true);
                 }
                 else if (_showGenius)
                 {
+                    if (Genius == null)
+                    {
+                        Genius = new Genius((Canvas)this.FindName("AssistantCanvasOverlay0"), (Canvas)this.FindName("AssistantCanvasOverlay1"));
+                    }
                     Genius.StartAnimation(GeniusAnimations.Idle1, true);
                 }
                 else if (_showRocky)
                 {
+                    if (Rocky == null)
+                    {
+                        Rocky = new Rocky((Canvas)this.FindName("AssistantCanvasOverlay0"));
+                    }
                     Rocky.StartAnimation(RockyAnimations.Greeting, true);
                 }
                 else
                 {
+                    if (Clippy == null)
+                    {
+                        Clippy = new Clippy((Canvas)this.FindName("AssistantCanvasOverlay0"));
+                    }
                     Clippy.StartAnimation(ClippyAnimations.Idle11, true);
                 }
             }

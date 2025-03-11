@@ -62,6 +62,9 @@
     <Compile Include="RockyTests.cs" />
   </ItemGroup>
   <ItemGroup>
+    <PackageReference Include="MessagePack">
+      <Version>2.5.187</Version>
+    </PackageReference>
     <PackageReference Include="Microsoft.VisualStudio.SDK">
       <Version>17.4.33103.184</Version>
     </PackageReference>
