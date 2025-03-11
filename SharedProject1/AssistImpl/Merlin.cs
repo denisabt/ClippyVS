@@ -57,7 +57,7 @@ MerlinAnimations.Idle1_2};
         public Merlin(Panel canvas)
         {
             AnimationsResourceUri = "pack://application:,,,/ClippyVs2022;component/merlin_agent.js";
-            SpriteResourceUri = "pack://application:,,,/ClippyVs2022;component/merlin_map.png";
+            SpriteResourceUri = "pack://application:,,,/ClippyVs2022;component/Merlin/merlin_map.png";
 
             InitAssistant(canvas, SpriteResourceUri);
 

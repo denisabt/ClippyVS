@@ -53,7 +53,7 @@ namespace SharedProject1.AssistImpl
         public Genius(Panel canvas, Panel canvas1)
         {
             AnimationsResourceUri = "pack://application:,,,/ClippyVs2022;component/Genius.json";
-            SpriteResourceUri = "pack://application:,,,/ClippyVs2022;component/genius_map.png";
+            SpriteResourceUri = "pack://application:,,,/ClippyVs2022;component/Genius/genius_map.png";
 
             if (canvas == null) return;
 

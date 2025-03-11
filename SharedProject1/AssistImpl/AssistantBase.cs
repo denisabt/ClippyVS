@@ -85,14 +85,14 @@ namespace Recoding.ClippyVSPackage
             // ReSharper disable once RedundantAssignment
             var spResUri = spriteResourceUri;
 #if Dev19
-            //spResUri = spriteResourceUri.Replace("ClippyVs2022", "ClippyVSPackage");
+            spResUri = spriteResourceUri.Replace("ClippyVs2022", "ClippyVSPackage");
 #endif
 #if Dev22
 #endif
             // pass BitmapImage
             var uri = new Uri(spResUri, UriKind.RelativeOrAbsolute);
             ResourceManager rm = Resources.ResourceManager;
-            var resourceSet = rm.GetResourceSet(CultureInfo.InvariantCulture, false, true);
+            //var resourceSet = rm.GetResourceSet(CultureInfo.InvariantCulture, false, true);
             this.Sprite = new BitmapImage(uri);
 
             AssistantFramesImage = new Image

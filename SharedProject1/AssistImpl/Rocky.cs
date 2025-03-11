@@ -89,7 +89,7 @@ RockyAnimations.Print,
         /// </summary>
         public Rocky(Panel canvas)
         {
-            SpriteResourceUri = "pack://application:,,,/ClippyVs2022;component/rocky_map.png";
+            SpriteResourceUri = "pack://application:,,,/ClippyVs2022;component/Rocky/rocky_map.png";
             AnimationsResourceUri = "pack://application:,,,/ClippyVs2022;component/rocky.json";
             Animations = null;
             InitAssistant(canvas, SpriteResourceUri);
