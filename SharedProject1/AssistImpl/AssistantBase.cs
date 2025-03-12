@@ -1,8 +1,11 @@
 ﻿using Recoding.ClippyVSPackage.Configurations;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
+using System.Drawing;
 using System.Globalization;
 using System.IO;
+using System.Reflection;
 using System.Resources;
 using System.Text;
 using System.Windows;
@@ -119,6 +122,7 @@ namespace Recoding.ClippyVSPackage
 #endif
             var uri = new Uri(spResUri, UriKind.RelativeOrAbsolute);
 
+            //object resource = Application.Current.FindResource("component/animations.json");
             var info = Application.GetResourceStream(uri);
 
             if (info == null)
@@ -185,6 +189,45 @@ namespace Recoding.ClippyVSPackage
                 }
             }
             return animations;
+        }
+
+        /// <summary>
+        /// Get a bitmap from the resources of the shared project
+        /// </summary>
+        /// <param name="assistant">Rocky, Genius or similar (folder in resource name)</param>
+        /// <param name="filename">rocky_map.png for example</param>
+        /// <returns></returns>
+        protected BitmapImage GetResourceBitmapFromSharedProject(string assistant, string filename)
+        {
+            // XXXXXX
+            var executingAssembly = Assembly.GetExecutingAssembly();
+            //string[] resourceNames = executingAssembly.GetManifestResourceNames();
+
+            //foreach (var resourceName in resourceNames)
+            //{
+            //    Debug.WriteLine(resourceName);
+            //}
+
+
+            //var rocky_map_test = executingAssembly.GetManifestResourceInfo(executingAssembly.GetName().Name + ".Resources.Rocky.rocky_map.png");
+            var rocky_map_bmp = executingAssembly.GetManifestResourceStream(executingAssembly.GetName().Name + ".Resources.Rocky." +filename);
+
+            // global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("Recoding.ClippyVSPackage.Resources", typeof(Resources).Assembly);
+            //temp.GetResourceSet(CultureInfo.InvariantCulture, true, true);
+
+            // XXXX
+            var bitmap = new BitmapImage();
+            using (rocky_map_bmp)
+            {
+                bitmap.BeginInit();
+                bitmap.StreamSource = rocky_map_bmp;
+                bitmap.CacheOption = BitmapCacheOption.OnLoad;
+                bitmap.EndInit();
+                bitmap.Freeze();
+            }
+
+            return bitmap;
+            
         }
     }
 }
