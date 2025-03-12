@@ -59,7 +59,7 @@ MerlinAnimations.Idle1_2};
             AnimationsResourceUri = "pack://application:,,,/ClippyVs2022;component/merlin_agent.js";
             SpriteResourceUri = "pack://application:,,,/ClippyVs2022;component/Merlin/merlin_map.png";
 
-            InitAssistant(canvas, SpriteResourceUri);
+            InitAssistant(canvas, SpriteResourceUri, "Merlin", "merlin_map.png");
 
             if (_animations == null)
                 RegisterAnimations();
@@ -76,7 +76,7 @@ MerlinAnimations.Idle1_2};
         /// </summary>
         private void RegisterAnimations()
         {
-            _animations = RegisterAnimationsImpl(AnimationsResourceUri, XDoubleAnimation_Completed, ClipWidth, ClipHeight);
+            _animations = RegisterAnimationsImpl(AnimationsResourceUri, XDoubleAnimation_Completed, ClipWidth, ClipHeight, "Merlin", "merlin_agent.js");
         }
 
         /// <summary>

@@ -55,7 +55,7 @@ namespace Recoding.ClippyVSPackage
         {
             SpriteResourceUri = "pack://application:,,,/ClippyVs2022;component/clippy.png";
             AnimationsResourceUri = "pack://application:,,,/ClippyVs2022;component/animations.json"; 
-            InitAssistant(canvas, SpriteResourceUri);
+            InitAssistant(canvas, SpriteResourceUri, "Clippy", "clippy_map.png");
 
             if (_animations == null)
                 RegisterAnimations();
@@ -71,7 +71,7 @@ namespace Recoding.ClippyVSPackage
         /// </summary>
         private void RegisterAnimations()
         {
-            _animations = RegisterAnimationsImpl(AnimationsResourceUri, XDoubleAnimation_Completed, ClipWidth, ClipHeight);
+            _animations = RegisterAnimationsImpl(AnimationsResourceUri, XDoubleAnimation_Completed, ClipWidth, ClipHeight, "Clippy", "clippy.json");
         }
 
         /// <summary>

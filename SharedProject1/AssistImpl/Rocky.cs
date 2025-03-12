@@ -92,7 +92,7 @@ RockyAnimations.Print,
             SpriteResourceUri = "pack://application:,,,/ClippyVs2022;component/Rocky/rocky_map.png";
             AnimationsResourceUri = "pack://application:,,,/ClippyVs2022;component/rocky.json";
             Animations = null;
-            InitAssistant(canvas, SpriteResourceUri);
+            InitAssistant(canvas, SpriteResourceUri, "Rocky", "rocky_map.png");
 
             RegisterAnimationsImpl();
         }
@@ -129,10 +129,10 @@ RockyAnimations.Print,
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void XDoubleAnimation_Completed(object sender, EventArgs e)
-        {
-            IsAnimating = false;
-        }
+        //private void XDoubleAnimation_Completed(object sender, EventArgs e)
+        //{
+        //    IsAnimating = false;
+        //}
 
         /// <summary>
         /// Registers a function to perform a subset of animations randomly (the idle ones)

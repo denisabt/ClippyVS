@@ -32,7 +32,7 @@ namespace Recoding.ClippyVSPackage
         /// <summary>
         /// The image that holds the sprite
         /// </summary>
-        protected Image AssistantFramesImage;
+        protected System.Windows.Controls.Image AssistantFramesImage;
 
         /// <summary>
         /// The URI for the sprite with all the animation stages for Clippy
@@ -83,7 +83,7 @@ namespace Recoding.ClippyVSPackage
         /// </summary>
         /// <param name="canvas"></param>
         /// <param name="spriteResourceUri"></param>
-        protected void InitAssistant(Panel canvas, string spriteResourceUri)
+        protected void InitAssistant(Panel canvas, string spriteResourceUri, string assistantName, string assistantMapFilename)
         {
             // ReSharper disable once RedundantAssignment
             var spResUri = spriteResourceUri;
@@ -96,9 +96,13 @@ namespace Recoding.ClippyVSPackage
             var uri = new Uri(spResUri, UriKind.RelativeOrAbsolute);
             ResourceManager rm = Resources.ResourceManager;
             //var resourceSet = rm.GetResourceSet(CultureInfo.InvariantCulture, false, true);
-            this.Sprite = new BitmapImage(uri);
+            //var spr = this.GetResourceBitmapFromSharedProject("Merlin", "merlin_map.png");
+            var spr = this.GetResourceBitmapFromSharedProject(assistantName, assistantMapFilename);
 
-            AssistantFramesImage = new Image
+            //this.Sprite = new BitmapImage(uri);
+            this.Sprite = spr;
+
+            AssistantFramesImage = new System.Windows.Controls.Image
             {
                 Source = Sprite,
                 Stretch = Stretch.None
@@ -112,7 +116,7 @@ namespace Recoding.ClippyVSPackage
 
         protected Dictionary<string, Tuple<DoubleAnimationUsingKeyFrames, DoubleAnimationUsingKeyFrames>> RegisterAnimationsImpl(string animationsResourceUri,
            
-            EventHandler xDoubleAnimationCompleted, int clipWidth, int clipHeight)
+            EventHandler xDoubleAnimationCompleted, int clipWidth, int clipHeight, string assistantName, string assistantAnimationsFilename)
         {
             var spResUri = animationsResourceUri;
             var animations = new Dictionary<string, Tuple<DoubleAnimationUsingKeyFrames, DoubleAnimationUsingKeyFrames>>();
@@ -122,18 +126,19 @@ namespace Recoding.ClippyVSPackage
 #endif
             var uri = new Uri(spResUri, UriKind.RelativeOrAbsolute);
 
-            //object resource = Application.Current.FindResource("component/animations.json");
-            var info = Application.GetResourceStream(uri);
+            var animationsString2 = GetStringFromSharedProject(assistantName, assistantAnimationsFilename);
+            //var animationsStream = Application.GetResourceStream(uri);
 
-            if (info == null)
+            if (animationsString2 == null)
                 return animations;
 
             // Can go to Constructor/Init
             List<ClippySingleAnimation> storedAnimations = null;
             try
             {
+                var animationsString = animationsString2;
                 storedAnimations =
-                    Newtonsoft.Json.JsonConvert.DeserializeObject<List<ClippySingleAnimation>>(StreamToString(info.Stream));
+                    Newtonsoft.Json.JsonConvert.DeserializeObject<List<ClippySingleAnimation>>(animationsString);
             } catch (Exception exjson)
             {
                 Console.Write(exjson.ToString());
@@ -210,7 +215,7 @@ namespace Recoding.ClippyVSPackage
 
 
             //var rocky_map_test = executingAssembly.GetManifestResourceInfo(executingAssembly.GetName().Name + ".Resources.Rocky.rocky_map.png");
-            var rocky_map_bmp = executingAssembly.GetManifestResourceStream(executingAssembly.GetName().Name + ".Resources.Rocky." +filename);
+            var rocky_map_bmp = executingAssembly.GetManifestResourceStream(executingAssembly.GetName().Name + ".Resources."+ assistant+"." +filename);
 
             // global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("Recoding.ClippyVSPackage.Resources", typeof(Resources).Assembly);
             //temp.GetResourceSet(CultureInfo.InvariantCulture, true, true);
@@ -227,7 +232,14 @@ namespace Recoding.ClippyVSPackage
             }
 
             return bitmap;
-            
+        }
+
+        protected string GetStringFromSharedProject(string assistant, string filename)
+        {
+            var executingAssembly = Assembly.GetExecutingAssembly();
+            var textfileStream = executingAssembly.GetManifestResourceStream(executingAssembly.GetName().Name + ".Resources." + assistant + "." + filename);
+            var textfileContents = StreamToString(textfileStream);
+            return textfileContents;
         }
     }
 }

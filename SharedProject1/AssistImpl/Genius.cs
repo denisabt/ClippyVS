@@ -57,7 +57,7 @@ namespace SharedProject1.AssistImpl
 
             if (canvas == null) return;
 
-            InitAssistant(canvas, SpriteResourceUri);
+            InitAssistant(canvas, SpriteResourceUri, "Genius", "genius_map.png");
             // Might not be required XXX
             AssistantFramesImage.Visibility = Visibility.Visible;
 

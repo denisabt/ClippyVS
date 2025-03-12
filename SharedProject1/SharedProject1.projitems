@@ -61,6 +61,8 @@
     <Content Include="$(MSBuildThisFileDirectory)LICENSE.txt">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
+    <EmbeddedResource Include="$(MSBuildThisFileDirectory)Resources\Clippy\clippy.json" />
+    <EmbeddedResource Include="$(MSBuildThisFileDirectory)Resources\Clippy\clippy_map.png" />
     <EmbeddedResource Include="$(MSBuildThisFileDirectory)Resources\Rocky\rocky_map.png">
       <Generator>
       </Generator>
