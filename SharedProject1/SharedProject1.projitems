@@ -61,6 +61,7 @@
     <Content Include="$(MSBuildThisFileDirectory)LICENSE.txt">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
+    <Content Include="$(MSBuildThisFileDirectory)Resources\Genius\Genius.json" />
     <EmbeddedResource Include="$(MSBuildThisFileDirectory)Resources\Clippy\clippy.json" />
     <EmbeddedResource Include="$(MSBuildThisFileDirectory)Resources\Clippy\clippy_map.png" />
     <EmbeddedResource Include="$(MSBuildThisFileDirectory)Resources\Rocky\rocky_map.png">
@@ -96,6 +97,10 @@
       <Generator>
       </Generator>
     </EmbeddedResource>
+    <None Include="$(MSBuildThisFileDirectory)Resources\Genius\agent.js" />
+    <None Include="$(MSBuildThisFileDirectory)Resources\Genius\sounds-mp3.js" />
+    <None Include="$(MSBuildThisFileDirectory)Resources\Genius\sounds-ogg.js" />
+    <None Include="$(MSBuildThisFileDirectory)Resources\Rocky\rocky_agent.js" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="$(MSBuildThisFileDirectory)Resources.resx">
