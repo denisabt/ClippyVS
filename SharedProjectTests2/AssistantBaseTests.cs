@@ -1,11 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Controls;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Recoding.ClippyVSPackage;
+using System.Windows.Controls;
 
 namespace SharedProjectTests2
 {
@@ -20,14 +15,14 @@ namespace SharedProjectTests2
             subj.InitAssistant(panel, "");
             
         }
-
     }
 
     public class TestableAssistantBase : AssistantBase
     {
         public new void InitAssistant(Panel canvas, string spriteResourceUri)
         {
-            base.InitAssistant(canvas, spriteResourceUri);
+            //var rmMock = Mock.Of<ResourceManager>(MockBehavior.Strict);
+            base.InitAssistant(canvas, spriteResourceUri, "testAssistant", "testAssistantMapFilename");
         }
     }
 }

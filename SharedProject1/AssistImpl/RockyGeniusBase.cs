@@ -219,7 +219,7 @@ namespace SharedProject1.AssistImpl
 
                 for (var layerNum = 0; layerNum < frame.ImagesOffsets.Count; layerNum++)
                 {
-                    Debug.WriteLine("Processing Overlay " + layerNum);
+                    //Debug.WriteLine("Processing Overlay " + layerNum);
 
                     // Prepare Key frame for all potential layers (max 3)
                     xDoubleAnimation.KeyFrames.Add(new DiscreteDoubleKeyFrame());
