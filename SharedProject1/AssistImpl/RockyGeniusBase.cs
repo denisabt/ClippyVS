@@ -54,6 +54,10 @@ namespace SharedProject1.AssistImpl
             return !errorOccured;
         }
 
+        /// <summary>
+        /// todo Migrate to shared file use
+        /// </summary>
+        /// <returns></returns>
         private static List<WeblikeSingleAnimation> ParseAnimDescriptions()
         {
             var spResUri = AnimationsResourceUri;
