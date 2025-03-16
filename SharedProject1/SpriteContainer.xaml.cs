@@ -7,14 +7,10 @@ using SharedProject1.AssistImpl;
 using SharedProject1.Configurations;
 using System;
 using System.Diagnostics;
-using System.Drawing;
 using System.Globalization;
-using System.Reflection;
-using System.Security.Policy;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
-using System.Windows.Media.Imaging;
 
 namespace Recoding.ClippyVSPackage
 {
