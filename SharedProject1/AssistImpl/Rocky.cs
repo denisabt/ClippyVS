@@ -181,7 +181,7 @@ RockyAnimations.Print,
                     if (animation == null) return;
 
                     Debug.WriteLine("Triggering Rocky " + animationType);
-                    Debug.WriteLine(animation.Layer0.ToString() + animation.Layer1);
+                    Debug.WriteLine("Rocky Layers: " + animation.Layer0.ToString() + animation.Layer1);
                     await ThreadHelper.JoinableTaskFactory.SwitchToMainThreadAsync();
                     AssistantFramesImage.BeginAnimation(Canvas.LeftProperty, animation.Layer0.Item1);
                     AssistantFramesImage.BeginAnimation(Canvas.TopProperty, animation.Layer1.Item1);

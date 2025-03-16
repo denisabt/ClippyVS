@@ -27,7 +27,9 @@ namespace SharedProject1.AssistImpl
         {
             get
             {
-                return _animations.First(animation => animation.Name.Equals(animName));
+                LayeredAnimation result = _animations.First(animation => animation.Name.Equals(animName));
+                Debug.WriteLine("Returning animation frames for {0} with {1}", animName, _animations.Count.ToString());
+                return result;
             }
         }
     }
