@@ -215,6 +215,19 @@ namespace SharedProject1.AssistImpl
                 if (frame.branching?.branches != null)
                 {
                     Debug.WriteLine("Has Branching Info");
+                    Debug.WriteLine("Frame {frameIndex} has branching to " + frame.branching.branches.Count +
+                                    " branches.");
+
+                    int branchWeightTotal = 0;
+                    foreach (Branch b in frame.branching.branches)
+                    {
+                        Debug.WriteLine("Branch-Option is " + b.frameIndex);
+                        Debug.WriteLine("Branch-Weight is " + b.weight);
+                        branchWeightTotal += b.weight;
+                    }
+
+                    Debug.WriteLine("Total Branches Weight: " + branchWeightTotal);
+                    //https://github.com/pi0/clippyjs/blob/d88943d529410114c9cea7f01e05de40254cd914/lib/animator.js#L121
                 }
 
                 for (var layerNum = 0; layerNum < frame.ImagesOffsets.Count; layerNum++)

@@ -72,7 +72,7 @@ namespace Recoding.ClippyVSPackage
             Owner = Application.Current.MainWindow;
             Topmost = false;
 
-           
+
 
             #region Register event handlers
             ThreadHelper.ThrowIfNotOnUIThread();
@@ -241,7 +241,7 @@ namespace Recoding.ClippyVSPackage
 
         public void ReviveClippy()
         {
-            
+
             _showMerlin = false;
             _showGenius = false;
             _showRocky = false;
@@ -251,7 +251,7 @@ namespace Recoding.ClippyVSPackage
             ClippyGrid.Width = 124;
             ClippyGrid.Height = 93;
             AssistantCanvasOverlay0.Height = 93;
-            AssistantCanvasOverlay0.Width= 124;
+            AssistantCanvasOverlay0.Width = 124;
             AssistantCanvasOverlay1.Visibility = Visibility.Hidden;
 
             DisposeAssistant();
@@ -327,7 +327,7 @@ namespace Recoding.ClippyVSPackage
         private void RegisterToDteEvents(DTE dte)
         {
             ThreadHelper.ThrowIfNotOnUIThread();
-            
+
             _docEvents.DocumentOpening += DocumentEvents_DocumentOpening;
             _docEvents.DocumentSaved += DocumentEvents_DocumentSaved;
             _docEvents.DocumentClosing += DocEvents_DocumentClosing;
@@ -363,7 +363,14 @@ namespace Recoding.ClippyVSPackage
 
         private void _debuggerEvents_OnEnterBreakMode(dbgEventReason Reason, ref dbgExecutionAction ExecutionAction)
         {
-            throw new NotImplementedException();
+            if (_showMerlin)
+                Merlin.StartAnimation(MerlinAnimations.Alert, true);
+            else if (_showGenius)
+                Genius.StartAnimation(GeniusAnimations.Alert);
+            else if (_showRocky)
+                Rocky.StartAnimation(RockyAnimations.Alert);
+            else
+                Clippy.StartAnimation(ClippyAnimations.Alert, true);
         }
 
         #region -- IDE Event Handlers --
@@ -541,25 +548,47 @@ namespace Recoding.ClippyVSPackage
         }
 
 
-        private async void CmdClose_Click(object sender, RoutedEventArgs e)
+        private void CmdClose_Click(object sender, RoutedEventArgs e)
         {
-            //await Dispatcher.InvokeAsync(async () =>
-            //{
-                var window = this;
-
-                if (_showMerlin)
+            var window = this;
+            if (_showMerlin)
+            {
+                ThreadHelper.JoinableTaskFactory.Run(async delegate
+                {
                     await Merlin.StartAnimationAsync(MerlinAnimations.Wave, true);
-                else if (_showGenius)
+                });
+            }
+            else if (_showGenius)
+            {
+                ThreadHelper.JoinableTaskFactory.Run(async delegate
+                {
                     await Genius.StartAnimationAsync(GeniusAnimations.Goodbye);
-                else if (_showRocky)
+                });
+            }
+            else if (_showRocky)
+            {
+                ThreadHelper.JoinableTaskFactory.Run(async delegate
+                {
                     await Rocky.StartAnimationAsync(RockyAnimations.Goodbye);
-                else
-                    await Clippy.StartAnimationAsync(ClippyAnimations.GoodBye, true);
+                });
+            }
+            else
+            {
+                ThreadHelper.JoinableTaskFactory.Run(async delegate
+                {
 
+                    await Clippy.StartAnimationAsync(ClippyAnimations.GoodBye, true);
+                });
+            }
+
+            ThreadHelper.JoinableTaskFactory.Run(async delegate
+            {
                 await ThreadHelper.JoinableTaskFactory.SwitchToMainThreadAsync(_package.DisposalToken);
-                window.Owner.Focus();
-                window.Close();
-            //});
+            });
+
+            window.Owner.Focus();
+            window.Close();
+
         }
 
         private void cmdRandom_Click(object sender, RoutedEventArgs e)

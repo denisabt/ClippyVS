@@ -160,7 +160,7 @@ namespace Recoding.ClippyVSPackage
 
         private void MainWindow_ContentRendered(object sender, EventArgs e)
         {
-             Task.WaitAll(MainWindow_ContentRenderedAsync());
+            ThreadHelper.JoinableTaskFactory.Run(async delegate { await MainWindow_ContentRenderedAsync(); });
         }
 
         private async Task MainWindow_ContentRenderedAsync()
