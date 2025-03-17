@@ -47,12 +47,8 @@ namespace SharedProject1
         {
             await ThreadHelper.JoinableTaskFactory.SwitchToMainThreadAsync(package.DisposalToken);
 
-            ThreadHelper.JoinableTaskFactory.Run(
-                async delegate
-                {
-                    OleMenuCommandService commandService = await package.GetServiceAsync(typeof(IMenuCommandService)) as OleMenuCommandService;
-                    _ = new CommandRocky(package, commandService);
-                });
+            OleMenuCommandService commandService = await package.GetServiceAsync(typeof(IMenuCommandService)) as OleMenuCommandService;
+            _ = new CommandRocky(package, commandService);
         }
 
 
