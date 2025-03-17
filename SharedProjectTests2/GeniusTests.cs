@@ -33,7 +33,7 @@ namespace SharedProjectTests2
     {
         public TestableGenius(Panel canvas, Panel canvas1) : base(canvas, canvas)
         {
-            
+
         }
 
         public new void RegisterAnimations()

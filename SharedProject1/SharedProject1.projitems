@@ -13,13 +13,17 @@
     <Compile Include="$(MSBuildThisFileDirectory)AssistImpl\Genius.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)AssistImpl\LayeredAnimation.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)AssistImpl\LayeredAnimations.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)AssistImpl\Rocky.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)AssistImpl\Merlin.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)AssistImpl\Clippy.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)AssistImpl\RockyGeniusBase.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)AssistImpl\WebLikeAssistant.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ClippyVSPackage.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ClippyVSSettings.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)CommandGenius.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Commands\Command1.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Commands\Command2.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Commands\CommandMerlin.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Commands\CommandRocky.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Configurations\ClippySingleAnimation.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -28,6 +32,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)Configurations\Frame.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Configurations\GeniusAnimations.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Configurations\Legacy\LegacySingleAnimation.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Configurations\RockyAnimations.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Configurations\MerlinAnimations.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Constants.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)GlobalSuppressions.cs" />
@@ -56,17 +61,46 @@
     <Content Include="$(MSBuildThisFileDirectory)LICENSE.txt">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Resource Include="$(MSBuildThisFileDirectory)Resources\Merlin\merlin_map.png" />
-    <Resource Include="$(MSBuildThisFileDirectory)Resources\Genius\genius_map.png" />
+    <Content Include="$(MSBuildThisFileDirectory)Resources\Genius\Genius.json" />
+    <EmbeddedResource Include="$(MSBuildThisFileDirectory)Resources\Clippy\clippy.json" />
+    <EmbeddedResource Include="$(MSBuildThisFileDirectory)Resources\Clippy\clippy_map.png" />
+    <EmbeddedResource Include="$(MSBuildThisFileDirectory)Resources\Rocky\rocky_map.png">
+      <Generator>
+      </Generator>
+    </EmbeddedResource>
+    <EmbeddedResource Include="$(MSBuildThisFileDirectory)Resources\Merlin\merlin_map.png">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+      <Generator>
+      </Generator>
+    </EmbeddedResource>
+    <EmbeddedResource Include="$(MSBuildThisFileDirectory)Resources\Genius\genius_map.png">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+      <Generator>
+      </Generator>
+    </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
     <None Include="$(MSBuildThisFileDirectory)app.config" />
     <None Include="$(MSBuildThisFileDirectory)ClippyVSPackage.ruleset" />
     <None Include="$(MSBuildThisFileDirectory)Key.snk" />
-    <Resource Include="$(MSBuildThisFileDirectory)Resources\Merlin\merlin_agent.js" />
-    <Resource Include="$(MSBuildThisFileDirectory)Resources\Merlin\merlin_sounds-mp3.js" />
-    <Resource Include="$(MSBuildThisFileDirectory)Resources\Merlin\merlin_sounds-ogg.js" />
-    <Resource Include="$(MSBuildThisFileDirectory)Resources\Merlin\merlin_tempanimfile.js" />
+    <EmbeddedResource Include="$(MSBuildThisFileDirectory)Resources\Merlin\merlin_agent.js">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+      <Generator>
+      </Generator>
+    </EmbeddedResource>
+    <EmbeddedResource Include="$(MSBuildThisFileDirectory)Resources\Merlin\merlin_sounds-mp3.js" />
+    <EmbeddedResource Include="$(MSBuildThisFileDirectory)Resources\Merlin\merlin_sounds-ogg.js">
+      <Generator>
+      </Generator>
+    </EmbeddedResource>
+    <EmbeddedResource Include="$(MSBuildThisFileDirectory)Resources\Merlin\merlin_tempanimfile.js">
+      <Generator>
+      </Generator>
+    </EmbeddedResource>
+    <None Include="$(MSBuildThisFileDirectory)Resources\Genius\agent.js" />
+    <None Include="$(MSBuildThisFileDirectory)Resources\Genius\sounds-mp3.js" />
+    <None Include="$(MSBuildThisFileDirectory)Resources\Genius\sounds-ogg.js" />
+    <None Include="$(MSBuildThisFileDirectory)Resources\Rocky\rocky_agent.js" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="$(MSBuildThisFileDirectory)Resources.resx">
@@ -78,15 +112,14 @@
       <LastGenOutput>Resources1.Designer.cs</LastGenOutput>
       <Generator>ResXFileCodeGenerator</Generator>
     </EmbeddedResource>
-    <EmbeddedResource Include="$(MSBuildThisFileDirectory)VSPackage.resx" />
+    <EmbeddedResource Include="$(MSBuildThisFileDirectory)VSPackage.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+    </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
     <Page Include="$(MSBuildThisFileDirectory)SpriteContainer.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-  </ItemGroup>
-  <ItemGroup>
-    <Folder Include="$(MSBuildThisFileDirectory)Commands\" />
   </ItemGroup>
 </Project>

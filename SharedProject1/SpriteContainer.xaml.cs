@@ -25,8 +25,11 @@ namespace Recoding.ClippyVSPackage
         private Clippy Clippy { get; set; }
         private Merlin Merlin { get; set; }
         private Genius Genius { get; set; }
+        private Rocky Rocky { get; set; }
+
         private bool _showMerlin;
         private bool _showGenius;
+        private bool _showRocky;
 
         /// <summary>
         /// This VSIX package
@@ -54,13 +57,14 @@ namespace Recoding.ClippyVSPackage
         /// <param name="package">The Shell Package</param>
         /// <param name="showMerlin">Indicates if Merlin should be shown - get rid of this soon</param>
         /// <param name="showGenius">Indicates if Genius should be shown - dito</param>
-        public SpriteContainer(AsyncPackage package, bool showMerlin = false, bool showGenius = false)
+        public SpriteContainer(AsyncPackage package, bool showMerlin = false, bool showGenius = false, bool showRocky = false)
         {
             _package = package;
             _showMerlin = showMerlin;
             _showGenius = showGenius;
+            _showRocky = showRocky;
 
-            SettingsManager settingsManager = new ShellSettingsManager(this._package);
+            SettingsManager settingsManager = new ShellSettingsManager(_package);
             _userSettingsStore = settingsManager.GetWritableSettingsStore(SettingsScope.UserSettings);
 
             InitializeComponent();
@@ -68,19 +72,25 @@ namespace Recoding.ClippyVSPackage
             Owner = Application.Current.MainWindow;
             Topmost = false;
 
+
+
             #region Register event handlers
             ThreadHelper.ThrowIfNotOnUIThread();
-            //IVsActivityLog activityLog = package.GetServiceAsync(typeof(SVsActivityLog))
-            //    .ConfigureAwait(true).GetAwaiter().GetResult() as IVsActivityLog;
-            //if (activityLog == null) return;
-            //System.Windows.Forms.MessageBox.Show("Found the activity log service.");
+
             var dte = (DTE)package.GetServiceAsync(typeof(DTE)).ConfigureAwait(true).GetAwaiter().GetResult();
             _docEvents = dte.Events.DocumentEvents;
             _buildEvents = dte.Events.BuildEvents;
             _findEvents = dte.Events.FindEvents;
             _projItemsEvents = dte.Events.MiscFilesEvents;
-            _debuggerEvents = dte.Events.DebuggerEvents;
-            //dte.Events.
+
+            try
+            {
+                _debuggerEvents = dte.Events.DebuggerEvents;
+            }
+            catch (Exception exx)
+            {
+                Debug.WriteLine(exx);
+            }
 
             RegisterToDteEvents(dte);
 
@@ -89,7 +99,7 @@ namespace Recoding.ClippyVSPackage
             Owner.SizeChanged += Owner_StateOrSizeChanged;
             LocationChanged += SpriteContainer_LocationChanged;
             #endregion
-            
+
 
             #region -- Restore Sprite postion --
             double? storedRelativeTop = null;
@@ -111,12 +121,21 @@ namespace Recoding.ClippyVSPackage
             PlaceContainer(storedRelativeTop, storedRelativeLeft);
             #endregion
 
-            if (_showMerlin)
-                ReviveMerlin();
-            else if (_showGenius)
-                ReviveGenius();
-            else
-                ReviveClippy();
+            try
+            {
+                if (_showMerlin)
+                    ReviveMerlin();
+                else if (_showGenius)
+                    ReviveGenius();
+                else if (_showRocky)
+                    ReviveRocky();
+                else
+                    ReviveClippy();
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine(ex.ToString());
+            }
         }
 
 
@@ -174,7 +193,11 @@ namespace Recoding.ClippyVSPackage
             {
                 values = Enum.GetValues(typeof(GeniusAnimations));
             }
-            
+            if (_showRocky)
+            {
+                values = Enum.GetValues(typeof(RockyAnimations));
+            }
+
             //// TEMP: create a voice for each animation in the context menu
             var pMenu = (ContextMenu)this.Resources["CmButton"];
             pMenu.Items.Clear();
@@ -185,31 +208,53 @@ namespace Recoding.ClippyVSPackage
                 {
                     Header = val.ToString(),
                     Name = "cmd" + val
-                }; 
+                };
                 menuItem.Click += CmdTestAnimation_Click;
                 pMenu.Items.Add(menuItem);
             }
 #endif
         }
 
-
-        public void ReviveClippy()
+        private void DisposeAssistant()
         {
             if (Merlin != null)
             {
                 Merlin.Dispose();
                 Merlin = null;
             }
+            if (Genius != null)
+            {
+                Genius.Dispose();
+                Genius = null;
+            }
+            if (Rocky != null)
+            {
+                Rocky.Dispose();
+                Rocky = null;
+            }
+            if (Clippy != null)
+            {
+                Clippy.Dispose();
+                Clippy = null;
+            }
+        }
+
+        public void ReviveClippy()
+        {
+
             _showMerlin = false;
             _showGenius = false;
+            _showRocky = false;
 
             ClippySpriteContainer.Width = 124;
             ClippySpriteContainer.Height = 93;
             ClippyGrid.Width = 124;
             ClippyGrid.Height = 93;
             AssistantCanvasOverlay0.Height = 93;
+            AssistantCanvasOverlay0.Width = 124;
             AssistantCanvasOverlay1.Visibility = Visibility.Hidden;
 
+            DisposeAssistant();
             Clippy = new Clippy((Canvas)FindName("AssistantCanvasOverlay0"));
             Clippy.StartAnimation(ClippyAnimations.Greeting);
 
@@ -218,14 +263,12 @@ namespace Recoding.ClippyVSPackage
 
         public void ReviveMerlin()
         {
-            if (Clippy != null)
-            {
-                Clippy.Dispose();
-                Clippy = null;
-            }
+            DisposeAssistant();
 
             _showMerlin = true;
             _showGenius = false;
+            _showRocky = false;
+
             this.Width = 128;
             this.Height = 128;
             ClippyGrid.Width = 150;
@@ -238,17 +281,35 @@ namespace Recoding.ClippyVSPackage
 
             PopulateContextMenu();
         }
+        public void ReviveRocky()
+        {
+            DisposeAssistant();
+
+            _showMerlin = false;
+            _showGenius = false;
+            _showRocky = true;
+
+            this.Width = 124;
+            this.Height = 93;
+            ClippyGrid.Width = 124;
+            ClippyGrid.Height = 93;
+            AssistantCanvasOverlay0.Height = 93;
+            AssistantCanvasOverlay0.Width = 124;
+            AssistantCanvasOverlay1.Visibility = Visibility.Hidden;
+
+            Rocky = new Rocky((Canvas)this.FindName("AssistantCanvasOverlay0"));
+            Rocky.StartAnimation(RockyAnimations.Wave);
+
+            PopulateContextMenu();
+        }
 
         public void ReviveGenius()
         {
-            if (Clippy != null)
-            {
-                Clippy.Dispose();
-                Clippy = null;
-            }
+            DisposeAssistant();
 
-            _showGenius = true; 
+            _showGenius = true;
             _showMerlin = false;
+            _showRocky = false;
             this.Width = 124;
             this.Height = 93;
             ClippyGrid.Width = 124;
@@ -266,6 +327,7 @@ namespace Recoding.ClippyVSPackage
         private void RegisterToDteEvents(DTE dte)
         {
             ThreadHelper.ThrowIfNotOnUIThread();
+
             _docEvents.DocumentOpening += DocumentEvents_DocumentOpening;
             _docEvents.DocumentSaved += DocumentEvents_DocumentSaved;
             _docEvents.DocumentClosing += DocEvents_DocumentClosing;
@@ -285,11 +347,30 @@ namespace Recoding.ClippyVSPackage
                 _csharpProjectItemsEvents.ItemAdded += ProjectItemsEvents_ItemAdded;
                 _csharpProjectItemsEvents.ItemRemoved += ProjectItemsEvents_ItemRemoved;
                 _csharpProjectItemsEvents.ItemRenamed += ProjectItemsEvents_ItemRenamed;
+                _debuggerEvents.OnContextChanged += (process, program, thread, frame) => { };
+                _debuggerEvents.OnEnterBreakMode += _debuggerEvents_OnEnterBreakMode;
+                _debuggerEvents.OnExceptionThrown += ((string type, string name, int code, string description,
+                    ref dbgExceptionAction action) =>
+                {
+                    Debug.WriteLine("XYZ");
+                });
             }
             catch (Exception exev)
             {
                 Debug.WriteLine("Events binding failure {0}", exev.Message);
             }
+        }
+
+        private void _debuggerEvents_OnEnterBreakMode(dbgEventReason Reason, ref dbgExecutionAction ExecutionAction)
+        {
+            if (_showMerlin)
+                Merlin.StartAnimation(MerlinAnimations.Alert, true);
+            else if (_showGenius)
+                Genius.StartAnimation(GeniusAnimations.Alert);
+            else if (_showRocky)
+                Rocky.StartAnimation(RockyAnimations.Alert);
+            else
+                Clippy.StartAnimation(ClippyAnimations.Alert, true);
         }
 
         #region -- IDE Event Handlers --
@@ -300,6 +381,8 @@ namespace Recoding.ClippyVSPackage
                 Merlin.StartAnimation(MerlinAnimations.Writing, true);
             else if (_showGenius)
                 Genius.StartAnimation(GeniusAnimations.Greeting);
+            else if (_showRocky)
+                Rocky.StartAnimation(RockyAnimations.Greeting);
             else
                 Clippy.StartAnimation(ClippyAnimations.Writing, true);
         }
@@ -310,6 +393,8 @@ namespace Recoding.ClippyVSPackage
                 Merlin.StartAnimation(MerlinAnimations.DoMagic2, true);
             else if (_showGenius)
                 Genius.StartAnimation(GeniusAnimations.EmptyTrash);
+            else if (_showRocky)
+                Rocky.StartAnimation(RockyAnimations.EmptyTrash);
             else
                 Clippy.StartAnimation(ClippyAnimations.EmptyTrash, true);
         }
@@ -320,6 +405,8 @@ namespace Recoding.ClippyVSPackage
                 Merlin.StartAnimation(MerlinAnimations.Congratulate, true);
             else if (_showGenius)
                 Genius.StartAnimation(GeniusAnimations.Congratulate);
+            else if (_showRocky)
+                Rocky.StartAnimation(RockyAnimations.Congratulate);
             else
                 Clippy.StartAnimation(ClippyAnimations.Congratulate, true);
 
@@ -332,6 +419,9 @@ namespace Recoding.ClippyVSPackage
 
             else if (_showGenius)
                 Genius.StartAnimation(GeniusAnimations.Searching);
+            else if (_showRocky)
+                Rocky.StartAnimation(RockyAnimations.Searching);
+
             else
                 Clippy.StartAnimation(ClippyAnimations.Searching, true);
 
@@ -344,6 +434,8 @@ namespace Recoding.ClippyVSPackage
 
             else if (_showGenius)
                 Genius.StartAnimation(GeniusAnimations.Congratulate);
+            else if (_showRocky)
+                Rocky.StartAnimation(RockyAnimations.Congratulate);
             else
                 Clippy.StartAnimation(ClippyAnimations.Congratulate, true);
 
@@ -356,6 +448,8 @@ namespace Recoding.ClippyVSPackage
 
             else if (_showGenius)
                 Genius.StartAnimation(GeniusAnimations.EmptyTrash);
+            else if (_showRocky)
+                Rocky.StartAnimation(RockyAnimations.EmptyTrash);
             else
                 Clippy.StartAnimation(ClippyAnimations.GoodBye, true);
 
@@ -368,6 +462,8 @@ namespace Recoding.ClippyVSPackage
 
             else if (_showGenius)
                 Genius.StartAnimation(GeniusAnimations.GetTechy);
+            else if (_showRocky)
+                Rocky.StartAnimation(RockyAnimations.GetTechy);
             else
                 Clippy.StartAnimation(ClippyAnimations.Processing, true); // GetTechy
 
@@ -379,6 +475,9 @@ namespace Recoding.ClippyVSPackage
                 Merlin.StartAnimation(MerlinAnimations.Congratulate2, true);
             else if (_showGenius)
                 Genius.StartAnimation(GeniusAnimations.Save);
+            else if (_showRocky)
+                Rocky.StartAnimation(RockyAnimations.Save);
+
             else
                 Clippy.StartAnimation(ClippyAnimations.Save, true);
 
@@ -391,6 +490,8 @@ namespace Recoding.ClippyVSPackage
                 Merlin.StartAnimation(MerlinAnimations.LookUp);
             else if (_showGenius)
                 Genius.StartAnimation(GeniusAnimations.LookUp);
+            else if (_showRocky)
+                Rocky.StartAnimation(RockyAnimations.LookUp);
             else
                 Clippy.StartAnimation(ClippyAnimations.LookUp);
 
@@ -447,36 +548,69 @@ namespace Recoding.ClippyVSPackage
         }
 
 
-        private async void CmdClose_Click(object sender, RoutedEventArgs e)
+        private void CmdClose_Click(object sender, RoutedEventArgs e)
         {
             var window = this;
-
             if (_showMerlin)
-                await Merlin.StartAnimationAsync(MerlinAnimations.Wave, true);
+            {
+                ThreadHelper.JoinableTaskFactory.Run(async delegate
+                {
+                    await Merlin.StartAnimationAsync(MerlinAnimations.Wave, true);
+                });
+            }
             else if (_showGenius)
-                await Genius.StartAnimationAsync(GeniusAnimations.Goodbye);
+            {
+                ThreadHelper.JoinableTaskFactory.Run(async delegate
+                {
+                    await Genius.StartAnimationAsync(GeniusAnimations.Goodbye);
+                });
+            }
+            else if (_showRocky)
+            {
+                ThreadHelper.JoinableTaskFactory.Run(async delegate
+                {
+                    await Rocky.StartAnimationAsync(RockyAnimations.Goodbye);
+                });
+            }
             else
-                await Clippy.StartAnimationAsync(ClippyAnimations.GoodBye, true);
+            {
+                ThreadHelper.JoinableTaskFactory.Run(async delegate
+                {
 
-            await ThreadHelper.JoinableTaskFactory.SwitchToMainThreadAsync(_package.DisposalToken);
+                    await Clippy.StartAnimationAsync(ClippyAnimations.GoodBye, true);
+                });
+            }
+
+            ThreadHelper.JoinableTaskFactory.Run(async delegate
+            {
+                await ThreadHelper.JoinableTaskFactory.SwitchToMainThreadAsync(_package.DisposalToken);
+            });
+
             window.Owner.Focus();
             window.Close();
+
         }
 
         private void cmdRandom_Click(object sender, RoutedEventArgs e)
         {
             Random rmd = new Random();
-            if (!_showMerlin && !_showGenius)
+            if (!_showMerlin && !_showGenius && !_showRocky)
             {
                 var randomInt = rmd.Next(0, Clippy.AllAnimations.Count);
 
                 Clippy.StartAnimation(Clippy.AllAnimations[randomInt]);
             }
-            else if (_showGenius)
+            else if (_showGenius && !_showRocky)
             {
                 var randomInt = rmd.Next(0, Genius.AllAnimations.Count);
 
                 Genius.StartAnimation(Genius.AllAnimations[randomInt]);
+            }
+            else if (_showRocky)
+            {
+                var randomInt = rmd.Next(0, Rocky.AllAnimations.Count);
+
+                Rocky.StartAnimation(Rocky.AllAnimations[randomInt]);
             }
             else
             {
@@ -505,10 +639,15 @@ namespace Recoding.ClippyVSPackage
                             ((MenuItem)sender).Header.ToString());
                     Genius.StartAnimation(geniusAnimation, true);
                 }
+                else if (_showRocky)
+                {
+                    var rockyAnimation = (RockyAnimations)Enum.Parse(typeof(RockyAnimations),
+                            ((MenuItem)sender).Header.ToString());
+                    Rocky.StartAnimation(rockyAnimation, true);
+                }
                 else
                 {
-                    var menuItem = sender as MenuItem;
-                    if (menuItem == null) return;
+                    if (!(sender is MenuItem menuItem)) return;
 
                     var animation = (ClippyAnimations)Enum.Parse(typeof(ClippyAnimations), menuItem.Header.ToString());
                     Clippy.StartAnimation(animation, true);
@@ -540,14 +679,34 @@ namespace Recoding.ClippyVSPackage
             {
                 if (_showMerlin)
                 {
+                    if (Merlin == null)
+                    {
+                        Merlin = new Merlin((Canvas)this.FindName("AssistantCanvasOverlay0"));
+                    }
                     Merlin.StartAnimation(MerlinAnimations.Idle1_1, true);
                 }
                 else if (_showGenius)
                 {
+                    if (Genius == null)
+                    {
+                        Genius = new Genius((Canvas)this.FindName("AssistantCanvasOverlay0"), (Canvas)this.FindName("AssistantCanvasOverlay1"));
+                    }
                     Genius.StartAnimation(GeniusAnimations.Idle1, true);
+                }
+                else if (_showRocky)
+                {
+                    if (Rocky == null)
+                    {
+                        Rocky = new Rocky((Canvas)this.FindName("AssistantCanvasOverlay0"));
+                    }
+                    Rocky.StartAnimation(RockyAnimations.Greeting, true);
                 }
                 else
                 {
+                    if (Clippy == null)
+                    {
+                        Clippy = new Clippy((Canvas)this.FindName("AssistantCanvasOverlay0"));
+                    }
                     Clippy.StartAnimation(ClippyAnimations.Idle11, true);
                 }
             }
@@ -624,6 +783,11 @@ namespace Recoding.ClippyVSPackage
                 {
                     relativeTop = ownerBottom - (Genius.ClipHeight + 100);
                     relativeLeft = ownerRight - (Genius.ClipWidth + 100);
+                }
+                else if (_showRocky)
+                {
+                    relativeTop = ownerBottom - (Rocky.ClipHeight + 100);
+                    relativeLeft = ownerRight - (Rocky.ClipWidth + 100);
                 }
                 else
                 {

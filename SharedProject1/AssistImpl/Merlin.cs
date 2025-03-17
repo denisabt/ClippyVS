@@ -17,18 +17,6 @@ namespace SharedProject1.AssistImpl
     public class Merlin : AssistantBase
     {
         /// <summary>
-        /// The URI for the sprite with all the animation stages for Clippy
-        /// </summary>
-        //private static string spriteResourceUri = "pack://application:,,,/ClippyVSPackage;component/clippy.png";
-        private static readonly string SpriteResourceUri = "pack://application:,,,/ClippyVs2022;component/merlin_map.png";
-
-        /// <summary>
-        /// The URI for the animations json definition
-        /// </summary>
-        //private static string animationsResourceUri = "pack://application:,,,/ClippyVSPackage;component/animations.json";
-        private static readonly string AnimationsResourceUri = "pack://application:,,,/ClippyVs2022;component/merlin_agent.js";
-
-        /// <summary>
         /// The height of the frame
         /// </summary>
         public static int ClipHeight { get; } = 128;
@@ -68,7 +56,10 @@ MerlinAnimations.Idle1_2};
         /// </summary>
         public Merlin(Panel canvas)
         {
-            InitAssistant(canvas, SpriteResourceUri);
+            AnimationsResourceUri = "pack://application:,,,/ClippyVs2022;component/merlin_agent.js";
+            SpriteResourceUri = "pack://application:,,,/ClippyVs2022;component/Merlin/merlin_map.png";
+
+            InitAssistant(canvas, SpriteResourceUri, "Merlin", "merlin_map.png");
 
             if (_animations == null)
                 RegisterAnimations();
@@ -85,7 +76,7 @@ MerlinAnimations.Idle1_2};
         /// </summary>
         private void RegisterAnimations()
         {
-            _animations = RegisterAnimationsImpl(AnimationsResourceUri, XDoubleAnimation_Completed, ClipWidth, ClipHeight);
+            _animations = RegisterAnimationsImpl(AnimationsResourceUri, XDoubleAnimation_Completed, ClipWidth, ClipHeight, "Merlin", "merlin_agent.js");
         }
 
         /// <summary>
@@ -147,8 +138,8 @@ MerlinAnimations.Idle1_2};
                     Debug.WriteLine(animation.Item1.ToString() + animation.Item2);
                     IsAnimating = true;
                     await ThreadHelper.JoinableTaskFactory.SwitchToMainThreadAsync();
-                    ClippedImage.BeginAnimation(Canvas.LeftProperty, animation.Item1);
-                    ClippedImage.BeginAnimation(Canvas.TopProperty, animation.Item2);
+                    AssistantFramesImage.BeginAnimation(Canvas.LeftProperty, animation.Item1);
+                    AssistantFramesImage.BeginAnimation(Canvas.TopProperty, animation.Item2);
                 }
             }
             catch (Exception)

@@ -1,19 +1,17 @@
 ﻿using Microsoft.VisualStudio.Shell;
+using Recoding.ClippyVSPackage;
 using System;
 using System.ComponentModel.Design;
-using Task = System.Threading.Tasks.Task;
+using AsyncTasks = System.Threading.Tasks;
 
-namespace Recoding.ClippyVSPackage
+namespace SharedProject1
 {
-    /// <summary>
-    /// Command handler
-    /// </summary>
-    internal sealed class CommandGenius
+    internal sealed class CommandMerlin
     {
         /// <summary>
         /// Command ID.
         /// </summary>
-        private const int CommandId = 4131;
+        private const int CommandId = 4130;
 
         /// <summary>
         /// Command menu group (command set GUID).
@@ -26,30 +24,36 @@ namespace Recoding.ClippyVSPackage
         private readonly AsyncPackage _package;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="CommandGenius"/> class.
+        /// Initializes a new instance of the <see cref="CommandMerlin"/> class.
         /// Adds our command handlers for menu (commands must exist in the command table file)
         /// </summary>
+        /// <param name="package">Owner package, not null.</param>
         /// <param name="commandService">Command service to add command to, not null.</param>
-        /// <param name="package">The Shell Package</param>
-        private CommandGenius(OleMenuCommandService commandService, AsyncPackage package)
+        private CommandMerlin(AsyncPackage package, OleMenuCommandService commandService)
         {
-            var menuCommandId = new CommandID(CommandSet, CommandId);
-            var menuItem = new MenuCommand(Execute, menuCommandId);
-            commandService.AddCommand(menuItem);
+            _package = package ?? throw new ArgumentNullException(nameof(package));
+            commandService = commandService ?? throw new ArgumentNullException(nameof(commandService));
 
-            _package = package;
+            var menuCommandId = new CommandID(CommandSet, CommandId);
+            var menuItem = new MenuCommand(this.Execute, menuCommandId);
+            commandService.AddCommand(menuItem);
         }
+
 
         /// <summary>
         /// Initializes the singleton instance of the command.
         /// </summary>
         /// <param name="package">Owner package, not null.</param>
-        public static async Task InitializeAsync(AsyncPackage package)
+        public static async AsyncTasks.Task InitializeAsync(AsyncPackage package)
         {
-            //await ThreadHelper.JoinableTaskFactory.SwitchToMainThreadAsync(package.DisposalToken);
+            // Switch to the main thread - the call to AddCommand in Command2's constructor requires
+            // the UI thread.
+            await ThreadHelper.JoinableTaskFactory.SwitchToMainThreadAsync(package.DisposalToken);
+
             OleMenuCommandService commandService = await package.GetServiceAsync(typeof(IMenuCommandService)) as OleMenuCommandService;
-            _ = new CommandGenius(commandService, package);
+            _ = new CommandMerlin(package, commandService);
         }
+
 
         /// <summary>
         /// This function is the callback used to execute the command when the menu item is clicked.
@@ -61,7 +65,7 @@ namespace Recoding.ClippyVSPackage
         private void Execute(object sender, EventArgs e)
         {
             ThreadHelper.ThrowIfNotOnUIThread();
-            ((ClippyVisualStudioPackage)_package).ReviveGeniusCommand();
+            ((ClippyVisualStudioPackage)_package).ReviveMerlinCommand();
         }
     }
 }
