@@ -37,7 +37,7 @@ namespace SharedProjectTests2
             var subject = new TestableRocky(panel);
 
             subject.RegisterAnimations();
-            Assert.AreEqual(46, subject.AllAnimations.Count, "Animation Count is  {0}", subject.AllAnimations.Count);
+            Assert.AreEqual(46, subject.AllAnimationNames.Count, "Animation Count is  {0}", subject.AllAnimationNames.Count);
         }
 
         //[TestMethod]

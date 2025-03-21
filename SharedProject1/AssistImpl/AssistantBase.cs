@@ -1,12 +1,8 @@
 ﻿using Recoding.ClippyVSPackage.Configurations;
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
-using System.Drawing;
-using System.Globalization;
 using System.IO;
 using System.Reflection;
-using System.Resources;
 using System.Text;
 using System.Windows;
 using System.Windows.Controls;
@@ -22,13 +18,13 @@ namespace Recoding.ClippyVSPackage
         /// <summary>
         /// The time dispatcher to perform the animations in a random way
         /// </summary>
-        protected static DispatcherTimer WpfAnimationsDispatcher;
+        private static DispatcherTimer _wpfAnimationsDispatcher;
 
         /// <summary>
         /// The sprite with all the animation stages for Clippy
         /// </summary>
         protected BitmapSource Sprite;
-        
+
         /// <summary>
         /// The image that holds the sprite
         /// </summary>
@@ -37,19 +33,17 @@ namespace Recoding.ClippyVSPackage
         /// <summary>
         /// The URI for the sprite with all the animation stages for Clippy
         /// </summary>
-        //private static string spriteResourceUri = "pack://application:,,,/ClippyVSPackage;component/clippy.png";
         protected static string SpriteResourceUri = "pack://application:,,,/ClippyVs2022;component/clippy.png";
 
         /// <summary>
         /// The URI for the animationses json definition
         /// </summary>
-        //private static string animationsResourceUri = "pack://application:,,,/ClippyVSPackage;component/animations.json";
         protected static string AnimationsResourceUri = "pack://application:,,,/ClippyVs2022;component/animations.json";
 
         /// <summary>
         /// Seconds between a random idle animation and another
         /// </summary>
-        protected const int IdleAnimationTimeout = 45;
+        private const int IdleAnimationTimeout = 45;
 
         /// <summary>
         /// When is true it means an animation is actually running
@@ -65,7 +59,7 @@ namespace Recoding.ClippyVSPackage
         {
             string streamString;
             stream.Position = 0;
-            using (StreamReader reader = new StreamReader(stream, Encoding.UTF8))
+            using (var reader = new StreamReader(stream, Encoding.UTF8))
             {
                 streamString = reader.ReadToEnd();
             }
@@ -74,7 +68,7 @@ namespace Recoding.ClippyVSPackage
 
         public void Dispose()
         {
-            WpfAnimationsDispatcher?.Stop();
+            _wpfAnimationsDispatcher?.Stop();
         }
 
 
@@ -83,39 +77,24 @@ namespace Recoding.ClippyVSPackage
         /// </summary>
         /// <param name="canvas"></param>
         /// <param name="spriteResourceUri"></param>
-        protected void InitAssistant(Panel canvas, string spriteResourceUri, string assistantName, string assistantMapFilename)
+        protected void InitAssistant(Panel canvas, string assistantName, string assistantMapFilename)
         {
-            // ReSharper disable once RedundantAssignment
-            var spResUri = spriteResourceUri;
-#if Dev19
-            spResUri = spriteResourceUri.Replace("ClippyVs2022", "ClippyVSPackage");
-#endif
-#if Dev22
-#endif
-            // pass BitmapImage
-            var uri = new Uri(spResUri, UriKind.RelativeOrAbsolute);
-            ResourceManager rm = Resources.ResourceManager;
-            //var resourceSet = rm.GetResourceSet(CultureInfo.InvariantCulture, false, true);
-            //var spr = this.GetResourceBitmapFromSharedProject("Merlin", "merlin_map.png");
-            var spr = this.GetResourceBitmapFromSharedProject(assistantName, assistantMapFilename);
+            if (canvas == null) return; 
+            
+            Sprite = GetResourceBitmapFromSharedProject(assistantName, assistantMapFilename);
 
-            //this.Sprite = new BitmapImage(uri);
-            this.Sprite = spr;
-
-            AssistantFramesImage = new System.Windows.Controls.Image
+            AssistantFramesImage = new Image
             {
                 Source = Sprite,
                 Stretch = Stretch.None
             };
-
-            if (canvas == null) return;
 
             canvas.Children.Clear();
             canvas.Children.Add(AssistantFramesImage);
         }
 
         protected Dictionary<string, Tuple<DoubleAnimationUsingKeyFrames, DoubleAnimationUsingKeyFrames>> RegisterAnimationsImpl(string animationsResourceUri,
-           
+
             EventHandler xDoubleAnimationCompleted, int clipWidth, int clipHeight, string assistantName, string assistantAnimationsFilename)
         {
             var spResUri = animationsResourceUri;
@@ -127,7 +106,6 @@ namespace Recoding.ClippyVSPackage
             var uri = new Uri(spResUri, UriKind.RelativeOrAbsolute);
 
             var animationsString2 = GetStringFromSharedProject(assistantName, assistantAnimationsFilename);
-            //var animationsStream = Application.GetResourceStream(uri);
 
             if (animationsString2 == null)
                 return animations;
@@ -139,7 +117,8 @@ namespace Recoding.ClippyVSPackage
                 var animationsString = animationsString2;
                 storedAnimations =
                     Newtonsoft.Json.JsonConvert.DeserializeObject<List<ClippySingleAnimation>>(animationsString);
-            } catch (Exception exjson)
+            }
+            catch (Exception exjson)
             {
                 Console.Write(exjson.ToString());
             }
@@ -177,7 +156,7 @@ namespace Recoding.ClippyVSPackage
                             var yKeyFrame = new DiscreteDoubleKeyFrame(clipHeight * -lastRow,
                                 KeyTime.FromTimeSpan(TimeSpan.FromSeconds(timeOffset)));
 
-                            timeOffset += ((double) frame.Duration / 1000);
+                            timeOffset += ((double)frame.Duration / 1000);
                             xDoubleAnimation.KeyFrames.Add(xKeyFrame);
                             yDoubleAnimation.KeyFrames.Add(yKeyFrame);
                         }
@@ -186,7 +165,7 @@ namespace Recoding.ClippyVSPackage
                     animations.Add(animation.Name,
                         new Tuple<DoubleAnimationUsingKeyFrames, DoubleAnimationUsingKeyFrames>(xDoubleAnimation,
                             yDoubleAnimation));
-                   // xDoubleAnimation.Completed += xDoubleAnimationCompleted;
+                    // xDoubleAnimation.Completed += xDoubleAnimationCompleted;
                 }
                 catch (Exception ex)
                 {
@@ -204,23 +183,19 @@ namespace Recoding.ClippyVSPackage
         /// <returns></returns>
         protected BitmapImage GetResourceBitmapFromSharedProject(string assistant, string filename)
         {
-            // XXXXXX
-            var executingAssembly = Assembly.GetExecutingAssembly();
+            if (string.IsNullOrEmpty(assistant) || string.IsNullOrEmpty(filename))
+                return new BitmapImage();
+
             //string[] resourceNames = executingAssembly.GetManifestResourceNames();
 
-            //foreach (var resourceName in resourceNames)
-            //{
-            //    Debug.WriteLine(resourceName);
-            //}
+            var executingAssembly = Assembly.GetExecutingAssembly();
+            var rocky_map_bmp = executingAssembly.GetManifestResourceStream(
+                executingAssembly.GetName().Name + ".Resources." + assistant + "." + filename
+                );
 
+            if (rocky_map_bmp == null)
+                return new BitmapImage();
 
-            //var rocky_map_test = executingAssembly.GetManifestResourceInfo(executingAssembly.GetName().Name + ".Resources.Rocky.rocky_map.png");
-            var rocky_map_bmp = executingAssembly.GetManifestResourceStream(executingAssembly.GetName().Name + ".Resources."+ assistant+"." +filename);
-
-            // global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("Recoding.ClippyVSPackage.Resources", typeof(Resources).Assembly);
-            //temp.GetResourceSet(CultureInfo.InvariantCulture, true, true);
-
-            // XXXX
             var bitmap = new BitmapImage();
             using (rocky_map_bmp)
             {
@@ -234,12 +209,35 @@ namespace Recoding.ClippyVSPackage
             return bitmap;
         }
 
-        protected string GetStringFromSharedProject(string assistant, string filename)
+        private string GetStringFromSharedProject(string assistant, string filename)
         {
+            if (string.IsNullOrEmpty(assistant) || string.IsNullOrEmpty(filename))
+                return string.Empty;
+
             var executingAssembly = Assembly.GetExecutingAssembly();
-            var textfileStream = executingAssembly.GetManifestResourceStream(executingAssembly.GetName().Name + ".Resources." + assistant + "." + filename);
-            var textfileContents = StreamToString(textfileStream);
+            var assemblyName = executingAssembly.GetName().Name;
+            var manifestResourceName = assemblyName + ".Resources." + assistant + "." + filename;
+            string textfileContents;
+
+            using (var textfileStream = executingAssembly.GetManifestResourceStream(manifestResourceName))
+            {
+                textfileContents = StreamToString(textfileStream);
+            }
+
             return textfileContents;
+        }
+
+        /// <summary>
+        /// Registers a function to perform a subset of animationses randomly (the idle ones)
+        /// </summary>
+        protected void RegisterIdleRandomAnimations(EventHandler WPFAnimationsDispatcher_Tick)
+        {
+            _wpfAnimationsDispatcher = new DispatcherTimer();
+
+            _wpfAnimationsDispatcher.Interval = TimeSpan.FromSeconds(IdleAnimationTimeout);
+            _wpfAnimationsDispatcher.Tick += WPFAnimationsDispatcher_Tick;
+
+            _wpfAnimationsDispatcher.Start();
         }
     }
 }

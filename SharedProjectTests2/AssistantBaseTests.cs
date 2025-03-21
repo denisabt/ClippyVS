@@ -22,7 +22,7 @@ namespace SharedProjectTests2
         public new void InitAssistant(Panel canvas, string spriteResourceUri)
         {
             //var rmMock = Mock.Of<ResourceManager>(MockBehavior.Strict);
-            base.InitAssistant(canvas, spriteResourceUri, "testAssistant", "testAssistantMapFilename");
+            base.InitAssistant(canvas, "testAssistant", "testAssistantMapFilename");
         }
     }
 }

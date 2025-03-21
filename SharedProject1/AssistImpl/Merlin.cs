@@ -3,7 +3,6 @@ using System;
 using System.Collections.Generic;
 using System.Windows.Controls;
 using System.Windows.Media.Animation;
-using System.Windows.Threading;
 using System.Linq;
 using Recoding.ClippyVSPackage;
 using System.Diagnostics;
@@ -29,7 +28,7 @@ namespace SharedProject1.AssistImpl
         /// <summary>
         /// The list of all the available animations
         /// </summary>
-        public List<MerlinAnimations> AllAnimations { get; }
+        public List<MerlinAnimations> AllAnimationNames { get; }
 
         /// <summary>
         /// The list of couples of Columns/Rows double animations
@@ -59,16 +58,16 @@ MerlinAnimations.Idle1_2};
             AnimationsResourceUri = "pack://application:,,,/ClippyVs2022;component/merlin_agent.js";
             SpriteResourceUri = "pack://application:,,,/ClippyVs2022;component/Merlin/merlin_map.png";
 
-            InitAssistant(canvas, SpriteResourceUri, "Merlin", "merlin_map.png");
+            InitAssistant(canvas, "Merlin", "merlin_map.png");
 
             if (_animations == null)
                 RegisterAnimations();
 
             //XX Requires testing..
-            AllAnimations = new List<MerlinAnimations>();
+            AllAnimationNames = new List<MerlinAnimations>();
             var values = Enum.GetValues(typeof(MerlinAnimations));
-            AllAnimations.AddRange(values.Cast<MerlinAnimations>());
-            RegisterIdleRandomAnimations();
+            AllAnimationNames.AddRange(values.Cast<MerlinAnimations>());
+            RegisterIdleRandomAnimations(WPFAnimationsDispatcher_Tick);
         }
 
         /// <summary>
@@ -89,25 +88,12 @@ MerlinAnimations.Idle1_2};
             IsAnimating = false;
         }
 
-        /// <summary>
-        /// Registers a function to perform a subset of animations randomly (the idle ones)
-        /// </summary>
-        private void RegisterIdleRandomAnimations()
-        {
-            WpfAnimationsDispatcher = new DispatcherTimer
-            {
-                Interval = TimeSpan.FromSeconds(IdleAnimationTimeout)
-            };
-            WpfAnimationsDispatcher.Tick += WPFAnimationsDispatcher_Tick;
-
-            WpfAnimationsDispatcher.Start();
-        }
-
         private void WPFAnimationsDispatcher_Tick(object sender, EventArgs e)
         {
             var rmd = new Random();
             var randomInt = rmd.Next(0, IdleAnimations.Count);
 
+            Debug.WriteLine("Trigger idle Merlin anim " + IdleAnimations[randomInt]);
             StartAnimation(IdleAnimations[randomInt]);
         }
 

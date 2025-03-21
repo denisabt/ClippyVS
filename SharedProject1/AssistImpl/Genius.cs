@@ -29,7 +29,7 @@ namespace SharedProject1.AssistImpl
         /// <summary>
         /// The list of all the available animations
         /// </summary>
-        public List<GeniusAnimations> AllAnimations { get; } = new List<GeniusAnimations>();
+        public List<GeniusAnimations> AllAnimationNames { get; } = new List<GeniusAnimations>();
 
         /// <summary>
         /// All the animations that represents an Idle state
@@ -57,7 +57,7 @@ namespace SharedProject1.AssistImpl
 
             if (canvas == null) return;
 
-            InitAssistant(canvas, SpriteResourceUri, "Genius", "genius_map.png");
+            InitAssistant(canvas, "Genius", "genius_map.png");
             // Might not be required XXX
             AssistantFramesImage.Visibility = Visibility.Visible;
 
@@ -68,37 +68,22 @@ namespace SharedProject1.AssistImpl
                 Visibility = Visibility.Collapsed
             };
     
-            //canvas.Children.Clear();
-            //canvas.Children.Add(ClippedImage);
-
             canvas1.Children.Clear();
             canvas1.Children.Add(ClippedImage1);
 
             if (Animations == null)
                 RegisterAnimations();
 
-            AllAnimations = new List<GeniusAnimations>();
+            AllAnimationNames = new List<GeniusAnimations>();
             var values = Enum.GetValues(typeof(GeniusAnimations));
-            AllAnimations.AddRange(values.Cast<GeniusAnimations>());
-            RegisterIdleRandomAnimations();
+            AllAnimationNames.AddRange(values.Cast<GeniusAnimations>());
+            RegisterIdleRandomAnimations(WPFAnimationsDispatcher_Tick);
         }
-
-        
 
         /// <summary>
         /// Registers a function to perform a subset of animations randomly (the idle ones)
         /// </summary>
-        private void RegisterIdleRandomAnimations()
-        {
-            WpfAnimationsDispatcher = new DispatcherTimer
-            {
-                Interval = TimeSpan.FromSeconds(IdleAnimationTimeout)
-            };
-            WpfAnimationsDispatcher.Tick += WPFAnimationsDispatcher_Tick;
-
-            WpfAnimationsDispatcher.Start();
-        }
-
+       
         private void WPFAnimationsDispatcher_Tick(object sender, EventArgs e)
         {
             var rmd = new Random();

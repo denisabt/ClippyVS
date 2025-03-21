@@ -4,7 +4,6 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using System.Windows.Controls;
 using System.Windows.Media.Animation;
-using System.Windows.Threading;
 using System.Linq;
 using System.Diagnostics;
 
@@ -28,7 +27,7 @@ namespace Recoding.ClippyVSPackage
         /// <summary>
         /// The list of all the available animationses
         /// </summary>
-        public List<ClippyAnimations> AllAnimations { get; } = new List<ClippyAnimations>();
+        public List<ClippyAnimations> AllAnimationNames { get; } = new List<ClippyAnimations>();
 
         /// <summary>
         /// The list of couples of Columns/Rows double animationses
@@ -55,15 +54,15 @@ namespace Recoding.ClippyVSPackage
         {
             SpriteResourceUri = "pack://application:,,,/ClippyVs2022;component/clippy.png";
             AnimationsResourceUri = "pack://application:,,,/ClippyVs2022;component/animations.json";
-            InitAssistant(canvas, SpriteResourceUri, "Clippy", "clippy_map.png");
+            InitAssistant(canvas, "Clippy", "clippy_map.png");
 
             if (_animations == null)
                 RegisterAnimations();
 
-            AllAnimations = new List<ClippyAnimations>();
+            AllAnimationNames = new List<ClippyAnimations>();
             var values = Enum.GetValues(typeof(ClippyAnimations));
-            AllAnimations.AddRange(values.Cast<ClippyAnimations>());
-            RegisterIdleRandomAnimations();
+            AllAnimationNames.AddRange(values.Cast<ClippyAnimations>());
+            RegisterIdleRandomAnimations(WPFAnimationsDispatcher_Tick);
         }
 
         /// <summary>
@@ -82,20 +81,6 @@ namespace Recoding.ClippyVSPackage
         void XDoubleAnimation_Completed(object sender, EventArgs e)
         {
             IsAnimating = false;
-        }
-
-        /// <summary>
-        /// Registers a function to perform a subset of animationses randomly (the idle ones)
-        /// </summary>
-        private void RegisterIdleRandomAnimations()
-        {
-            WpfAnimationsDispatcher = new DispatcherTimer
-            {
-                Interval = TimeSpan.FromSeconds(IdleAnimationTimeout)
-            };
-            WpfAnimationsDispatcher.Tick += WPFAnimationsDispatcher_Tick;
-
-            WpfAnimationsDispatcher.Start();
         }
 
         private void WPFAnimationsDispatcher_Tick(object sender, EventArgs e)

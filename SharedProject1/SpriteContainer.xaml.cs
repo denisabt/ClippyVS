@@ -596,15 +596,15 @@ namespace Recoding.ClippyVSPackage
             Random rmd = new Random();
             if (!_showMerlin && !_showGenius && !_showRocky)
             {
-                var randomInt = rmd.Next(0, Clippy.AllAnimations.Count);
+                var randomInt = rmd.Next(0, Clippy.AllAnimationNames.Count);
 
-                Clippy.StartAnimation(Clippy.AllAnimations[randomInt]);
+                Clippy.StartAnimation(Clippy.AllAnimationNames[randomInt]);
             }
             else if (_showGenius && !_showRocky)
             {
-                var randomInt = rmd.Next(0, Genius.AllAnimations.Count);
+                var randomInt = rmd.Next(0, Genius.AllAnimationNames.Count);
 
-                Genius.StartAnimation(Genius.AllAnimations[randomInt]);
+                Genius.StartAnimation(Genius.AllAnimationNames[randomInt]);
             }
             else if (_showRocky)
             {
@@ -614,9 +614,9 @@ namespace Recoding.ClippyVSPackage
             }
             else
             {
-                var randomInt = rmd.Next(0, Merlin.AllAnimations.Count);
+                var randomInt = rmd.Next(0, Merlin.AllAnimationNames.Count);
 
-                Merlin.StartAnimation(Merlin.AllAnimations[randomInt]);
+                Merlin.StartAnimation(Merlin.AllAnimationNames[randomInt]);
             }
         }
 

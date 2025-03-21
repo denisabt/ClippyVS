@@ -92,7 +92,7 @@ RockyAnimations.Print,
             SpriteResourceUri = "pack://application:,,,/ClippyVs2022;component/Rocky/rocky_map.png";
             AnimationsResourceUri = "pack://application:,,,/ClippyVs2022;component/rocky.json";
             Animations = null;
-            InitAssistant(canvas, SpriteResourceUri, "Rocky", "rocky_map.png");
+            InitAssistant(canvas, "Rocky", "rocky_map.png");
 
             RegisterAnimationsImpl();
         }
@@ -108,7 +108,7 @@ RockyAnimations.Print,
                 AllAnimationNames = new List<RockyAnimations>();
                 var values = Enum.GetValues(typeof(RockyAnimations));
                 AllAnimationNames.AddRange(values.Cast<RockyAnimations>());
-                RegisterIdleRandomAnimations();
+                RegisterIdleRandomAnimations(WPFAnimationsDispatcher_Tick);
             }
             else
             {
@@ -123,31 +123,6 @@ RockyAnimations.Print,
         //{
         //    Animations = RegisterAnimationsImpl(AnimationsResourceUri, XDoubleAnimation_Completed, ClipWidth, ClipHeight);
         //}
-
-        /// <summary>
-        /// Callback to execute at the end of an animation
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        //private void XDoubleAnimation_Completed(object sender, EventArgs e)
-        //{
-        //    IsAnimating = false;
-        //}
-
-        /// <summary>
-        /// Registers a function to perform a subset of animations randomly (the idle ones)
-        /// </summary>
-        private void RegisterIdleRandomAnimations()
-        {
-            WpfAnimationsDispatcher = new DispatcherTimer
-            {
-                Interval = TimeSpan.FromSeconds(IdleAnimationTimeout)
-            };
-            
-            WpfAnimationsDispatcher.Tick += WPFAnimationsDispatcher_Tick;
-
-            WpfAnimationsDispatcher.Start();
-        }
 
         private void WPFAnimationsDispatcher_Tick(object sender, EventArgs e)
         {
