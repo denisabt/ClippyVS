@@ -1,8 +1,9 @@
 ﻿namespace SharedProject1.Configurations
 {
+    // Refactor to use json as name source Todo
     public enum RockyAnimations
     {
-
+        Idle_1,
         DeepIdle1,
         Congratulate, 
         Hide, 

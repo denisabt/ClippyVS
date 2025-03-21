@@ -28,12 +28,12 @@ namespace SharedProject1.AssistImpl
         /// <summary>
         /// The list of all the available animations
         /// </summary>
-        public List<RockyAnimations> AllAnimations { get; set; }
+        public List<RockyAnimations> AllAnimationNames { get; set; }
 
         /// <summary>
         /// All the animations that represents an Idle state
         /// </summary>
-        private static readonly List<RockyAnimations> IdleAnimations = new List<RockyAnimations>
+        private static readonly List<RockyAnimations> IdleAnimationNames = new List<RockyAnimations>
         {
 
         RockyAnimations.DeepIdle1,
@@ -105,9 +105,9 @@ RockyAnimations.Print,
 
             if (registerSuccess)
             {
-                AllAnimations = new List<RockyAnimations>();
+                AllAnimationNames = new List<RockyAnimations>();
                 var values = Enum.GetValues(typeof(RockyAnimations));
-                AllAnimations.AddRange(values.Cast<RockyAnimations>());
+                AllAnimationNames.AddRange(values.Cast<RockyAnimations>());
                 RegisterIdleRandomAnimations();
             }
             else
@@ -152,9 +152,9 @@ RockyAnimations.Print,
         private void WPFAnimationsDispatcher_Tick(object sender, EventArgs e)
         {
             var rmd = new Random();
-            var randomInt = rmd.Next(0, IdleAnimations.Count);
+            var randomInt = rmd.Next(0, IdleAnimationNames.Count);
 
-            StartAnimation(IdleAnimations[randomInt]);
+            StartAnimation(IdleAnimationNames[randomInt]);
         }
 
         public void StartAnimation(RockyAnimations animations, bool byPassCurrentAnimation = false)

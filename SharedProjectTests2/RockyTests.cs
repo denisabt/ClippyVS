@@ -51,7 +51,7 @@ namespace SharedProjectTests2
 
             //    foreach (var anim in Enum.GetValues(typeof(RockyAnimations)))
             //    {
-            //        subject.AllAnimations
+            //        subject.AllAnimationNames
             //        var animation = RockyGeniusBase.Ani
             //        if (animation == null)
             //            missing = true;

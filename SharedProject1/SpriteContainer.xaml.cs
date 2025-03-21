@@ -608,9 +608,9 @@ namespace Recoding.ClippyVSPackage
             }
             else if (_showRocky)
             {
-                var randomInt = rmd.Next(0, Rocky.AllAnimations.Count);
+                var randomInt = rmd.Next(0, Rocky.AllAnimationNames.Count);
 
-                Rocky.StartAnimation(Rocky.AllAnimations[randomInt]);
+                Rocky.StartAnimation(Rocky.AllAnimationNames[randomInt]);
             }
             else
             {

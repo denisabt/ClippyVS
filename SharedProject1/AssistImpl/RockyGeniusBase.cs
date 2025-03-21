@@ -116,8 +116,6 @@ namespace SharedProject1.AssistImpl
             };
             var visibility2 = new ObjectAnimationUsingKeyFrames();
 
-
-
             double timeOffset = 0;
             var frameIndex = 0;
 
@@ -138,7 +136,7 @@ namespace SharedProject1.AssistImpl
                 visibility1,
                 animationMaxLayers);
 
-            Debug.WriteLine("Added Genius Anim {0}" + animation.Name);
+            Debug.WriteLine("Added RockyGenius Anim {0}", animation.Name);
             Debug.WriteLine("...  Frame Count: " + xDoubleAnimation.KeyFrames.Count + " - " +
                             yDoubleAnimation.KeyFrames.Count);
             Debug.WriteLine($"Animation {animation.Name} has {animationMaxLayers} layers");
