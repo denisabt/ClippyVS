@@ -54,7 +54,7 @@ namespace Recoding.ClippyVSPackage
         public Clippy(Canvas canvas)
         {
             SpriteResourceUri = "pack://application:,,,/ClippyVs2022;component/clippy.png";
-            AnimationsResourceUri = "pack://application:,,,/ClippyVs2022;component/animations.json"; 
+            AnimationsResourceUri = "pack://application:,,,/ClippyVs2022;component/animations.json";
             InitAssistant(canvas, SpriteResourceUri, "Clippy", "clippy_map.png");
 
             if (_animations == null)
@@ -124,16 +124,21 @@ namespace Recoding.ClippyVSPackage
         {
             if (!IsAnimating || byPassCurrentAnimation)
             {
-                IsAnimating = true;
-                await Microsoft.VisualStudio.Shell.ThreadHelper.JoinableTaskFactory.SwitchToMainThreadAsync();
-                if (_animations.ContainsKey(animationsType.ToString()))
-                {
-                    AssistantFramesImage.BeginAnimation(Canvas.LeftProperty, _animations[animationsType.ToString()].Item1);
-                    AssistantFramesImage.BeginAnimation(Canvas.TopProperty, _animations[animationsType.ToString()].Item2);
-                } else
+                if (!_animations.ContainsKey(animationsType.ToString()))
                 {
                     Debug.WriteLine("Animation {0} not found!", animationsType.ToString());
+                    return;
                 }
+
+                IsAnimating = true;
+                await Microsoft.VisualStudio.Shell.ThreadHelper.JoinableTaskFactory.SwitchToMainThreadAsync();
+
+                var leftPropertyAnimation = _animations[animationsType.ToString()].Item1;
+                var topPropertyAnimation = _animations[animationsType.ToString()].Item2;
+
+                AssistantFramesImage.BeginAnimation(Canvas.LeftProperty, leftPropertyAnimation);
+                AssistantFramesImage.BeginAnimation(Canvas.TopProperty, topPropertyAnimation);
+
             }
 
         }

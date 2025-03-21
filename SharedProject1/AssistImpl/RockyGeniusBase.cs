@@ -234,6 +234,7 @@ namespace SharedProject1.AssistImpl
                 {
                     //Debug.WriteLine("Processing Overlay " + layerNum);
 
+                    // For Branching reasons, this can actually only be assembled on runtime.... :-/
                     // Prepare Key frame for all potential layers (max 3)
                     xDoubleAnimation.KeyFrames.Add(new DiscreteDoubleKeyFrame());
                     yDoubleAnimation.KeyFrames.Add(new DiscreteDoubleKeyFrame());

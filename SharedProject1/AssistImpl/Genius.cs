@@ -142,10 +142,15 @@ namespace SharedProject1.AssistImpl
                         ClippedImage1.Visibility = Visibility.Visible;
                         ((Canvas) ClippedImage1.Parent).Visibility = Visibility.Visible;
                     }
-                    AssistantFramesImage.BeginAnimation(Canvas.LeftProperty, animation.Layer0.Item1);
-                    AssistantFramesImage.BeginAnimation(Canvas.TopProperty, animation.Layer0.Item2);
 
-                    ClippedImage1.BeginAnimation(Canvas.LeftProperty, animation.Layer1.Item1);
+                    var leftPropertyAnimation = animation.Layer0.Item1;
+                    var topPropertyAnimation = animation.Layer0.Item2;
+                    
+                    AssistantFramesImage.BeginAnimation(Canvas.LeftProperty,leftPropertyAnimation);
+                    AssistantFramesImage.BeginAnimation(Canvas.TopProperty, topPropertyAnimation);
+
+
+ClippedImage1.BeginAnimation(Canvas.LeftProperty, animation.Layer1.Item1);
                     ClippedImage1.BeginAnimation(Canvas.TopProperty, animation.Layer1.Item2);
                     ClippedImage1.BeginAnimation(UIElement.OpacityProperty, animation.Visibility1);
                 }
@@ -158,6 +163,11 @@ namespace SharedProject1.AssistImpl
             {
                 Debug.WriteLine("StartAnimAsyncException Genius " + animationType);
             }
+        }
+
+        private void TopPropertyAnimation_Changed(object sender, EventArgs e)
+        {
+            Debug.WriteLine("TopPropertyAnimation_Changed");
         }
     }
 }

@@ -37,27 +37,27 @@ namespace SharedProjectTests2
             var subject = new TestableRocky(panel);
 
             subject.RegisterAnimations();
-            Assert.IsTrue(subject.AllAnimations.Count == 46);
+            Assert.AreEqual(46, subject.AllAnimations.Count, "Animation Count is  {0}", subject.AllAnimations.Count);
         }
 
         //[TestMethod]
-        //public void TestAnimations_ContainAllAnims()
-        //{
-        //    Canvas panel = new Canvas();
-        //    var subject = new TestableRocky(panel);
+            //public void TestAnimations_ContainAllAnims()
+            //{
+            //    Canvas panel = new Canvas();
+            //    var subject = new TestableRocky(panel);
 
-        //    subject.RegisterAnimations();
-        //    bool missing = false;
+            //    subject.RegisterAnimations();
+            //    bool missing = false;
 
-        //    foreach (var anim in Enum.GetValues(typeof(RockyAnimations)))
-        //    {
-        //        subject.AllAnimations
-        //        var animation = RockyGeniusBase.Ani
-        //        if (animation == null)
-        //            missing = true;
-        //    }
+            //    foreach (var anim in Enum.GetValues(typeof(RockyAnimations)))
+            //    {
+            //        subject.AllAnimations
+            //        var animation = RockyGeniusBase.Ani
+            //        if (animation == null)
+            //            missing = true;
+            //    }
 
-        //    Assert.IsFalse(missing);
-        //}
+            //    Assert.IsFalse(missing);
+            //}
+        }
     }
-}
