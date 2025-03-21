@@ -14,7 +14,7 @@ namespace SharedProjectTests2
             Canvas panel2 = new Canvas();
             var subject = new Genius(panel, panel2);
 
-            Assert.IsTrue(subject.AllAnimations.Count > 0);
+            Assert.IsTrue(subject.AllAnimationNames.Count > 0);
         }
 
         [TestMethod]
@@ -25,7 +25,7 @@ namespace SharedProjectTests2
             var subject = new TestableGenius(panel, panel2);
 
             subject.RegisterAnimations();
-            Assert.IsTrue(subject.AllAnimations.Count == 47);
+            Assert.IsTrue(subject.AllAnimationNames.Count == 47);
         }
     }
 

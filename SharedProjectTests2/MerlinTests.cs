@@ -13,7 +13,7 @@ namespace SharedProjectTests2
             Canvas panel = new Canvas();
             var subject = new Merlin(panel);
 
-            Assert.IsTrue(subject.AllAnimations.Count > 0);
+            Assert.IsTrue(subject.AllAnimationNames.Count > 0);
         }
     }
 }

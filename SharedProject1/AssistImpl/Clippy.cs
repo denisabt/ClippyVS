@@ -27,7 +27,7 @@ namespace Recoding.ClippyVSPackage
         /// <summary>
         /// The list of all the available animationses
         /// </summary>
-        public List<ClippyAnimations> AllAnimationNames { get; } = new List<ClippyAnimations>();
+        public List<ClippyAnimations> AllAnimationNames { get; }
 
         /// <summary>
         /// The list of couples of Columns/Rows double animationses
@@ -70,7 +70,8 @@ namespace Recoding.ClippyVSPackage
         /// </summary>
         private void RegisterAnimations()
         {
-            _animations = RegisterAnimationsImpl(AnimationsResourceUri, XDoubleAnimation_Completed, ClipWidth, ClipHeight, "Clippy", "clippy.json");
+            _animations = RegisterAnimationsImpl(AnimationsResourceUri, XDoubleAnimation_Completed, ClipWidth,
+                ClipHeight, "Clippy", "clippy.json");
         }
 
         /// <summary>

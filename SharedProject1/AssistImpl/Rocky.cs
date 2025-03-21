@@ -116,14 +116,6 @@ RockyAnimations.Print,
             }
         }
 
-        /// <summary>
-        /// Registers all the animation definitions into a static property
-        /// </summary>
-        //private void RegisterAnimations()
-        //{
-        //    Animations = RegisterAnimationsImpl(AnimationsResourceUri, XDoubleAnimation_Completed, ClipWidth, ClipHeight);
-        //}
-
         private void WPFAnimationsDispatcher_Tick(object sender, EventArgs e)
         {
             var rmd = new Random();

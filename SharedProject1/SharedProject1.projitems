@@ -17,6 +17,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)AssistImpl\Merlin.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)AssistImpl\Clippy.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)AssistImpl\RockyGeniusBase.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)AssistImpl\SingleAnimationFrame.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)AssistImpl\WebLikeAssistant.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ClippyVSPackage.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ClippyVSSettings.cs" />

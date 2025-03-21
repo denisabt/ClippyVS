@@ -27,7 +27,7 @@ namespace SharedProjectTests2
             Canvas panel2 = new Canvas();
             var subject = new Genius(panel, panel2);
 
-            Assert.IsTrue(subject.AllAnimations.Count > 0);
+            Assert.IsTrue(subject.AllAnimationNames.Count > 0);
         }
 
         [TestMethod]
@@ -39,25 +39,5 @@ namespace SharedProjectTests2
             subject.RegisterAnimations();
             Assert.AreEqual(46, subject.AllAnimationNames.Count, "Animation Count is  {0}", subject.AllAnimationNames.Count);
         }
-
-        //[TestMethod]
-            //public void TestAnimations_ContainAllAnims()
-            //{
-            //    Canvas panel = new Canvas();
-            //    var subject = new TestableRocky(panel);
-
-            //    subject.RegisterAnimations();
-            //    bool missing = false;
-
-            //    foreach (var anim in Enum.GetValues(typeof(RockyAnimations)))
-            //    {
-            //        subject.AllAnimationNames
-            //        var animation = RockyGeniusBase.Ani
-            //        if (animation == null)
-            //            missing = true;
-            //    }
-
-            //    Assert.IsFalse(missing);
-            //}
-        }
     }
+}
