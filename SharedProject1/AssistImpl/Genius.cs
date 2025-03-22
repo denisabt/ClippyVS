@@ -51,16 +51,18 @@ namespace SharedProject1.AssistImpl
         /// </summary>
         public Genius(Panel canvas, Panel canvas1)
         {
+            AssistantName = "Genius";
+            AssistantMapFilename = "genius_map.png";
             AnimationsResourceUri = "pack://application:,,,/ClippyVs2022;component/Genius.json";
             SpriteResourceUri = "pack://application:,,,/ClippyVs2022;component/Genius/genius_map.png";
 
             if (canvas == null) return;
 
-            InitAssistant(canvas, "Genius", "genius_map.png");
+            InitAssistant(canvas);
             // Might not be required XXX
-            AssistantFramesImage.Visibility = Visibility.Visible;
+            Layer0.Visibility = Visibility.Visible;
 
-            ClippedImage1 = new Image
+            Layer1 = new Image
             {
                 Source = Sprite,
                 Stretch = Stretch.None,
@@ -68,7 +70,7 @@ namespace SharedProject1.AssistImpl
             };
     
             canvas1.Children.Clear();
-            canvas1.Children.Add(ClippedImage1);
+            canvas1.Children.Add(Layer1);
 
             if (Animations == null)
                 RegisterAnimations();
@@ -123,20 +125,20 @@ namespace SharedProject1.AssistImpl
                     await ThreadHelper.JoinableTaskFactory.SwitchToMainThreadAsync();
                     // well have to skip this (leave collapsed) if only one layer
                     if (animLayers > 1) {
-                        ClippedImage1.Visibility = Visibility.Visible;
-                        ((Canvas) ClippedImage1.Parent).Visibility = Visibility.Visible;
+                        Layer1.Visibility = Visibility.Visible;
+                        ((Canvas) Layer1.Parent).Visibility = Visibility.Visible;
                     }
 
                     var leftPropertyAnimation = animation.Layer0.Item1;
                     var topPropertyAnimation = animation.Layer0.Item2;
                     
-                    AssistantFramesImage.BeginAnimation(Canvas.LeftProperty,leftPropertyAnimation);
-                    AssistantFramesImage.BeginAnimation(Canvas.TopProperty, topPropertyAnimation);
+                    Layer0.BeginAnimation(Canvas.LeftProperty,leftPropertyAnimation);
+                    Layer0.BeginAnimation(Canvas.TopProperty, topPropertyAnimation);
 
 
-ClippedImage1.BeginAnimation(Canvas.LeftProperty, animation.Layer1.Item1);
-                    ClippedImage1.BeginAnimation(Canvas.TopProperty, animation.Layer1.Item2);
-                    ClippedImage1.BeginAnimation(UIElement.OpacityProperty, animation.Visibility1);
+Layer1.BeginAnimation(Canvas.LeftProperty, animation.Layer1.Item1);
+                    Layer1.BeginAnimation(Canvas.TopProperty, animation.Layer1.Item2);
+                    Layer1.BeginAnimation(UIElement.OpacityProperty, animation.Visibility1);
                 }
                 else
                 {

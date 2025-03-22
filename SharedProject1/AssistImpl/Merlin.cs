@@ -55,10 +55,12 @@ MerlinAnimations.Idle1_2};
         /// </summary>
         public Merlin(Panel canvas)
         {
+            AssistantName = "Merlin";
+            AssistantMapFilename = "merlin_map.png";
             AnimationsResourceUri = "pack://application:,,,/ClippyVs2022;component/merlin_agent.js";
             SpriteResourceUri = "pack://application:,,,/ClippyVs2022;component/Merlin/merlin_map.png";
 
-            InitAssistant(canvas, "Merlin", "merlin_map.png");
+            InitAssistant(canvas);
 
             if (_animations == null)
                 RegisterAnimations();
@@ -124,8 +126,8 @@ MerlinAnimations.Idle1_2};
                     Debug.WriteLine(animation.Item1.ToString() + animation.Item2);
                     IsAnimating = true;
                     await ThreadHelper.JoinableTaskFactory.SwitchToMainThreadAsync();
-                    AssistantFramesImage.BeginAnimation(Canvas.LeftProperty, animation.Item1);
-                    AssistantFramesImage.BeginAnimation(Canvas.TopProperty, animation.Item2);
+                    Layer0.BeginAnimation(Canvas.LeftProperty, animation.Item1);
+                    Layer0.BeginAnimation(Canvas.TopProperty, animation.Item2);
                 }
             }
             catch (Exception)

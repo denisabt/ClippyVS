@@ -37,51 +37,16 @@ namespace SharedProject1.AssistImpl
         {
 
         RockyAnimations.DeepIdle1,
-        RockyAnimations.Congratulate,
         RockyAnimations.Idle_8,
-        RockyAnimations.Hide,
-        RockyAnimations.SendMail,
-        RockyAnimations.Thinking,
         RockyAnimations.Idle_3,
-        RockyAnimations.Explain,
         RockyAnimations.Idle_5,
-RockyAnimations.Print,
-        RockyAnimations.LookRight,
-        RockyAnimations.GetAttention,
-        RockyAnimations.Save,
-        RockyAnimations.GetTechy,
-        RockyAnimations.GestureUp,
         RockyAnimations.Idle1_1,
-        RockyAnimations.Processing,
-        RockyAnimations.Alert,
-        RockyAnimations.LookUpRight,
         RockyAnimations.Idle_9,
         RockyAnimations.Idle_7,
-        RockyAnimations.GestureDown,
-        RockyAnimations.LookLeft,
         RockyAnimations.Idle_2,
-        RockyAnimations.LookUpLeft,
-        RockyAnimations.CheckingSomething,
-        RockyAnimations.Hearing_1,
-        RockyAnimations.GetWizardy,
-        RockyAnimations.GestureLeft,
-        RockyAnimations.Wave,
-        RockyAnimations.Goodbye,
-        RockyAnimations.GestureRight,
-        RockyAnimations.Writing,
-        RockyAnimations.LookDownRight,
-        RockyAnimations.GetArtsy,
-        RockyAnimations.Show,
-        RockyAnimations.LookDown,
-        RockyAnimations.Searching,
         RockyAnimations.Idle_4,
-        RockyAnimations.EmptyTrash,
-        RockyAnimations.Greeting,
-        RockyAnimations.LookUp,
         RockyAnimations.Idle_6,
-        RockyAnimations.RestPose,
         RockyAnimations.Idle_8,
-        RockyAnimations.LookDownLeft
     };
 
         /// <summary>
@@ -89,10 +54,13 @@ RockyAnimations.Print,
         /// </summary>
         public Rocky(Panel canvas)
         {
+            AssistantName = "Rocky";
+            AssistantMapFilename = "rocky_map.png";
+
             SpriteResourceUri = "pack://application:,,,/ClippyVs2022;component/Rocky/rocky_map.png";
             AnimationsResourceUri = "pack://application:,,,/ClippyVs2022;component/rocky.json";
             Animations = null;
-            InitAssistant(canvas, "Rocky", "rocky_map.png");
+            InitAssistant(canvas);
 
             RegisterAnimationsImpl();
         }
@@ -112,7 +80,7 @@ RockyAnimations.Print,
             }
             else
             {
-                MessageBox.Show(Application.Current.MainWindow, "Error when initializing Animations for \"Rocky\"" );
+                MessageBox.Show(Application.Current.MainWindow, "Error when initializing Animations for \"Rocky\"");
             }
         }
 
@@ -150,8 +118,8 @@ RockyAnimations.Print,
                     Debug.WriteLine("Triggering Rocky " + animationType);
                     Debug.WriteLine("Rocky Layers: " + animation.Layer0.ToString() + animation.Layer1);
                     await ThreadHelper.JoinableTaskFactory.SwitchToMainThreadAsync();
-                    AssistantFramesImage.BeginAnimation(Canvas.LeftProperty, animation.Layer0.Item1);
-                    AssistantFramesImage.BeginAnimation(Canvas.TopProperty, animation.Layer1.Item1);
+                    Layer0.BeginAnimation(Canvas.LeftProperty, animation.Layer0.Item1);
+                    Layer0.BeginAnimation(Canvas.TopProperty, animation.Layer1.Item1);
                     IsAnimating = true;
                 }
                 else

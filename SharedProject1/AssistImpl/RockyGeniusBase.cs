@@ -23,7 +23,7 @@ namespace SharedProject1.AssistImpl
         /// <summary>
         /// The image that holds the sprite
         /// </summary>
-        protected Image ClippedImage1;
+        protected Image Layer1;
 
         /// <summary>
         /// Registers all the animation definitions into a static property
@@ -92,7 +92,7 @@ namespace SharedProject1.AssistImpl
             var animationMaxLayers = 0;
             foreach (var frame in animation.Frames) 
                 animationMaxLayers = 
-                    RegisterFrame(frame, animationMaxLayers, 
+                     RegisterFrame(frame, animationMaxLayers, 
                         singleAnimationFrame, ref timeOffset, ref frameIndex);
             
             Animations.Add(animation.Name,
@@ -152,17 +152,17 @@ namespace SharedProject1.AssistImpl
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        protected void XDoubleAnimation_Completed(object sender, EventArgs e)
+        private void XDoubleAnimation_Completed(object sender, EventArgs e)
         {
             Debug.WriteLine("Stopping animation");
             IsAnimating = false;
-            AssistantFramesImage.Visibility = Visibility.Visible;
-            if (AssistantFramesImage.Parent is Canvas canvas)
+            Layer0.Visibility = Visibility.Visible;
+            if (Layer0.Parent is Canvas canvas)
                 canvas.Visibility = Visibility.Visible;
 
-            if (ClippedImage1 != null) 
-                ClippedImage1.Visibility = Visibility.Hidden;
-            if (ClippedImage1?.Parent is Canvas canvas1)
+            if (Layer1 != null) 
+                Layer1.Visibility = Visibility.Hidden;
+            if (Layer1?.Parent is Canvas canvas1)
                 canvas1.Visibility = Visibility.Hidden;
         }
 

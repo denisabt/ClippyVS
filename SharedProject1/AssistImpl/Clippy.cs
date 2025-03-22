@@ -52,9 +52,12 @@ namespace Recoding.ClippyVSPackage
         /// </summary>
         public Clippy(Canvas canvas)
         {
+            AssistantName = "Clippy";
+            AssistantMapFilename = "clippy_map.png";
             SpriteResourceUri = "pack://application:,,,/ClippyVs2022;component/clippy.png";
             AnimationsResourceUri = "pack://application:,,,/ClippyVs2022;component/animations.json";
-            InitAssistant(canvas, "Clippy", "clippy_map.png");
+            
+            InitAssistant(canvas);
 
             if (_animations == null)
                 RegisterAnimations();
@@ -122,8 +125,8 @@ namespace Recoding.ClippyVSPackage
                 var leftPropertyAnimation = _animations[animationsType.ToString()].Item1;
                 var topPropertyAnimation = _animations[animationsType.ToString()].Item2;
 
-                AssistantFramesImage.BeginAnimation(Canvas.LeftProperty, leftPropertyAnimation);
-                AssistantFramesImage.BeginAnimation(Canvas.TopProperty, topPropertyAnimation);
+                Layer0.BeginAnimation(Canvas.LeftProperty, leftPropertyAnimation);
+                Layer0.BeginAnimation(Canvas.TopProperty, topPropertyAnimation);
 
             }
 

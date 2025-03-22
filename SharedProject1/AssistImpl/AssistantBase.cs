@@ -28,7 +28,7 @@ namespace Recoding.ClippyVSPackage
         /// <summary>
         /// The image that holds the sprite
         /// </summary>
-        protected System.Windows.Controls.Image AssistantFramesImage;
+        protected System.Windows.Controls.Image Layer0;
 
         /// <summary>
         /// The URI for the sprite with all the animation stages for Clippy
@@ -49,6 +49,9 @@ namespace Recoding.ClippyVSPackage
         /// When is true it means an animation is actually running
         /// </summary>
         protected bool IsAnimating { get; set; }
+
+        protected string AssistantName { get; set; }
+        protected string AssistantMapFilename { get; set; }
 
         /// <summary>
         /// Reads the content of a stream into a string
@@ -77,20 +80,20 @@ namespace Recoding.ClippyVSPackage
         /// </summary>
         /// <param name="canvas"></param>
         /// <param name="spriteResourceUri"></param>
-        protected void InitAssistant(Panel canvas, string assistantName, string assistantMapFilename)
+        protected void InitAssistant(Panel canvas)
         {
             if (canvas == null) return; 
             
-            Sprite = GetResourceBitmapFromSharedProject(assistantName, assistantMapFilename);
+            Sprite = GetResourceBitmapFromSharedProject(AssistantName, AssistantMapFilename);
 
-            AssistantFramesImage = new Image
+            Layer0 = new Image
             {
                 Source = Sprite,
                 Stretch = Stretch.None
             };
 
             canvas.Children.Clear();
-            canvas.Children.Add(AssistantFramesImage);
+            canvas.Children.Add(Layer0);
         }
 
         protected Dictionary<string, Tuple<DoubleAnimationUsingKeyFrames, DoubleAnimationUsingKeyFrames>> RegisterAnimationsImpl(string animationsResourceUri,
