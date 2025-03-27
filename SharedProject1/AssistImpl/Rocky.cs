@@ -80,7 +80,8 @@ namespace SharedProject1.AssistImpl
             }
             else
             {
-                MessageBox.Show(Application.Current.MainWindow, "Error when initializing Animations for \"Rocky\"");
+                if (Application.Current != null && Application.Current.MainWindow != null)
+                    MessageBox.Show(Application.Current.MainWindow, "Error when initializing Animations for \"Rocky\"");
             }
         }
 

@@ -12,17 +12,15 @@ namespace SharedProjectTests2
         {
             Canvas panel = new Canvas();
             var subj = new TestableAssistantBase();
-            subj.InitAssistant(panel, "");
-            
+            subj.InitAssistant(panel);
         }
     }
 
     public class TestableAssistantBase : AssistantBase
     {
-        public new void InitAssistant(Panel canvas, string spriteResourceUri)
+        public new void InitAssistant(Panel canvas)
         {
-            //var rmMock = Mock.Of<ResourceManager>(MockBehavior.Strict);
-            base.InitAssistant(canvas, "testAssistant", "testAssistantMapFilename");
+            base.InitAssistant(canvas);
         }
     }
 }

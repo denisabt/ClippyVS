@@ -17,9 +17,9 @@ namespace SharedProject1.AssistImpl
 
         public void Add(string animName, Tuple<DoubleAnimationUsingKeyFrames, DoubleAnimationUsingKeyFrames> layer0, ObjectAnimationUsingKeyFrames visibility0,
             Tuple<DoubleAnimationUsingKeyFrames, DoubleAnimationUsingKeyFrames> layer1, ObjectAnimationUsingKeyFrames visibility1,
-            int animMaxLayers)
+            int animMaxLayers, EventHandler XDoubleAnimation_Completed)
         {
-            _animations.Add(new LayeredAnimation(animName, layer0, layer1, visibility1, animMaxLayers));
+            _animations.Add(new LayeredAnimation(animName, layer0, layer1, null, null, visibility1, null, animMaxLayers, XDoubleAnimation_Completed));
             Debug.WriteLine("Added animation");
         }
 

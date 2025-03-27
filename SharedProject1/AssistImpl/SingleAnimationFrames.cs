@@ -1,9 +1,10 @@
 ﻿using System;
+using System.Text;
 using System.Windows.Media.Animation;
 
 namespace SharedProject1.AssistImpl
 {
-    internal class SingleAnimationFrame
+    internal class SingleAnimationFrames
     {
         public DoubleAnimationUsingKeyFrames xDoubleAnimation = new DoubleAnimationUsingKeyFrames
         {
@@ -15,7 +16,6 @@ namespace SharedProject1.AssistImpl
             FillBehavior = FillBehavior.HoldEnd
         };
         public ObjectAnimationUsingKeyFrames visibility0 = new ObjectAnimationUsingKeyFrames();
-
 
         public DoubleAnimationUsingKeyFrames xDoubleAnimation1 = new DoubleAnimationUsingKeyFrames
         {
@@ -37,7 +37,7 @@ namespace SharedProject1.AssistImpl
         };
         public ObjectAnimationUsingKeyFrames visibility2 = new ObjectAnimationUsingKeyFrames();
 
-        public SingleAnimationFrame(EventHandler XDoubleAnimation_Completed)
+        public SingleAnimationFrames(EventHandler XDoubleAnimation_Completed)
         {
             xDoubleAnimation.Completed += XDoubleAnimation_Completed;
         }

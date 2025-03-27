@@ -25,6 +25,8 @@ namespace SharedProject1.AssistImpl
         /// </summary>
         protected Image Layer1;
 
+        protected int MaxLayers = 0;
+
         /// <summary>
         /// Registers all the animation definitions into a static property
         /// </summary>
@@ -83,31 +85,38 @@ namespace SharedProject1.AssistImpl
         {
             if (animation.Frames == null) 
                 return;
-
-            SingleAnimationFrame singleAnimationFrame = new SingleAnimationFrame(XDoubleAnimation_Completed);
-
+            
             double timeOffset = 0;
             var frameIndex = 0;
+            var singleAnimationFrames = ParseWeblikeAnimation(animation, timeOffset, frameIndex);
 
-            var animationMaxLayers = 0;
-            foreach (var frame in animation.Frames) 
-                animationMaxLayers = 
-                     RegisterFrame(frame, animationMaxLayers, 
-                        singleAnimationFrame, ref timeOffset, ref frameIndex);
-            
             Animations.Add(animation.Name,
                 new Tuple<DoubleAnimationUsingKeyFrames, DoubleAnimationUsingKeyFrames>(
-                    singleAnimationFrame.xDoubleAnimation, singleAnimationFrame.yDoubleAnimation),
-                singleAnimationFrame.visibility0,
+                    singleAnimationFrames.Layer0.Item1, singleAnimationFrames.Layer0.Item2),
+                singleAnimationFrames.Visibility1,
                 new Tuple<DoubleAnimationUsingKeyFrames, DoubleAnimationUsingKeyFrames>(
-                    singleAnimationFrame.xDoubleAnimation1, singleAnimationFrame.yDoubleAnimation1),
-                singleAnimationFrame.visibility1,
-                animationMaxLayers);
+                    singleAnimationFrames.Layer1.Item1, singleAnimationFrames.Layer1.Item2),
+                singleAnimationFrames.Visibility1,
+                MaxLayers, XDoubleAnimation_Completed);
 
             Debug.WriteLine("Added RockyGenius Anim {0}", animation.Name);
-            Debug.WriteLine("...  Frame Count: " + singleAnimationFrame.xDoubleAnimation.KeyFrames.Count + " - " +
-                            singleAnimationFrame.yDoubleAnimation.KeyFrames.Count);
-            Debug.WriteLine($"Animation {animation.Name} has {animationMaxLayers} layers");
+            Debug.WriteLine("...  Frame Count: " + singleAnimationFrames.Layer0.Item1.KeyFrames.Count + " - " +
+                            singleAnimationFrames.Layer0.Item2.KeyFrames.Count);
+            Debug.WriteLine($"Animation {animation.Name} has {MaxLayers} layers");
+        }
+
+        private LayeredAnimation ParseWeblikeAnimation(WeblikeSingleAnimation animation, 
+            double timeOffset, int frameIndex)
+        {
+            // Get rid of this class and replace with LayeredAnimation TODO
+            LayeredAnimation singleAnimationFrameses = new LayeredAnimation(animation.Name);
+            
+            foreach (var frame in animation.Frames) {
+                RegisterFrame(frame, 
+                    singleAnimationFrameses, ref timeOffset, ref frameIndex);
+            }
+
+            return singleAnimationFrameses;
         }
 
         protected static List<WeblikeSingleAnimation> DeserializeAnimations(StreamResourceInfo animJStream, List<string> errors)
@@ -166,13 +175,13 @@ namespace SharedProject1.AssistImpl
                 canvas1.Visibility = Visibility.Hidden;
         }
 
-        private int RegisterFrame(Frame frame, int animationMaxLayers, SingleAnimationFrame singleAnimationFrame, ref double timeOffset, ref int frameIndex)
+        private void RegisterFrame(Frame frame, LayeredAnimation layeredAnimation, ref double timeOffset, ref int frameIndex)
         {
             if (frame.ImagesOffsets != null)
             {
-                if (frame.ImagesOffsets.Count > animationMaxLayers)
+                if (frame.ImagesOffsets.Count > MaxLayers)
                 {
-                    animationMaxLayers = frame.ImagesOffsets.Count;
+                    MaxLayers = frame.ImagesOffsets.Count;
                 }
 
                 if (frame.branching?.branches != null)
@@ -198,16 +207,19 @@ namespace SharedProject1.AssistImpl
                     //Debug.WriteLine("Processing Overlay " + layerNum);
 
                     // For Branching reasons, this can actually only be assembled on runtime.... :-/
-                    // Prepare Key frame for all potential layers (max 3)
-                    singleAnimationFrame.xDoubleAnimation.KeyFrames.Add(new DiscreteDoubleKeyFrame());
-                    singleAnimationFrame.yDoubleAnimation.KeyFrames.Add(new DiscreteDoubleKeyFrame());
-                    singleAnimationFrame.visibility0.KeyFrames.Add(new DiscreteObjectKeyFrame(0.0));
-                    singleAnimationFrame.xDoubleAnimation1.KeyFrames.Add(new DiscreteDoubleKeyFrame());
-                    singleAnimationFrame.yDoubleAnimation1.KeyFrames.Add(new DiscreteDoubleKeyFrame());
-                    singleAnimationFrame.visibility1.KeyFrames.Add(new DiscreteObjectKeyFrame(0.0));
-                    singleAnimationFrame.xDoubleAnimation2.KeyFrames.Add(new DiscreteDoubleKeyFrame());
-                    singleAnimationFrame.yDoubleAnimation2.KeyFrames.Add(new DiscreteDoubleKeyFrame());
-                    singleAnimationFrame.visibility2.KeyFrames.Add(new DiscreteObjectKeyFrame(0.0));
+                    // Prepare
+                    // Key frame for all potential layers (max 3)
+                    //var layer0
+
+                    //layeredAnimatsion.xDoubleAnimation.KeyFrames.Add(new DiscreteDoubleKeyFrame());
+                    //layeredAnimatsion.yDoubleAnimation.KeyFrames.Add(new DiscreteDoubleKeyFrame());
+                    //layeredAnimatsion.visibility0.KeyFrames.Add(new DiscreteObjectKeyFrame(0.0));
+                    //layeredAnimatsion.xDoubleAnimation1.KeyFrames.Add(new DiscreteDoubleKeyFrame());
+                    //layeredAnimatsion.yDoubleAnimation1.KeyFrames.Add(new DiscreteDoubleKeyFrame());
+                    //layeredAnimatsion.visibility1.KeyFrames.Add(new DiscreteObjectKeyFrame(0.0));
+                    //layeredAnimatsion.xDoubleAnimation2.KeyFrames.Add(new DiscreteDoubleKeyFrame());
+                    //layeredAnimatsion.yDoubleAnimation2.KeyFrames.Add(new DiscreteDoubleKeyFrame());
+                    //layeredAnimatsion.visibility2.KeyFrames.Add(new DiscreteObjectKeyFrame(0.0));
 
                     //Overlay is actually - layers - displayed at the same time...
                     var lastCol = frame.ImagesOffsets[layerNum][0];
@@ -223,19 +235,20 @@ namespace SharedProject1.AssistImpl
                     switch (layerNum)
                     {
                         case 0:
-                            singleAnimationFrame.xDoubleAnimation.KeyFrames.Insert(frameIndex, xKeyFrame);
-                            singleAnimationFrame.yDoubleAnimation.KeyFrames.Insert(frameIndex, yKeyFrame);
-                            singleAnimationFrame.visibility0.KeyFrames.Insert(frameIndex, new DiscreteObjectKeyFrame(1.0, frameKeyTime));
+                            //var layer0Frame = new Tuple<DoubleAnimationUsingKeyFrames, DoubleAnimationUsingKeyFrames>(xKeyFrame)
+                            layeredAnimation.Layer0.Item1.KeyFrames.Add(xKeyFrame);
+                            layeredAnimation.Layer0.Item2.KeyFrames.Add(yKeyFrame);
+                            layeredAnimation.Visibility0.KeyFrames.Add(new DiscreteObjectKeyFrame(0.0, frameKeyTime));
                             break;
                         case 1:
-                            singleAnimationFrame.xDoubleAnimation1.KeyFrames.Insert(frameIndex, xKeyFrame);
-                            singleAnimationFrame.yDoubleAnimation1.KeyFrames.Insert(frameIndex, yKeyFrame);
-                            singleAnimationFrame.visibility1.KeyFrames.Insert(frameIndex, new DiscreteObjectKeyFrame(1.0, frameKeyTime));
+                            layeredAnimation.Layer1.Item1.KeyFrames.Add(xKeyFrame);
+                            layeredAnimation.Layer1.Item2.KeyFrames.Add(yKeyFrame);
+                            layeredAnimation.Visibility1.KeyFrames.Add(new DiscreteObjectKeyFrame(0.0, frameKeyTime));
                             break;
                         case 2:
-                            singleAnimationFrame.xDoubleAnimation2.KeyFrames.Insert(frameIndex, xKeyFrame);
-                            singleAnimationFrame.yDoubleAnimation2.KeyFrames.Insert(frameIndex, yKeyFrame);
-                            singleAnimationFrame.visibility2.KeyFrames.Insert(frameIndex, new DiscreteObjectKeyFrame(1.0, frameKeyTime));
+                            layeredAnimation.Layer2.Item1.KeyFrames.Add(xKeyFrame);
+                            layeredAnimation.Layer2.Item2.KeyFrames.Add(yKeyFrame);
+                            layeredAnimation.Visibility2.KeyFrames.Add(new DiscreteObjectKeyFrame(0.0, frameKeyTime));
                             break;
                     }
                 }
@@ -249,7 +262,8 @@ namespace SharedProject1.AssistImpl
                 Debug.WriteLine("ImageOffsets was null");
             }
 
-            return animationMaxLayers;
+
+            return;
         }
     }
 }
