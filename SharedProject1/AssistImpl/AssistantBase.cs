@@ -1,4 +1,5 @@
 ﻿using Recoding.ClippyVSPackage.Configurations;
+using SharedProject1.Configurations;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -49,10 +50,45 @@ namespace Recoding.ClippyVSPackage
         /// When is true it means an animation is actually running
         /// </summary>
         protected bool IsAnimating { get; set; }
-
         protected string AssistantName { get; set; }
         protected string AssistantMapFilename { get; set; }
 
+        public void PopulateContextMenu(ContextMenu assistantContextMenu, bool showClippy, bool showMerlin, bool showGenius, bool showRocky, RoutedEventHandler menuItemOnClick)
+        {
+#if DEBUG
+            var values = Enum.GetValues(typeof(ClippyAnimations));
+            if (showClippy)
+            {
+                values = Enum.GetValues(typeof(ClippyAnimations));
+            }
+            if (showMerlin)
+            {
+                values = Enum.GetValues(typeof(MerlinAnimations));
+            }
+            if (showGenius)
+            {
+                values = Enum.GetValues(typeof(GeniusAnimations));
+            }
+            if (showRocky)
+            {
+                values = Enum.GetValues(typeof(RockyAnimations));
+            }
+
+            //// TEMP: create a voice for each animation in the context menu
+            assistantContextMenu.Items.Clear();
+
+            foreach (var val in values)
+            {
+                var menuItem = new MenuItem()
+                {
+                    Header = val.ToString(),
+                    Name = "cmd" + val
+                };
+                menuItem.Click += menuItemOnClick;
+                assistantContextMenu.Items.Add(menuItem);
+            }
+#endif
+        }
         /// <summary>
         /// Reads the content of a stream into a string
         /// </summary>

@@ -181,39 +181,42 @@ namespace Recoding.ClippyVSPackage
         }
 
 
-        private void PopulateContextMenu()
-        {
-#if DEBUG
-            var values = Enum.GetValues(typeof(ClippyAnimations));
-            if (_showMerlin)
-            {
-                values = Enum.GetValues(typeof(MerlinAnimations));
-            }
-            if (_showGenius)
-            {
-                values = Enum.GetValues(typeof(GeniusAnimations));
-            }
-            if (_showRocky)
-            {
-                values = Enum.GetValues(typeof(RockyAnimations));
-            }
+        //        private void PopulateContextMenu(ContextMenu assistantContextMenu, bool showClippy, bool showMerlin, bool showGenius, bool showRocky, RoutedEventHandler menuItemOnClick)
+        //        {
+        //#if DEBUG
+        //            var values = Enum.GetValues(typeof(ClippyAnimations));
+        //            if (showClippy)
+        //            {
+        //                values = Enum.GetValues(typeof(ClippyAnimations));
+        //            }
+        //            if (showMerlin)
+        //            {
+        //                values = Enum.GetValues(typeof(MerlinAnimations));
+        //            }
+        //            if (showGenius)
+        //            {
+        //                values = Enum.GetValues(typeof(GeniusAnimations));
+        //            }
+        //            if (showRocky)
+        //            {
+        //                values = Enum.GetValues(typeof(RockyAnimations));
+        //            }
 
-            //// TEMP: create a voice for each animation in the context menu
-            var pMenu = (ContextMenu)this.Resources["CmButton"];
-            pMenu.Items.Clear();
+        //            //// TEMP: create a voice for each animation in the context menu
+        //            assistantContextMenu.Items.Clear();
 
-            foreach (var val in values)
-            {
-                var menuItem = new MenuItem()
-                {
-                    Header = val.ToString(),
-                    Name = "cmd" + val
-                };
-                menuItem.Click += CmdTestAnimation_Click;
-                pMenu.Items.Add(menuItem);
-            }
-#endif
-        }
+        //            foreach (var val in values)
+        //            {
+        //                var menuItem = new MenuItem()
+        //                {
+        //                    Header = val.ToString(),
+        //                    Name = "cmd" + val
+        //                };
+        //                menuItem.Click += menuItemOnClick;
+        //                assistantContextMenu.Items.Add(menuItem);
+        //            }
+        //#endif
+        //        }
 
         private void DisposeAssistant()
         {
@@ -232,11 +235,10 @@ namespace Recoding.ClippyVSPackage
                 Rocky.Dispose();
                 Rocky = null;
             }
-            if (Clippy != null)
-            {
-                Clippy.Dispose();
-                Clippy = null;
-            }
+
+            if (Clippy == null) return;
+            Clippy.Dispose();
+            Clippy = null;
         }
 
         public void ReviveClippy()
@@ -258,7 +260,7 @@ namespace Recoding.ClippyVSPackage
             Clippy = new Clippy((Canvas)FindName("AssistantCanvasOverlay0"));
             Clippy.StartAnimation(ClippyAnimations.Greeting);
 
-            PopulateContextMenu();
+            Clippy.PopulateContextMenu((ContextMenu)this.Resources["CmButton"], true, false, false, false, CmdTestAnimation_Click);
         }
 
         public void ReviveMerlin()
@@ -279,8 +281,9 @@ namespace Recoding.ClippyVSPackage
             Merlin = new Merlin((Canvas)this.FindName("AssistantCanvasOverlay0"));
             Merlin.StartAnimation(MerlinAnimations.Greet);
 
-            PopulateContextMenu();
+            Merlin.PopulateContextMenu((ContextMenu)this.Resources["CmButton"], false, true, false,false, CmdTestAnimation_Click);
         }
+ 
         public void ReviveRocky()
         {
             DisposeAssistant();
@@ -300,7 +303,7 @@ namespace Recoding.ClippyVSPackage
             Rocky = new Rocky((Canvas)this.FindName("AssistantCanvasOverlay0"));
             Rocky.StartAnimation(RockyAnimations.Wave);
 
-            PopulateContextMenu();
+            Rocky.PopulateContextMenu((ContextMenu)this.Resources["CmButton"], false,false,false,true, CmdTestAnimation_Click);
         }
 
         public void ReviveGenius()
@@ -322,7 +325,7 @@ namespace Recoding.ClippyVSPackage
             Genius = new Genius((Canvas)FindName("AssistantCanvasOverlay0"), (Canvas)FindName("AssistantCanvasOverlay1"));
             Genius.StartAnimation(GeniusAnimations.Greeting);
 
-            PopulateContextMenu();
+            Genius.PopulateContextMenu((ContextMenu)this.Resources["CmButton"], false, _showMerlin, _showGenius, _showRocky, CmdTestAnimation_Click);
         }
 
         private void AssistantCanvasOverlay1_IsVisibleChanged(object sender, DependencyPropertyChangedEventArgs e)
