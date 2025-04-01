@@ -72,8 +72,6 @@ namespace Recoding.ClippyVSPackage
             Owner = Application.Current.MainWindow;
             Topmost = false;
 
-
-
             #region Register event handlers
             ThreadHelper.ThrowIfNotOnUIThread();
 
@@ -100,7 +98,6 @@ namespace Recoding.ClippyVSPackage
             LocationChanged += SpriteContainer_LocationChanged;
             #endregion
 
-
             #region -- Restore Sprite postion --
             double? storedRelativeTop = null;
             double? storedRelativeLeft = null;
@@ -120,6 +117,9 @@ namespace Recoding.ClippyVSPackage
 
             PlaceContainer(storedRelativeTop, storedRelativeLeft);
             #endregion
+
+            // debug helpers for animation
+            AssistantCanvasOverlay1.IsVisibleChanged += AssistantCanvasOverlay1_IsVisibleChanged;
 
             try
             {
@@ -317,11 +317,17 @@ namespace Recoding.ClippyVSPackage
             AssistantCanvasOverlay0.Height = 93;
             AssistantCanvasOverlay1.Visibility = Visibility.Visible;
 
+
             // Genius has to layers, thus overlay 0 and 1 need to be passed for this one.
             Genius = new Genius((Canvas)FindName("AssistantCanvasOverlay0"), (Canvas)FindName("AssistantCanvasOverlay1"));
             Genius.StartAnimation(GeniusAnimations.Greeting);
 
             PopulateContextMenu();
+        }
+
+        private void AssistantCanvasOverlay1_IsVisibleChanged(object sender, DependencyPropertyChangedEventArgs e)
+        {
+            Debug.WriteLine("Vis Changed of Layer 1" + e.NewValue)  ;
         }
 
         private void RegisterToDteEvents(DTE dte)

@@ -177,6 +177,7 @@ namespace SharedProject1.AssistImpl
 
         private void RegisterFrame(Frame frame, LayeredAnimation layeredAnimation, ref double timeOffset, ref int frameIndex)
         {
+            
             if (frame.ImagesOffsets != null)
             {
                 if (frame.ImagesOffsets.Count > MaxLayers)
@@ -232,23 +233,29 @@ namespace SharedProject1.AssistImpl
                     var yKeyFrame = new DiscreteDoubleKeyFrame(lastRow * -1,
                         frameKeyTime);
 
+                    int visibleLayers = frame.ImagesOffsets.Count;  
+
                     switch (layerNum)
                     {
                         case 0:
                             //var layer0Frame = new Tuple<DoubleAnimationUsingKeyFrames, DoubleAnimationUsingKeyFrames>(xKeyFrame)
                             layeredAnimation.Layer0.Item1.KeyFrames.Add(xKeyFrame);
                             layeredAnimation.Layer0.Item2.KeyFrames.Add(yKeyFrame);
-                            layeredAnimation.Visibility0.KeyFrames.Add(new DiscreteObjectKeyFrame(0.0, frameKeyTime));
+                            var visibility0Frame = new DiscreteObjectKeyFrame(0.0, frameKeyTime);
+                            layeredAnimation.Visibility0.KeyFrames.Add(visibility0Frame);
                             break;
                         case 1:
                             layeredAnimation.Layer1.Item1.KeyFrames.Add(xKeyFrame);
                             layeredAnimation.Layer1.Item2.KeyFrames.Add(yKeyFrame);
-                            layeredAnimation.Visibility1.KeyFrames.Add(new DiscreteObjectKeyFrame(0.0, frameKeyTime));
+                            // XXXXX DEBUG..  and unit test
+                            var visibility1Frame = new DiscreteObjectKeyFrame((visibleLayers > 1 ? Visibility.Visible : Visibility.Hidden ), frameKeyTime);
+                            layeredAnimation.Visibility1.KeyFrames.Add(visibility1Frame);
                             break;
                         case 2:
                             layeredAnimation.Layer2.Item1.KeyFrames.Add(xKeyFrame);
                             layeredAnimation.Layer2.Item2.KeyFrames.Add(yKeyFrame);
-                            layeredAnimation.Visibility2.KeyFrames.Add(new DiscreteObjectKeyFrame(0.0, frameKeyTime));
+                            var visibility2Frame = new DiscreteObjectKeyFrame(0.0, frameKeyTime);
+                            //layeredAnimation.Visibility2.KeyFrames.Add(visibility2Frame);
                             break;
                     }
                 }

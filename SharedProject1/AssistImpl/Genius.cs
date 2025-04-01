@@ -14,7 +14,7 @@ namespace SharedProject1.AssistImpl
     /// The core object that represents Clippy and its animations
     /// </summary>
     public class Genius : RockyGeniusBase
-    { 
+    {
         /// <summary>
         /// The height of the frame
         /// </summary>
@@ -68,7 +68,7 @@ namespace SharedProject1.AssistImpl
                 Stretch = Stretch.None,
                 Visibility = Visibility.Collapsed
             };
-    
+
             canvas1.Children.Clear();
             canvas1.Children.Add(Layer1);
 
@@ -84,7 +84,7 @@ namespace SharedProject1.AssistImpl
         /// <summary>
         /// Registers a function to perform a subset of animations randomly (the idle ones)
         /// </summary>
-       
+
         private void WPFAnimationsDispatcher_Tick(object sender, EventArgs e)
         {
             var rmd = new Random();
@@ -124,21 +124,27 @@ namespace SharedProject1.AssistImpl
 
                     await ThreadHelper.JoinableTaskFactory.SwitchToMainThreadAsync();
                     // well have to skip this (leave collapsed) if only one layer
-                    if (animLayers > 1) {
+                    if (animLayers > 1)
+                    {
                         Layer1.Visibility = Visibility.Visible;
-                        ((Canvas) Layer1.Parent).Visibility = Visibility.Visible;
+                        ((Canvas)Layer1.Parent).Visibility = Visibility.Visible;
                     }
+                    //else
+                    //{
+                    //    Layer1.Visibility = Visibility.Collapsed;
+                    //    ((Canvas)Layer1.Parent).Visibility = Visibility.Collapsed;
+                    //}
 
                     var leftPropertyAnimation = animation.Layer0.Item1;
                     var topPropertyAnimation = animation.Layer0.Item2;
-                    
-                    Layer0.BeginAnimation(Canvas.LeftProperty,leftPropertyAnimation);
+
+                    Layer0.BeginAnimation(Canvas.LeftProperty, leftPropertyAnimation);
                     Layer0.BeginAnimation(Canvas.TopProperty, topPropertyAnimation);
 
-
-Layer1.BeginAnimation(Canvas.LeftProperty, animation.Layer1.Item1);
+                    Layer1.BeginAnimation(Canvas.LeftProperty, animation.Layer1.Item1);
                     Layer1.BeginAnimation(Canvas.TopProperty, animation.Layer1.Item2);
-                    Layer1.BeginAnimation(UIElement.OpacityProperty, animation.Visibility1);
+                    Layer1.BeginAnimation(UIElement.VisibilityProperty, animation.Visibility1);
+                    Debug.WriteLine("Genius Opac1 " + animation.Visibility1);
                 }
                 else
                 {

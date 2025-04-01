@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics;
 using System.Windows.Media.Animation;
 using Microsoft.VisualStudio.OLE.Interop;
 
@@ -25,7 +26,7 @@ namespace SharedProject1.AssistImpl
             ObjectAnimationUsingKeyFrames visibility1,
             ObjectAnimationUsingKeyFrames visibility2,
             int animMaxLayers,
-            EventHandler XDoubleAnimation_Completed) : this(name)
+            EventHandler xDoubleAnimationCompleted) : this(name)
         {
             Layer0 = layer0;
             Layer1 = layer1;
@@ -34,8 +35,13 @@ namespace SharedProject1.AssistImpl
             Visibility1 = visibility1;
             Visibility2 = visibility2;
             MaxLayers = animMaxLayers;
+            layer0.Item1.Changed += Item1_Changed;
+            Layer0.Item1.Completed += xDoubleAnimationCompleted;
+        }
 
-            Layer0.Item1.Completed += XDoubleAnimation_Completed;
+        private void Item1_Changed(object sender, EventArgs e)
+        {
+            Debug.WriteLine("Fram changed");
         }
 
         public LayeredAnimation(string name)
