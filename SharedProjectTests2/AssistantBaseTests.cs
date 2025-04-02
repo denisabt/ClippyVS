@@ -1,6 +1,8 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Recoding.ClippyVSPackage;
 using System.Windows.Controls;
+using Recoding.ClippyVSPackage.Configurations.Legacy;
+using SharedProject1.AssistImpl;
 
 namespace SharedProjectTests2
 {
@@ -21,6 +23,22 @@ namespace SharedProjectTests2
         public new void InitAssistant(Panel canvas)
         {
             base.InitAssistant(canvas);
+        }
+
+        
+    }
+
+    public class TestableRockyGeniusBase : RockyGeniusBase
+    {
+        public new void InitAssistant(Panel canvas)
+        {
+            base.InitAssistant(canvas);
+        }
+
+        public new LayeredAnimation ParseWeblikeAnimation(WeblikeSingleAnimation animation,
+            double timeOffset, int frameIndex)
+        {
+            return base.ParseWeblikeAnimation(animation, timeOffset, frameIndex);
         }
     }
 }

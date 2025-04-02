@@ -129,11 +129,6 @@ namespace SharedProject1.AssistImpl
                         Layer1.Visibility = Visibility.Visible;
                         ((Canvas)Layer1.Parent).Visibility = Visibility.Visible;
                     }
-                    //else
-                    //{
-                    //    Layer1.Visibility = Visibility.Collapsed;
-                    //    ((Canvas)Layer1.Parent).Visibility = Visibility.Collapsed;
-                    //}
 
                     var leftPropertyAnimation = animation.Layer0.Item1;
                     var topPropertyAnimation = animation.Layer0.Item2;

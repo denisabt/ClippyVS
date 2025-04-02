@@ -39,7 +39,7 @@ namespace Recoding.ClippyVSPackage
         /// <summary>
         /// The URI for the animationses json definition
         /// </summary>
-        protected static string AnimationsResourceUri = "pack://application:,,,/ClippyVs2022;component/animations.json";
+        protected string AnimationsResourceUri = "pack://application:,,,/ClippyVs2022;component/animations.json";
 
         /// <summary>
         /// Seconds between a random idle animation and another

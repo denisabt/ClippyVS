@@ -60,11 +60,11 @@ namespace SharedProject1.AssistImpl
         /// todo Migrate to shared file use
         /// </summary>
         /// <returns></returns>
-        private static List<WeblikeSingleAnimation> ParseAnimDescriptions()
+        protected List<WeblikeSingleAnimation> ParseAnimDescriptions()
         {
             var spResUri = AnimationsResourceUri;
 
-#if Dev19
+#if Dev19   
             spResUri = spResUri.Replace("ClippyVs2022", "ClippyVSPackage");
 #endif
             var uri = new Uri(spResUri, UriKind.RelativeOrAbsolute);
@@ -105,7 +105,7 @@ namespace SharedProject1.AssistImpl
             Debug.WriteLine($"Animation {animation.Name} has {MaxLayers} layers");
         }
 
-        private LayeredAnimation ParseWeblikeAnimation(WeblikeSingleAnimation animation, 
+        protected LayeredAnimation ParseWeblikeAnimation(WeblikeSingleAnimation animation, 
             double timeOffset, int frameIndex)
         {
             // Get rid of this class and replace with LayeredAnimation TODO
