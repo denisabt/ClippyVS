@@ -18,10 +18,14 @@ namespace SharedProjectTests2
             var subj = new TestableRockyGeniusBase();
             subj.AnimationsResourceUri = "";
             var animation = new WeblikeSingleAnimation();
+            animation.Name = "TestAnimation";
+            animation.Frames.Add(new Frame());
             double timeOffset = 0;
             int frameIndex = 0;
+
             // Act
             var result = subj.ParseWeblikeAnimation(animation, timeOffset, frameIndex);
+            
             // Assert
             Assert.IsNotNull(result);
         }

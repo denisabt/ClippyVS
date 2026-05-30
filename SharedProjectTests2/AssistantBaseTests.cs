@@ -25,11 +25,17 @@ namespace SharedProjectTests2
             base.InitAssistant(canvas);
         }
 
-        
+
     }
 
     public class TestableRockyGeniusBase : RockyGeniusBase
     {
+        public new string AnimationsResourceUri
+        {
+            get => base.AnimationsResourceUri;
+            set => base.AnimationsResourceUri = value;
+        }
+
         public new void InitAssistant(Panel canvas)
         {
             base.InitAssistant(canvas);

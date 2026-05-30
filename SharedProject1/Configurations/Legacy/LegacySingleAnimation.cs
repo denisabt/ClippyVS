@@ -6,7 +6,7 @@ namespace Recoding.ClippyVSPackage.Configurations.Legacy
     public class WeblikeSingleAnimation
     {
         public string Name { get; set; }
-        public List<Frame> Frames { get; set; }
+        public List<Frame> Frames { get; set; } = new List<Frame>();
     }
     public class Branch
     {

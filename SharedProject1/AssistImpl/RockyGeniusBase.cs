@@ -115,7 +115,7 @@ namespace SharedProject1.AssistImpl
                 RegisterFrame(frame, 
                     singleAnimationFrameses, ref timeOffset, ref frameIndex);
             }
-
+    
             return singleAnimationFrameses;
         }
 
